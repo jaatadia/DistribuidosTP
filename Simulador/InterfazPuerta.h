@@ -22,16 +22,16 @@ public:
     // devuelve si pudo entrar o no 
     bool entrar(int numeroPuerta);
     
-    //devuelve -1 si no pudo entrar, o la tarjeta en caso contrario
+    //devuelve -1 si no pudo entrar, o el numero de tarjeta en caso contrario
     int entrarInvestigador(int numeroPuerta,int pertenencias);
     
-    //pasea por tanto tiempo o hasta que le digan que salga
+    //pasea por tanto tiempo o hasta que le digan que salga TODO
     void pasear(int milisegundos);
     
     //true pudo salir, false no
     bool salir(int numeroPuerta);
     
-    //devuelve -1 en caso de que no sea la puerta correcta o las pertenencias
+    //devuelve el id de las pertenencias o -1 en caso de que no sea la puerta correcta
     int salirInvestigador(int numeroPuerta,int tarjeta);
     
     virtual ~InterfazPuerta();
