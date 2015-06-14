@@ -46,12 +46,21 @@
 #define COLA_MATAR_PERSONAS 105
 #define COLA_MATAR_PERSONAS_STR "105"
 
-#define DESP 4
 
-#define PUERTA_FILA 106 //las sucesivas puertas van a tener PUERTA_FILA + DESP * nro_puerta
-#define PUERTA_RESP 107 //las sucesivas puertas van a tener PUERTA_RESP + DESP * nro_puerta
-#define PUERTA_SALIDA_FILA 108 //las sucesivas puertas van a tener PUERTA_SALIDA_FILA + DESP * nro_puerta
-#define PUERTA_SALIDA_RESP 109 //las sucesivas puertas van a tener PUERTA_SALIDA_RESP + DESP * nro_puerta
+
+#define PUERTA_FILA 106 
+#define PUERTA_RESP 107 
+#define PUERTA_SALIDA_FILA 108 
+#define PUERTA_SALIDA_FILA_PRIORITARIA 109 
+#define PUERTA_SALIDA_RESP 110 
+
+#define DESP 5
+#define MUTEX_PUERTA_ESPERANDO 111 //para la puerta i es MUTEX_PUERTA_ESPERANDO + (i-1)*DESP
+#define MUTEX_CONTADOR_FILA_PRIORITARIA 112
+#define CONTADOR_FILA_PRIORITARIA 113
+#define MUTEX_CONTADOR_FILA_NORMAL 114
+#define CONTADOR_FILA_NORMAL 115
+
 
 typedef struct {
     bool estaAbierto;

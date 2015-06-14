@@ -18,7 +18,7 @@ INIT_SOURCE = Initializer.cpp
 INIT_EXE = Initializer
 
 #parametros para la compilacion del proceso persona
-OBJETOS_PERSONA = Logger.o InterfazPuerta.o
+OBJETOS_PERSONA = Logger.o InterfazPuerta.o semaforo.o
 PERSONA_SOURCE = Persona.cpp
 PERSONA_EXE = Persona
 

@@ -14,9 +14,10 @@ private:
     int colaEntrada;
     int colaEntradaRespuesta;
     int colaSalida;
+    int colaSalidaPrioritaria;
     int colaSalidaRespuesta;
     void entrar(int numeroPuerta,int tipo,int tarjeta,MensajeAPuerta& mensaje);
-    void salir(int numeroPuerta,int tipo,int pertenencias,MensajeAPuerta& mensaje);
+    void aumentarEsperando(bool normal, int numeroPuerta);
     
 public:
     
