@@ -7,17 +7,13 @@
 
 #include <stdlib.h>
 #include <iostream>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/msg.h>
-#include <sys/types.h>
 #include <unistd.h>
 #include <sstream>
 
 #include "Logger.h"
 #include "Simulador.h"
-#include "semaforo.h"
 #include "InterfazMuseoEntrada.h"
+#include "InterfazPersonaEntrada.h"
 
 using namespace std;
 
@@ -38,40 +34,18 @@ int main(int argc, char** argv) {
     Logger::startLog(LOGGER_DEFAULT_PATH,puertaid.c_str());
     
     InterfazMuseoEntrada museo;
-   
-    //busco las colas
-    Logger::logg("Buscando la cola de entrada");
-    int colaEntrada,colaRespuesta;
-    if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,PUERTA_FILA),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de entrada");
-        exit(1);   
-    }
-
-    Logger::logg("Buscando la cola de respuesta");
-    if( (colaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_RESP),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de respuesta");
-        exit(1);   
-    }
+    InterfazPersonaEntrada entrada(numero);
   
     while(true){
-        int resultado=MENSAJE_PASAR;
+        Persona persona;
         
-        Logger::logg("Esperando persona");
-        MensajeAPuerta msg;
-        if( (msgrcv(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero,0)) == -1){
-            Logger::loggError("Error leer mensaje de entrada");
-            exit(1);   
-        }
-        
+        entrada.tomarPersona(persona);
         bool pudoEntrar = museo.entrar();
-        
-        msg.destinatario  = msg.mensaje;
-        msg.mensaje = resultado;
-        if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
-            Logger::loggError("Error responder a la persona");
-            exit(1);   
-        }
-        
+        if (persona.tipoPersona == PERSONA) {
+            entrada.responder(persona.idPersona,pudoEntrar);
+        } else {
+            entrada.responderInvestigador(persona.idPersona,0); //TODO numero de tarjeta
+        }       
     }
 
 }

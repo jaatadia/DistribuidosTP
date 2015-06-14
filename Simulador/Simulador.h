@@ -76,18 +76,10 @@ typedef struct {
 #define TIPO_INVESTIGADOR 1
 typedef struct {
     long int destinatario;
-    int mensaje;
+    int mensaje; //viene a quien responderle - va el mensaje
     int tipo;
     int pertenenciasOTarjeta;
 } MensajeAPuerta;
-
-#define PERSONA 1
-#define INVESTIGADOR 2
-typedef struct {
-    int idPersona;
-    int tipoPersona;
-} Persona;
-
 
 #endif	/* SIMULADOR_H */
 

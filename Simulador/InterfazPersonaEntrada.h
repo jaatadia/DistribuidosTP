@@ -8,10 +8,23 @@
 #ifndef INTERFAZPERSONAENTRADA_H
 #define	INTERFAZPERSONAENTRADA_H
 
+#define PERSONA 1
+#define INVESTIGADOR 2
+typedef struct {
+    int idPersona;
+    int tipoPersona;
+} Persona;
+
+#include <stdlib.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/types.h>
 #include "Simulador.h"
+#include "Logger.h"
+
 class InterfazPersonaEntrada {
 public:
-    InterfazPersonaEntrada();
+    InterfazPersonaEntrada(int numeroPuerta);
     virtual ~InterfazPersonaEntrada();
     
     //toma una persona, devuelve un struct con el id de la persona y el tipo
@@ -24,6 +37,10 @@ public:
     void responderInvestigador(int idInvestigador,int tarjeta);
     
 private:
+        int colaEntrada;
+        int colaRespuesta;
+        int numero; //numero de la puerta de entrada
+        MensajeAPuerta request;
 
 };
 
