@@ -35,9 +35,10 @@ int main(int argc, char** argv) {
     
     InterfazMuseoEntrada museo;
     InterfazPersonaEntrada entrada(numero);
-  
+    Persona persona;
+    
     while(true){
-        Persona persona;
+        
         
         entrada.tomarPersona(persona);
         bool pudoEntrar = museo.entrar();
