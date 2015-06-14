@@ -235,9 +235,9 @@ void crearClientes(){
         stringstream espera;
         stringstream puertaSalida;
         
-        puertaEntrada<<rand()%puertas;
+        puertaEntrada<<(rand()%puertas)+1;
         espera<<rand()%10000000;
-        puertaSalida<<rand()%puertas;
+        puertaSalida<<(rand()%puertas)+1;
         
         Logger::logg("Creando una persona Entra: "+puertaEntrada.str()+" Duerme: "+espera.str()+" Sale:"+puertaSalida.str());
         

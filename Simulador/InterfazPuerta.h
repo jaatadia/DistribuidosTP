@@ -10,7 +10,11 @@
 
 class InterfazPuerta {
 private:
-
+    int colaEntrada;
+    int colaEntradaRespuesta;
+    int colaSalida;
+    int colaSalidaRespuesta;
+    
 public:
     
     InterfazPuerta();

@@ -23,51 +23,60 @@
 using namespace std;
 
     InterfazPuerta::InterfazPuerta(){
+        //busco las colas
+        Logger::logg("Buscando la cola de entrada");
         
-    }
+        if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,PUERTA_FILA),PERMISOS)) == -1){
+            Logger::loggError("Error al encontrar la cola de entrada");
+            exit(1);   
+        }
+
+        Logger::logg("Buscando la cola de respuesta");
+        if( (colaEntradaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_RESP),PERMISOS)) == -1){
+            Logger::loggError("Error al encontrar la cola de respuesta");
+            exit(1);   
+        }
+        
+        Logger::logg("Buscando la cola de salida");
+        if( (colaSalida = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA),PERMISOS)) == -1){
+            Logger::loggError("Error al encontrar la cola de entrada");
+            exit(1);   
+        }
+
+        Logger::logg("Buscando la cola de respuesta");
+        if( (colaSalidaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_RESP),PERMISOS)) == -1){
+            Logger::loggError("Error al encontrar la cola de respuesta");
+            exit(1);   
+        }
+ }
 
     // devuelve si pudo entrar o no 
     bool InterfazPuerta::entrar(int numeroPuerta){
-        //TODO 
-        
-    stringstream ss;
-    ss<<numeroPuerta;
 
-    //busco las colas
-    Logger::logg("Buscando la cola de entrada nro "+ss.str());
-    int colaEntrada,colaEntradaRespuesta;
-    if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,PUERTA_FILA),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de entrada nro " +ss.str());
-        exit(1);   
-    }
+        stringstream ss;
+        ss<<numeroPuerta;
 
-    Logger::logg("Buscando la cola de respuesta"+ss.str());
-    if( (colaEntradaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_RESP),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de respuesta nro "+ss.str());
-        exit(1);   
-    }
-        
-    Mensaje msg;
-    msg.destinatario=1;
-    msg.mensaje=getpid();
-    
-    Logger::logg("Enviando mensaje");
-    if(msgsnd(colaEntrada,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
-        Logger::loggError("Error al escribir el mensaje "+ss.str());
-        exit(1);
-    }
-    
-    Logger::logg("Esperando respuesta");
-    if(msgrcv(colaEntradaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
-        Logger::loggError("Error al leer el mensaje ");
-        exit(1);
-    }
-    
-    if(msg.mensaje==MENSAJE_NO_PASAR){
-        Logger::logg("El museo esta cerrado me voy");
-    }
-        
-        
+        Mensaje msg;
+        msg.destinatario=1;
+        msg.mensaje=getpid();
+
+        Logger::logg("Enviando mensaje");
+        if(msgsnd(colaEntrada,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
+            Logger::loggError("Error al escribir el mensaje "+ss.str());
+            exit(1);
+        }
+
+        Logger::logg("Esperando respuesta");
+        if(msgrcv(colaEntradaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
+            Logger::loggError("Error al leer el mensaje ");
+            exit(1);
+        }
+
+        if(msg.mensaje==MENSAJE_NO_PASAR){
+            Logger::logg("El museo esta cerrado me voy");
+        }
+
+
         return (msg.mensaje==MENSAJE_PASAR);
         
     }
@@ -86,43 +95,27 @@ using namespace std;
     
     //true pudo salir, false no
     bool InterfazPuerta::salir(int numeroPuerta){
-    Mensaje msg;
-    msg.destinatario=1;
-    msg.mensaje=getpid();
+        Mensaje msg;
+        msg.destinatario=numeroPuerta;
+        msg.mensaje=getpid();
 
-    
-    stringstream ss;
-    ss<<numeroPuerta;
+        stringstream ss;
+        ss<<numeroPuerta;
 
-    int colaSalida;
-    int colaSalidaRespuesta;
-    //busco las colas de salida
-    Logger::logg("Buscando la cola de salida");
-    if( (colaSalida = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de entrada nro " +ss.str());
-        exit(1);   
-    }
+        msg.mensaje=getpid();
+        Logger::logg("Enviando mensaje para salir");
+        if(msgsnd(colaSalida,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
+            Logger::loggError("Error al escribir el mensaje "+ss.str());
+            exit(1);
+        }
 
-    Logger::logg("Buscando la cola de respuesta");
-    if( (colaSalidaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_RESP),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de respuesta nro "+ss.str());
-        exit(1);   
-    }
-        
-    msg.mensaje=getpid();
-    Logger::logg("Enviando mensaje para salir");
-    if(msgsnd(colaSalida,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
-        Logger::loggError("Error al escribir el mensaje "+ss.str());
-        exit(1);
-    }
-    
-    Logger::logg("Esperando respuesta");
-    if(msgrcv(colaSalidaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
-        Logger::loggError("Error al leer el mensaje ");
-        exit(1);
-    }
-    
-    Logger::logg("Sali del museo");
+        Logger::logg("Esperando respuesta");
+        if(msgrcv(colaSalidaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
+            Logger::loggError("Error al leer el mensaje ");
+            exit(1);
+        }
+
+        Logger::logg("Sali del museo");
 
         return false;
     }
