@@ -85,8 +85,8 @@ int main(int argc, char** argv) {
         int resultado=MENSAJE_PASAR;
         
         Logger::logg("Esperando persona");
-        Mensaje msg;
-        if( (msgrcv(colaEntrada,&msg,sizeof(Mensaje)-sizeof(long),numero,0)) == -1){
+        MensajeAPuerta msg;
+        if( (msgrcv(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero,0)) == -1){
             Logger::loggError("Error leer mensaje de entrada");
             exit(1);   
         }
@@ -164,7 +164,7 @@ int main(int argc, char** argv) {
         
         msg.destinatario  = msg.mensaje;
         msg.mensaje = resultado;
-        if(msgsnd(colaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
+        if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error responder a la persona");
             exit(1);   
         }

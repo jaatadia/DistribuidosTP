@@ -8,13 +8,14 @@
 #ifndef INTERFAZPERSONAENTRADA_H
 #define	INTERFAZPERSONAENTRADA_H
 
+#include "Simulador.h"
 class InterfazPersonaEntrada {
 public:
     InterfazPersonaEntrada();
     virtual ~InterfazPersonaEntrada();
     
     //toma una persona, devuelve un struct con el id de la persona y el tipo
-    struct Persona tomarPersona();
+    void tomarPersona(Persona& persona);
     
     //responde a la persona con el id "id", si puede pasar o no
     void responder(int idPersona,bool puedePasar);

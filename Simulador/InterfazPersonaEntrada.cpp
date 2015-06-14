@@ -13,7 +13,7 @@ InterfazPersonaEntrada::InterfazPersonaEntrada() {
 InterfazPersonaEntrada::~InterfazPersonaEntrada() {
 }
 
-struct Persona InterfazPersonaEntrada::tomarPersona(){
+void InterfazPersonaEntrada::tomarPersona(Persona& persona){
     
 }
     

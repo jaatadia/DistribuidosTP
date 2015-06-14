@@ -8,14 +8,15 @@
 #ifndef INTERFAZPUERTA_H
 #define	INTERFAZPUERTA_H
 
+#include "Simulador.h"
 class InterfazPuerta {
 private:
     int colaEntrada;
     int colaEntradaRespuesta;
     int colaSalida;
     int colaSalidaRespuesta;
-    MensajeAPuerta entrar(int numeroPuerta,int tipo,int tarjeta);
-    MensajeAPuerta salir(int numeroPuerta,int tipo,int pertenencias);
+    void entrar(int numeroPuerta,int tipo,int tarjeta,MensajeAPuerta& mensaje);
+    void salir(int numeroPuerta,int tipo,int pertenencias,MensajeAPuerta& mensaje);
     
 public:
     

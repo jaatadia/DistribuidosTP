@@ -51,7 +51,7 @@ using namespace std;
  }
 
     
-    MensajeAPuerta InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta){
+   void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){
 
         stringstream ss;
         ss<<numeroPuerta;
@@ -67,29 +67,28 @@ using namespace std;
         }
 
         Logger::logg("Esperando respuesta");
-        if(msgrcv(colaEntradaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
+        if(msgrcv(colaEntradaRespuesta,&mensaje,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
 
-        if(msg.mensaje==MENSAJE_NO_PASAR){
+        if(mensaje.mensaje==MENSAJE_NO_PASAR){
             Logger::logg("El museo esta cerrado me voy");
         }
-
-
-        return (msg.mensaje==MENSAJE_PASAR);
         
     }
     
     // devuelve si pudo entrar o no 
     bool InterfazPuerta::entrar(int numeroPuerta){
-        MensajeAPuerta msg = entrar(numeroPuerta,TIPO_NORMAL,0);
+        MensajeAPuerta msg;
+        entrar(numeroPuerta,TIPO_NORMAL,0,msg);
         return (msg.mensaje==MENSAJE_PASAR);
     }
     
     //devuelve -1 si no pudo entrar, o la tarjeta en caso contrario
     int InterfazPuerta::entrarInvestigador(int numeroPuerta,int pertenencias){
-        MensajeAPuerta msg = entrar(numeroPuerta,TIPO_INVESTIGADOR,pertenencias);
+        MensajeAPuerta msg;
+        entrar(numeroPuerta,TIPO_INVESTIGADOR,pertenencias,msg);
         return msg.pertenenciasOTarjeta;
     }
     
@@ -100,7 +99,7 @@ using namespace std;
     }
     
     
-    MensajeAPuerta InterfazPuerta::salir(int numeroPuerta,int tipo,int pertenencias){
+    void InterfazPuerta::salir(int numeroPuerta,int tipo,int pertenencias,MensajeAPuerta& mensaje){
         MensajeAPuerta msg;
         msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
@@ -118,26 +117,24 @@ using namespace std;
         }
 
         Logger::logg("Esperando respuesta");
-        if(msgrcv(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
+        if(msgrcv(colaSalidaRespuesta,&mensaje,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
-
-        Logger::logg("Sali del museo");
-
-        return false;
     }
     
     
     //true pudo salir, false no
     bool InterfazPuerta::salir(int numeroPuerta){
-        MensajeAPuerta msg = salir(numeroPuerta,TIPO_NORMAL,0);
+        MensajeAPuerta msg;
+        salir(numeroPuerta,TIPO_NORMAL,0,msg);
         return (msg.mensaje==MENSAJE_PASAR);
     }
     
     //devuelve -1 en caso de que no sea la puerta correcta o las pertenencias
     int InterfazPuerta::salirInvestigador(int numeroPuerta,int tarjeta){
-        MensajeAPuerta msg = entrar(numeroPuerta,TIPO_NORMAL,0);
+        MensajeAPuerta msg;
+        entrar(numeroPuerta,TIPO_NORMAL,0,msg);
         return msg.pertenenciasOTarjeta;
     }
     
