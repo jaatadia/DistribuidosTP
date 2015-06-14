@@ -14,6 +14,8 @@ private:
     int colaEntradaRespuesta;
     int colaSalida;
     int colaSalidaRespuesta;
+    MensajeAPuerta entrar(int numeroPuerta,int tipo,int tarjeta);
+    MensajeAPuerta salir(int numeroPuerta,int tipo,int pertenencias);
     
 public:
     

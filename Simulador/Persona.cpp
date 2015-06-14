@@ -29,17 +29,17 @@ int  colaSalidaRespuesta;
 
 void myHandler(int signal){
     Logger::logg("Me avisaron que salga");
-    Mensaje msg;
+    MensajeAPuerta msg;
     msg.destinatario=1;
     msg.mensaje=getpid();
     Logger::logg("Enviando mensaje para salir");
-    if(msgsnd(colaSalida,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
+    if(msgsnd(colaSalida,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
         Logger::loggError("Error al escribir el mensaje ");
         exit(1);
     }
     
     Logger::logg("Esperando respuesta");
-    if(msgrcv(colaSalidaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
+    if(msgrcv(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
         Logger::loggError("Error al leer el mensaje ");
         exit(1);
     }

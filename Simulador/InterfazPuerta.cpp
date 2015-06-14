@@ -50,24 +50,24 @@ using namespace std;
         }
  }
 
-    // devuelve si pudo entrar o no 
-    bool InterfazPuerta::entrar(int numeroPuerta){
+    
+    MensajeAPuerta InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta){
 
         stringstream ss;
         ss<<numeroPuerta;
 
-        Mensaje msg;
+        MensajeAPuerta msg;
         msg.destinatario=1;
         msg.mensaje=getpid();
 
         Logger::logg("Enviando mensaje");
-        if(msgsnd(colaEntrada,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
+        if(msgsnd(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje "+ss.str());
             exit(1);
         }
 
         Logger::logg("Esperando respuesta");
-        if(msgrcv(colaEntradaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
+        if(msgrcv(colaEntradaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
@@ -81,10 +81,16 @@ using namespace std;
         
     }
     
+    // devuelve si pudo entrar o no 
+    bool InterfazPuerta::entrar(int numeroPuerta){
+        MensajeAPuerta msg = entrar(numeroPuerta,TIPO_NORMAL,0);
+        return (msg.mensaje==MENSAJE_PASAR);
+    }
+    
     //devuelve -1 si no pudo entrar, o la tarjeta en caso contrario
     int InterfazPuerta::entrarInvestigador(int numeroPuerta,int pertenencias){
-        //TODO
-        return -1;
+        MensajeAPuerta msg = entrar(numeroPuerta,TIPO_INVESTIGADOR,pertenencias);
+        return msg.pertenenciasOTarjeta;
     }
     
     //pasea por tanto tiempo o hasta que le digan que salga
@@ -93,24 +99,26 @@ using namespace std;
         usleep(milisegundos);
     }
     
-    //true pudo salir, false no
-    bool InterfazPuerta::salir(int numeroPuerta){
-        Mensaje msg;
+    
+    MensajeAPuerta InterfazPuerta::salir(int numeroPuerta,int tipo,int pertenencias){
+        MensajeAPuerta msg;
         msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
+        msg.tipo=tipo;
+        msg.pertenenciasOTarjeta=pertenencias;
 
         stringstream ss;
         ss<<numeroPuerta;
 
         msg.mensaje=getpid();
         Logger::logg("Enviando mensaje para salir");
-        if(msgsnd(colaSalida,&msg,sizeof(Mensaje)-sizeof(long),0)==-1){
+        if(msgsnd(colaSalida,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje "+ss.str());
             exit(1);
         }
 
         Logger::logg("Esperando respuesta");
-        if(msgrcv(colaSalidaRespuesta,&msg,sizeof(Mensaje)-sizeof(long),getpid(),0)==-1){
+        if(msgrcv(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
@@ -121,10 +129,16 @@ using namespace std;
     }
     
     
+    //true pudo salir, false no
+    bool InterfazPuerta::salir(int numeroPuerta){
+        MensajeAPuerta msg = salir(numeroPuerta,TIPO_NORMAL,0);
+        return (msg.mensaje==MENSAJE_PASAR);
+    }
+    
     //devuelve -1 en caso de que no sea la puerta correcta o las pertenencias
     int InterfazPuerta::salirInvestigador(int numeroPuerta,int tarjeta){
-        //TODO
-        return false;
+        MensajeAPuerta msg = entrar(numeroPuerta,TIPO_NORMAL,0);
+        return msg.pertenenciasOTarjeta;
     }
     
     InterfazPuerta::~InterfazPuerta(){

@@ -76,9 +76,9 @@ int main(int argc, char** argv) {
     }
     
     if(myMuseum->personasAdentro!=0){
-        Mensaje msg;
+        MensajeAPuerta msg;
         for (int i=0;i<myMuseum->personasAdentro;i++){
-            msgsnd(colaPer,&msg,sizeof(Mensaje)-sizeof(long),0);
+            msgsnd(colaPer,&msg,sizeof(MensajeAPuerta)-sizeof(long),0);
         }
     }else{
         int childpid;

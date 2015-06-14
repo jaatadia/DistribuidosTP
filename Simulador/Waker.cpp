@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
         exit(1);   
     }
     
-    Mensaje msg;
-    if(msgrcv(cola,&msg,sizeof(Mensaje)-sizeof(long),0,0)==-1){
+    MensajeAPuerta msg;
+    if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0,0)==-1){
         Logger::loggError("No recibi mensaje de terminacion");
     }else{
         Logger::logg("Recibi mensaje de terminacion, terminando proceso padre");
