@@ -72,6 +72,13 @@ typedef struct {
     int pertenenciasOTarjeta;
 } MensajeAPuerta;
 
+#define PERSONA 1
+#define INVESTIGADOR 2
+typedef struct {
+    int idPersona;
+    int tipoPersona;
+} Persona;
+
 
 #endif	/* SIMULADOR_H */
 
