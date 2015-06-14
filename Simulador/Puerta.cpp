@@ -70,13 +70,13 @@ int main(int argc, char** argv) {
     //busco las colas
     Logger::logg("Buscando la cola de entrada");
     int colaEntrada,colaRespuesta;
-    if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,PUERTA_FILA + DESP * numero),PERMISOS)) == -1){
+    if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,PUERTA_FILA),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de entrada");
         exit(1);   
     }
 
     Logger::logg("Buscando la cola de respuesta");
-    if( (colaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_RESP + DESP * numero),PERMISOS)) == -1){
+    if( (colaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_RESP),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de respuesta");
         exit(1);   
     }
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
         
         Logger::logg("Esperando persona");
         Mensaje msg;
-        if( (msgrcv(colaEntrada,&msg,sizeof(Mensaje)-sizeof(long),0,0)) == -1){
+        if( (msgrcv(colaEntrada,&msg,sizeof(Mensaje)-sizeof(long),numero,0)) == -1){
             Logger::loggError("Error leer mensaje de entrada");
             exit(1);   
         }
