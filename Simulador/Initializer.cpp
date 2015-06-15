@@ -200,57 +200,34 @@ void crearPuertas(){
           exit(1);   
         }
         
-        if (creasem(MUTEX_CONTADOR_FILA_PRIORITARIA+(i-1)*DESP)== -1){
+        if (creasem(MUTEX_CONTADOR_COLAS_PUERTAS+(i-1)*DESP)== -1){
           Logger::loggError("Error al crear el semaforo de exclusion mutua del contador de personas esperando para una puerta en la fila prioritaria");
           exit(1);   
         }
         
-        if (creasem(MUTEX_CONTADOR_FILA_NORMAL+(i-1)*DESP)== -1){
-          Logger::loggError("Error al crear el semaforo de exclusion mutua del contador de personas esperando para una puerta en la fila normal");
-          exit(1);   
-        }
         
         Logger::logg("Creando la memoria compartida para la puerta");
         int shmid;
-        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_FILA_NORMAL+(i-1)*DESP), sizeof(int),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1 ){
+        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_COLAS_PUERTAS+(i-1)*DESP), sizeof(ColasPuertas),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1 ){
             Logger::loggError("Error al crear la memoria compartida");
             exit(1);   
         }
 
         Logger::logg("Uniendose a la memoria compartida");
-        int* contador;
-        if ( (contador = (int*) shmat(shmid,NULL,0)) == (int*) -1 ){
+        ColasPuertas* contador;
+        if ( (contador = (ColasPuertas*) shmat(shmid,NULL,0)) == (ColasPuertas*) -1 ){
             Logger::loggError("Error al atachearse a la memoria compartida");
             exit(1);   
         }
 
-        *contador =  0;
+        contador->investigadores =  0;
+        contador->personasNormales =  0;
 
         Logger::logg("Desuniendose de la memoria compartida");
         if(shmdt(contador)==-1){
             Logger::loggError("Error al desatachearse de la memoria compartida");
             exit(1);   
         }    
-        
-        Logger::logg("Creando la memoria compartida prioritaria para la puerta");
-        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_FILA_PRIORITARIA+(i-1)*DESP), sizeof(int),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1 ){
-            Logger::loggError("Error al crear la memoria compartida");
-            exit(1);   
-        }
-
-        Logger::logg("Uniendose a la memoria compartida");
-        if ( (contador = (int*) shmat(shmid,NULL,0)) == (int*) -1 ){
-            Logger::loggError("Error al atachearse a la memoria compartida");
-            exit(1);   
-        }
-
-        *contador =  0;
-
-        Logger::logg("Desuniendose de la memoria compartida");
-        if(shmdt(contador)==-1){
-            Logger::loggError("Error al desatachearse de la memoria compartida");
-            exit(1);   
-        }
         
         //TODO Preguntar sobre el pasaje del parametro
         Logger::logg("Creando el proceso puerta de salida");

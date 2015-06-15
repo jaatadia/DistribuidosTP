@@ -54,12 +54,15 @@
 #define PUERTA_SALIDA_FILA_PRIORITARIA 109 
 #define PUERTA_SALIDA_RESP 110 
 
-#define DESP 5
+#define DESP 3
 #define MUTEX_PUERTA_ESPERANDO 111 //para la puerta i es MUTEX_PUERTA_ESPERANDO + (i-1)*DESP
-#define MUTEX_CONTADOR_FILA_PRIORITARIA 112
-#define CONTADOR_FILA_PRIORITARIA 113
-#define MUTEX_CONTADOR_FILA_NORMAL 114
-#define CONTADOR_FILA_NORMAL 115
+#define MUTEX_CONTADOR_COLAS_PUERTAS 112
+#define CONTADOR_COLAS_PUERTAS 113
+
+typedef struct {
+    int personasNormales;
+    int investigadores;
+} ColasPuertas;
 
 
 typedef struct {

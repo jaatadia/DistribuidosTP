@@ -171,46 +171,28 @@ using namespace std;
 
     void InterfazPuerta::aumentarEsperando(bool normal,int nroPuerta){
         int puertaEsperando = getsem(MUTEX_PUERTA_ESPERANDO+(nroPuerta-1)*DESP);
-        int colaNormal = getsem(MUTEX_CONTADOR_FILA_NORMAL+(nroPuerta-1)*DESP);
-        int colaPrioritaria = getsem(MUTEX_CONTADOR_FILA_PRIORITARIA+(nroPuerta-1)*DESP);
+        int colas = getsem(MUTEX_CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP);
         
         Logger::logg("buscando la memoria compartida para la puerta");
         int shmid;
-        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_FILA_NORMAL+(nroPuerta-1)*DESP), sizeof(int),PERMISOS)) == -1 ){
+        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP), sizeof(ColasPuertas),PERMISOS)) == -1 ){
             Logger::loggError("Error al obtener la memoria compartida");
             exit(1);   
         }
 
         Logger::logg("Uniendose a la memoria compartida");
-        int* contadorNormal;
-        if ( (contadorNormal = (int*) shmat(shmid,NULL,0)) == (int*) -1 ){
+        ColasPuertas* contador;
+        if ( (contador = (ColasPuertas*) shmat(shmid,NULL,0)) == (ColasPuertas*) -1 ){
             Logger::loggError("Error al atachearse a la memoria compartida");
             exit(1);   
         }
 
-        Logger::logg("buscando la memoria compartida para la puerta");
-        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_FILA_PRIORITARIA+(nroPuerta-1)*DESP), sizeof(int),PERMISOS)) == -1 ){
-            Logger::loggError("Error al obtener la memoria compartida");
-            exit(1);   
-        }
-
-        Logger::logg("Uniendose a la memoria compartida");
-        int* contadorPrioritario;
-        if ( (contadorPrioritario = (int*) shmat(shmid,NULL,0)) == (int*) -1 ){
-            Logger::loggError("Error al atachearse a la memoria compartida");
-            exit(1);   
-        }
-
-        if(p(colaNormal)==-1){
-            Logger::loggError("Error al obtener el mutex de la cola normal");
+        if(p(colas)==-1){
+            Logger::loggError("Error al obtener el mutex de el contador de las colas");
             exit(1);   
         }
         
-        if(p(colaPrioritaria)==-1){
-            Logger::loggError("Error al obtener el mutex de la cola prioritaria");
-            exit(1);   
-        }
-        if((*contadorNormal==0)&&(*contadorPrioritario==0)){
+        if((contador->personasNormales==0)&&(contador->investigadores==0)){
             if(v(puertaEsperando)==-1){
                 Logger::loggError("Error al liberar la puerta de la espera");
                 exit(1);   
@@ -218,21 +200,15 @@ using namespace std;
         }
         
         if(normal){
-            *contadorNormal=*contadorNormal+1;
+            contador->personasNormales=contador->personasNormales+1;
         }else{
-            *contadorPrioritario=*contadorPrioritario+1;
+            contador->investigadores=contador->investigadores+1;
         }
         
         Logger::logg("Desuniendose de la memoria compartida");
-        if(shmdt(contadorNormal)==-1){
+        if(shmdt(contador)==-1){
             Logger::loggError("Error al desatachearse de la memoria compartida");
             exit(1);   
         }    
-        
-        Logger::logg("Desuniendose de la memoria compartida");
-        if(shmdt(contadorPrioritario)==-1){
-            Logger::loggError("Error al desatachearse de la memoria compartida");
-            exit(1);   
-        }
         
     }
