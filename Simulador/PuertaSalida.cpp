@@ -8,14 +8,15 @@
 #include <stdlib.h>
 #include <iostream>
 #include <sys/ipc.h>
-#include <sys/shm.h>
 #include <sys/msg.h>
 #include <sys/types.h>
+#include <sys/shm.h>
 #include <unistd.h>
 #include <sstream>
 
 #include "Logger.h"
 #include "Simulador.h"
+#include "InterfazPersonaSalida.h"
 #include "semaforo.h"
 
 using namespace std;
@@ -66,7 +67,7 @@ int main(int argc, char** argv) {
         Logger::loggError("Error al atachearse a la memoria compartida");
         exit(1);   
     }
-   
+   /*
     //busco las colas
     Logger::logg("Buscando la cola de entrada");
     int colaEntrada,colaRespuesta;
@@ -80,16 +81,17 @@ int main(int argc, char** argv) {
         Logger::loggError("Error al encontrar la cola de respuesta");
         exit(1);   
     }
+    * */
   
     while(true){
-        
+        /*
         Logger::logg("Esperando persona");
         MensajeAPuerta msg;
         if( (msgrcv(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero,0)) == -1){
             Logger::loggError("Error al leer mensaje de entrada");
             exit(1);   
         }
-        
+        */
         if(p(mutexEstado)){
             Logger::loggError("Error al pedir el mutex de estado");
             exit(1);
@@ -111,13 +113,14 @@ int main(int argc, char** argv) {
                 exit(1);   
             }
         }
-        
+        /*
         msg.destinatario  = msg.mensaje;
         msg.mensaje = MENSAJE_PASAR;
         if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error responder a la persona");
             exit(1);   
         }
+        */
         
         //esto puede generar un deadlock 
         //verifico si cerro el museo y salio la gente

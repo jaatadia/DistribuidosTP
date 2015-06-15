@@ -60,7 +60,7 @@ using namespace std;
  }
 
     
-   void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){
+   void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){ //TODO no usa el tipo ni la tarjeta
 
         stringstream ss;
         ss<<numeroPuerta;

@@ -8,6 +8,13 @@
 #ifndef INTERFAZPERSONASALIDA_H
 #define	INTERFAZPERSONASALIDA_H
 
+#define PERSONA 1
+#define INVESTIGADOR 2
+typedef struct {
+    int idPersona;
+    int tipoPersona;
+} Persona; //TODO esta repetido en entrada
+
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -30,6 +37,10 @@ public:
     void responderInvestigador(int idInvestigador,int pertenencias);
     
 private:
+    int colaEntrada;
+    int colaRespuesta;
+    int numero; //numero de la puerta de salida
+    MensajeAPuerta request;
 
 };
 

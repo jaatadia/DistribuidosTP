@@ -43,7 +43,7 @@ void InterfazPersonaEntrada::tomarPersona(Persona& persona){
     
 }
     
-void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
+void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){ //TODO se responde a idPersona o al destinatario del request?
     
     MensajeAPuerta msg;
     msg.destinatario  = request.mensaje;
@@ -54,7 +54,7 @@ void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
     }
 }
     
-void InterfazPersonaEntrada::responderInvestigador(int idInvestigador,int tarjeta){
+void InterfazPersonaEntrada::responderInvestigador(int idInvestigador,int tarjeta){ //TODO se responde a idInvestigador o al destinatario del request?
     
     MensajeAPuerta msg;
     msg.destinatario  = request.mensaje;
