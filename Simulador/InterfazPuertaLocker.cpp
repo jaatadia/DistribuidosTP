@@ -10,6 +10,8 @@
 #include "InterfazPuertaLocker.h"
 #include "Logger.h"
 #include <stdlib.h>
+#include "Simulador.h"
+
 InterfazPuertaLocker::InterfazPuertaLocker() {
     Logger::logg("Buscando la cola de recepcion del Locker");
     if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER),PERMISOS)) == -1){
@@ -17,13 +19,20 @@ InterfazPuertaLocker::InterfazPuertaLocker() {
         exit(1);   
     }
     
+    
     Logger::logg("Buscando la cola de respuesta del Locker");
-    if( (colaRespuesta = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA),PERMISOS)) == -1){
+    if( (colaRespuestaDeposito = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_DEPOSITO),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de respuesta del Locker");
         exit(1);   
     }
     
+        Logger::logg("Buscando la cola de respuesta del Locker");
+    if( (colaRespuestaExtraccion = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_EXTRACCION),PERMISOS)) == -1){
+        Logger::loggError("Error al encontrar la cola de respuesta del Locker");
+        exit(1);   
+    }
     //TODO Agregar una tercera cola para leer respuestas de un tipo de un lado y otras del otro (crearla en el initializer)
+}
 
 void InterfazPuertaLocker::recivirPedido(Pedido& pedido){
     MensajeAPuerta msg;
@@ -41,7 +50,7 @@ void InterfazPuertaLocker::responderDeposito(int puerta, int tarjeta){
     msg.tipo=TIPO_DEPOSITO;
     msg.mensaje= (tarjeta!=-1) ? MENSAJE_PASAR:MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta=tarjeta;
-    if( (msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
+    if( (msgsnd(colaRespuestaDeposito,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
         Logger::loggError("Error al responder el mensaje de deposito");
         exit(1);   
     }
@@ -52,7 +61,7 @@ void InterfazPuertaLocker::responderExtraccion(int puerta, int pertenencia){
     msg.tipo=TIPO_RETIRO;
     msg.mensaje= (pertenencia!=-1) ? MENSAJE_PASAR:MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta=pertenencia;
-    if( (msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
+    if( (msgsnd(colaRespuestaExtraccion,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
         Logger::loggError("Error al responder el mensaje de extraccion");
         exit(1);   
     }

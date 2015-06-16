@@ -20,7 +20,8 @@ public:
     virtual ~InterfazPuertaLocker();
 private:
     int colaEntrada;
-    int colaRespuesta;
+    int colaRespuestaDeposito;
+    int colaRespuestaExtraccion;
 };
 
 #endif	/* INTERFAZPUERTALOCKER_H */

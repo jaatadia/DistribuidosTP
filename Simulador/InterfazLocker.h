@@ -17,7 +17,8 @@ public:
 private:
     int nroPuerta;
     int colaEntrada;
-    int colaRespuesta;
+    int colaRespuestaDeposito;
+    int colaRespuestaExtraccion;
 };
 
 #endif	/* INTERFAZLOCKER_H */

@@ -21,7 +21,13 @@ InterfazLocker::InterfazLocker(int nroPuerta) {
     }
     
     Logger::logg("Buscando la cola de respuesta del Locker");
-    if( (colaRespuesta = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA),PERMISOS)) == -1){
+    if( (colaRespuestaDeposito = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_DEPOSITO),PERMISOS)) == -1){
+        Logger::loggError("Error al encontrar la cola de respuesta del Locker");
+        exit(1);   
+    }
+    
+    Logger::logg("Buscando la cola de respuesta del Locker");
+    if( (colaRespuestaExtraccion = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_EXTRACCION),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de respuesta del Locker");
         exit(1);   
     }
@@ -39,7 +45,7 @@ int InterfazLocker::guardarPertenencia(int pertenencia){
         exit(1);   
     }
     
-    if(msgrcv(colaRespuesta,&msg,sizeof(msg)-sizeof(long),nroPuerta,0)==-1){
+    if(msgrcv(colaRespuestaDeposito,&msg,sizeof(msg)-sizeof(long),nroPuerta,0)==-1){
         Logger::loggError("Error al recibir respuesta");
         exit(1);   
     }
@@ -56,7 +62,7 @@ int InterfazLocker::tomarPertenencia(int tarjeta){
         exit(1);   
     }
     
-    if(msgrcv(colaRespuesta,&msg,sizeof(msg)-sizeof(long),nroPuerta,0)==-1){
+    if(msgrcv(colaRespuestaExtraccion,&msg,sizeof(msg)-sizeof(long),nroPuerta,0)==-1){
         Logger::loggError("Error al recibir respuesta");
         exit(1);   
     }
