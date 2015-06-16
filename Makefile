@@ -10,7 +10,7 @@ OBJECTS = $(PROYECT)/Objects
 PROCESOS = Initializer Puerta PuertaSalida Destroyer Cerrar Abrir Waker Persona
 SRC = ./Simulador
 
-OBJETOS = semaforo.o Logger.o Parser.o InterfazPuerta.o InterfazPersonaEntrada.o InterfazPersonaSalida.o InterfazMuseoEntrada.o InterfazMuseoSalida.o InterfazMuseoAdministrador.o InterfazPuertaLocker.o
+OBJETOS = semaforo.o Logger.o Parser.o InterfazPuerta.o InterfazPersonaEntrada.o InterfazPersonaSalida.o InterfazMuseoEntrada.o InterfazMuseoSalida.o InterfazMuseoAdministrador.o InterfazPuertaLocker.o InterfazLocker.o
 
 #parametros para la compilacion del proceso initializer
 OBJETOS_INIT = semaforo.o Logger.o Parser.o
@@ -28,12 +28,12 @@ DEST_SOURCE = Destroyer.cpp
 DEST_EXE = Destroyer
 
 #parametros para la compilacion del proceso puerta
-OBJETOS_PUERTA = semaforo.o Logger.o InterfazPersonaEntrada.o InterfazMuseoEntrada.o
+OBJETOS_PUERTA = semaforo.o Logger.o InterfazPersonaEntrada.o InterfazMuseoEntrada.o InterfazLocker.o
 PUERTA_SOURCE = Puerta.cpp
 PUERTA_EXE = Puerta
 
 #parametros para la compilacion del proceso puertaSalida
-OBJETOS_PUERTA_SALIDA = semaforo.o Logger.o InterfazMuseoSalida.o InterfazPersonaSalida.o
+OBJETOS_PUERTA_SALIDA = semaforo.o Logger.o InterfazMuseoSalida.o InterfazPersonaSalida.o InterfazLocker.o
 PUERTA_SALIDA_SOURCE = PuertaSalida.cpp
 PUERTA_SALIDA_EXE = PuertaSalida
 
