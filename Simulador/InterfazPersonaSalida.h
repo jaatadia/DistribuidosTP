@@ -21,6 +21,7 @@ typedef struct {
 #include <sys/types.h>
 #include "Simulador.h"
 #include "Logger.h"
+#include "semaforo.h"
 
 class InterfazPersonaSalida {
 public:
@@ -40,8 +41,8 @@ private:
     int colaEntrada;
     int colaRespuesta;
     int numero; //numero de la puerta de salida
-    MensajeAPuerta request;
-
+    //MensajeAPuerta request;
+    void disminuirEsperando(bool normal,int nroPuerta);
 };
 
 #endif	/* INTERFAZPERSONASALIDA_H */

@@ -40,7 +40,7 @@ private:
         int colaEntrada;
         int colaRespuesta;
         int numero; //numero de la puerta de entrada
-        MensajeAPuerta request;
+        //MensajeAPuerta request;
 
 };
 

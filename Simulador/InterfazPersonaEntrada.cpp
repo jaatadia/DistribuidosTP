@@ -36,17 +36,17 @@ void InterfazPersonaEntrada::tomarPersona(Persona& persona){
         Logger::loggError("Error leer mensaje de entrada");
         exit(1);   
     }
-    request = msg; 
+    //request = msg; 
     
     persona.idPersona = msg.mensaje;
     persona.tipoPersona = msg.tipo;
     
 }
     
-void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){ //TODO se responde a idPersona o al destinatario del request?
+void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
     
     MensajeAPuerta msg;
-    msg.destinatario  = request.mensaje;
+    msg.destinatario  = idPersona;
     msg.mensaje = (puedePasar) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
         Logger::loggError("Error responder a la persona");
@@ -54,10 +54,9 @@ void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){ //TODO se
     }
 }
     
-void InterfazPersonaEntrada::responderInvestigador(int idInvestigador,int tarjeta){ //TODO se responde a idInvestigador o al destinatario del request?
-    
+void InterfazPersonaEntrada::responderInvestigador(int idInvestigador,int tarjeta){ 
     MensajeAPuerta msg;
-    msg.destinatario  = request.mensaje;
+    msg.destinatario  = idInvestigador;
     msg.mensaje = (tarjeta) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta = tarjeta;
     if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){

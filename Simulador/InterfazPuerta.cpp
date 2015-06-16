@@ -170,9 +170,11 @@ using namespace std;
     }
 
     void InterfazPuerta::aumentarEsperando(bool normal,int nroPuerta){
-        int puertaEsperando = getsem(MUTEX_PUERTA_ESPERANDO+(nroPuerta-1)*DESP);
-        int colas = getsem(MUTEX_CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP);
         
+        //obtiene mutex
+        int mutexPuertaEsperando = getsem(MUTEX_PUERTA_ESPERANDO+(nroPuerta-1)*DESP);
+        int mutexColas = getsem(MUTEX_CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP);
+                
         Logger::logg("buscando la memoria compartida para la puerta");
         int shmid;
         if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP), sizeof(ColasPuertas),PERMISOS)) == -1 ){
@@ -187,13 +189,13 @@ using namespace std;
             exit(1);   
         }
 
-        if(p(colas)==-1){
+        if(p(mutexColas)==-1){
             Logger::loggError("Error al obtener el mutex de el contador de las colas");
             exit(1);   
         }
         
         if((contador->personasNormales==0)&&(contador->investigadores==0)){
-            if(v(puertaEsperando)==-1){
+            if(v(mutexPuertaEsperando)==-1){
                 Logger::loggError("Error al liberar la puerta de la espera");
                 exit(1);   
             }
