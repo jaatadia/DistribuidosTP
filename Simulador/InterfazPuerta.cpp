@@ -199,7 +199,7 @@ using namespace std;
                 Logger::loggError("Error al liberar la puerta de la espera");
                 exit(1);   
             }
-        }
+        } //TODO no hay v(mutexColas) ??
         
         if(normal){
             contador->personasNormales=contador->personasNormales+1;

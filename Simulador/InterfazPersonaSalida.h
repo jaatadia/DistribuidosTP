@@ -19,13 +19,14 @@ typedef struct {
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <sys/types.h>
+#include <sys/shm.h>
 #include "Simulador.h"
 #include "Logger.h"
 #include "semaforo.h"
 
 class InterfazPersonaSalida {
 public:
-    InterfazPersonaSalida();
+    InterfazPersonaSalida(int numeroPuerta);
     virtual ~InterfazPersonaSalida();
     
     //toma una persona, devuelve un struct con el id de la persona y el tipo
@@ -38,11 +39,14 @@ public:
     void responderInvestigador(int idInvestigador,int pertenencias);
     
 private:
-    int colaEntrada;
-    int colaRespuesta;
+    int colaSalida;
+    int colaSalidaPrioritaria;
+    int colaSalidaRespuesta;
+    int mutexPuertaEsperando;
+    int mutexColas;
+    ColasPuertas* contador;
     int numero; //numero de la puerta de salida
     //MensajeAPuerta request;
-    void disminuirEsperando(bool normal,int nroPuerta);
 };
 
 #endif	/* INTERFAZPERSONASALIDA_H */
