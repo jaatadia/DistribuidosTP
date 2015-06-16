@@ -300,6 +300,33 @@ void crearClientes(){
     
 }
 
+void crearLocker(){
+    
+    int cola;
+    Logger::logg(string("Creando cola para recepcion de pedidos del locker"));
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola para el locker");
+        exit(1);   
+    }
+    
+    Logger::logg(string("Creando cola para respuesta de pedidos del locker"));
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola de respuesta para el locker");
+        exit(1);   
+    }
+    
+    int childpid;
+    if ((childpid=fork())<0){
+        Logger::loggError(string("Error al crear el locker"));
+        exit(1);   
+    }else if (childpid == 0){
+        execlp(PATH_LOCKER_EXEC,NAME_LOCKER_EXEC,(char*)NULL);
+        Logger::loggError(string("Error al cargar la imagen de ejecutable en la locker "));
+        exit(1);
+    }
+    
+}
+
 
 #define INITIALIZER_ID "Initializer"
 int main(int argc, char** argv) {
@@ -310,6 +337,7 @@ int main(int argc, char** argv) {
     crearMuseo();
     crearPuertas();
     crearClientes();
+    crearLocker();
     
     Logger::closeLogger();
     

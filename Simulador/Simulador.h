@@ -28,6 +28,9 @@
 #define PATH_PERSONA_EXEC "./Persona"
 #define NAME_PERSONA_EXEC "Persona"
 
+#define PATH_LOCKER_EXEC "./Locker"
+#define NAME_LOCKER_EXEC "Locker"
+
 #define PATH_WAKER_EXEC "./Waker"
 #define NAME_WAKER_EXEC "Waker"
 
@@ -54,10 +57,22 @@
 #define PUERTA_SALIDA_FILA_PRIORITARIA 109 
 #define PUERTA_SALIDA_RESP 110 
 
+#define COLA_LOCKER 111
+#define COLA_LOCKER_RESPUESTA 112
+
 #define DESP 3
-#define MUTEX_PUERTA_ESPERANDO 111 //para la puerta i es MUTEX_PUERTA_ESPERANDO + (i-1)*DESP
-#define MUTEX_CONTADOR_COLAS_PUERTAS 112
-#define CONTADOR_COLAS_PUERTAS 113
+#define MUTEX_PUERTA_ESPERANDO 113 //para la puerta i es MUTEX_PUERTA_ESPERANDO + (i-1)*DESP
+#define MUTEX_CONTADOR_COLAS_PUERTAS 114
+#define CONTADOR_COLAS_PUERTAS 115
+
+
+#define TIPO_DEPOSITO 0
+#define TIPO_RETIRO 1
+typedef struct{
+    int tipo;
+    int puerta;
+    int pertenenciaOTarjeta;
+} Pedido;
 
 typedef struct {
     int personasNormales;

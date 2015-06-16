@@ -10,7 +10,7 @@ OBJECTS = $(PROYECT)/Objects
 PROCESOS = Initializer Puerta PuertaSalida Destroyer Cerrar Abrir Waker Persona
 SRC = ./Simulador
 
-OBJETOS = semaforo.o Logger.o Parser.o InterfazPuerta.o InterfazPersonaEntrada.o InterfazMuseoEntrada.o InterfazPersonaSalida.o
+OBJETOS = semaforo.o Logger.o Parser.o InterfazPuerta.o InterfazPersonaEntrada.o InterfazPersonaSalida.o InterfazMuseoEntrada.o InterfazMuseoSalida.o InterfazMuseoAdministrador.o InterfazPuertaLocker.o
 
 #parametros para la compilacion del proceso initializer
 OBJETOS_INIT = semaforo.o Logger.o Parser.o
@@ -33,7 +33,7 @@ PUERTA_SOURCE = Puerta.cpp
 PUERTA_EXE = Puerta
 
 #parametros para la compilacion del proceso puertaSalida
-OBJETOS_PUERTA_SALIDA = semaforo.o Logger.o InterfazPersonaSalida.o
+OBJETOS_PUERTA_SALIDA = semaforo.o Logger.o InterfazMuseoSalida.o InterfazPersonaSalida.o
 PUERTA_SALIDA_SOURCE = PuertaSalida.cpp
 PUERTA_SALIDA_EXE = PuertaSalida
 
@@ -43,15 +43,19 @@ WAKER_SOURCE = Waker.cpp
 WAKER_EXE = Waker
 
 #parametros para la compilacion del proceso abrir
-OBJETOS_ABRIR = semaforo.o Logger.o
+OBJETOS_ABRIR = semaforo.o Logger.o InterfazMuseoAdministrador.o
 ABRIR_SOURCE = Abrir.cpp
 ABRIR_EXE = Abrir
 
 #parametros para la compilacion del proceso cerrar
-OBJETOS_CERRAR = semaforo.o Logger.o
+OBJETOS_CERRAR = semaforo.o Logger.o InterfazMuseoAdministrador.o
 CERRAR_SOURCE = Cerrar.cpp
 CERRAR_EXE = Cerrar
 
+#parametros para la compilacion del proceso locker
+OBJETOS_LOCKER = InterfazPuertaLocker.o
+LOCKER_SOURCE = Locker.cpp
+LOCKER_EXE = Locker
 
 all: $(PROYECTO)
 
@@ -115,6 +119,14 @@ Cerrar: carpetas Objetos
 	@echo
 	#-----------compilando-----------
 	var="";for i in $(OBJETOS_CERRAR); do var="$$var $(OBJECTS)/$$i";done;$(PARAMETROS) $$var $(SRC)/$(CERRAR_SOURCE) -o $(RELEASE)/$(CERRAR_EXE)
+
+#////////////////////////Locker////////////////////
+Locker: carpetas Objetos
+	@echo
+	#-----------compilando-----------
+	var="";for i in $(OBJETOS_LOCKER); do var="$$var $(OBJECTS)/$$i";done;$(PARAMETROS) $$var $(SRC)/$(LOCKER_SOURCE) -o $(RELEASE)/$(LOCKER_EXE)
+
+
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #---------------------------- Otros Comandos -------------------------------
