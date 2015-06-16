@@ -19,6 +19,7 @@
 #include "InterfazPersonaSalida.h"
 #include "InterfazMuseoSalida.h"
 #include "semaforo.h"
+#include "InterfazLocker.h"
 
 using namespace std;
 
@@ -38,41 +39,19 @@ int main(int argc, char** argv) {
     string puertaid=string(PUERTA_SALIDA_ID)+argv[1];
     Logger::startLog(LOGGER_DEFAULT_PATH,puertaid.c_str());
     
-   /*
-    //busco las colas
-    Logger::logg("Buscando la cola de entrada");
-    int colaEntrada,colaRespuesta;
-    if( (colaEntrada = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de entrada");
-        exit(1);   
-    }
-
-    Logger::logg("Buscando la cola de respuesta");
-    if( (colaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_RESP),PERMISOS)) == -1){
-        Logger::loggError("Error al encontrar la cola de respuesta");
-        exit(1);   
-    }
-    * */
-  
+    InterfazPersonaSalida persona(numero);
     InterfazMuseoSalida museo;
+    InterfazLocker locker(numero);
+    Persona datos;
     while(true){
-        /*
-        Logger::logg("Esperando persona");
-        MensajeAPuerta msg;
-        if( (msgrcv(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero,0)) == -1){
-            Logger::loggError("Error al leer mensaje de entrada");
-            exit(1);   
+        persona.tomarPersona(datos);
+        if(datos.tipoPersona==TIPO_INVESTIGADOR){
+            int resultado = locker.guardarPertenencia(1);
+            if(resultado!=-1) museo.salir();
+            persona.responderInvestigador(datos.idPersona,resultado);
+        }else{
+            persona.responder(datos.idPersona,museo.salir());
         }
-        */
-        bool resultado = museo.salir();
-        /*
-        msg.destinatario  = msg.mensaje;
-        msg.mensaje = MENSAJE_PASAR;
-        if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
-            Logger::loggError("Error responder a la persona");
-            exit(1);   
-        }
-        */
         
     }
 

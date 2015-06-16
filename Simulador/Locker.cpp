@@ -21,9 +21,9 @@ int main(int argc, char** argv) {
     while(true){
         puerta.recivirPedido(pedido);
         if(pedido.tipo==TIPO_DEPOSITO){
-            puerta.responderDeposito(pedido.puerta,-1);
+            puerta.responderDeposito(pedido.puerta,pedido.puerta); //TODO cambiar respuesta de tarjeta
         }else{
-            puerta.responderExtraccion(pedido.puerta,-1);
+            puerta.responderExtraccion(pedido.puerta,(pedido.puerta==pedido.pertenenciaOTarjeta)? -1:1);//TODO cambiar respuesta de pertenencias
         }
     }
     

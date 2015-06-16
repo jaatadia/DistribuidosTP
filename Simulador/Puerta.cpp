@@ -14,6 +14,7 @@
 #include "Simulador.h"
 #include "InterfazMuseoEntrada.h"
 #include "InterfazPersonaEntrada.h"
+#include "InterfazLocker.h"
 
 using namespace std;
 
@@ -35,17 +36,16 @@ int main(int argc, char** argv) {
     
     InterfazMuseoEntrada museo;
     InterfazPersonaEntrada entrada(numero);
+    InterfazLocker locker(numero);
     Persona persona;
     
     while(true){
-        
-        
         entrada.tomarPersona(persona);
         bool pudoEntrar = museo.entrar();
         if (persona.tipoPersona == PERSONA) {
             entrada.responder(persona.idPersona,pudoEntrar);
         } else {
-            entrada.responderInvestigador(persona.idPersona,0); //TODO numero de tarjeta
+            entrada.responderInvestigador(persona.idPersona,locker.guardarPertenencia(1));//TODO Cambiar pertenencia
         }       
     }
 
