@@ -199,7 +199,7 @@ using namespace std;
                 Logger::loggError("Error al liberar la puerta de la espera");
                 exit(1);   
             }
-        } //TODO no hay v(mutexColas) ??
+        }
         
         if(normal){
             contador->personasNormales=contador->personasNormales+1;
@@ -207,6 +207,11 @@ using namespace std;
             contador->investigadores=contador->investigadores+1;
         }
         
+        if(v(mutexColas)==-1){
+            Logger::loggError("Error al liberar la puerta de la espera");
+            exit(1);   
+        }
+                
         Logger::logg("Desuniendose de la memoria compartida");
         if(shmdt(contador)==-1){
             Logger::loggError("Error al desatachearse de la memoria compartida");
