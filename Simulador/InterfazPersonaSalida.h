@@ -8,11 +8,10 @@
 #ifndef INTERFAZPERSONASALIDA_H
 #define	INTERFAZPERSONASALIDA_H
 
-#define PERSONA 1
-#define INVESTIGADOR 2
 typedef struct {
     int idPersona;
     int tipoPersona;
+    int pertenencias;
 } Persona; //TODO esta repetido en entrada
 
 #include <stdlib.h>

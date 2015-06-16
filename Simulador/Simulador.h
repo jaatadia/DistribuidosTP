@@ -90,8 +90,10 @@ typedef struct {
 
 #define MENSAJE_NO_PASAR 0
 #define MENSAJE_PASAR 1
-#define TIPO_NORMAL 0
-#define TIPO_INVESTIGADOR 1
+
+#define PERSONA 1
+#define INVESTIGADOR 2
+
 typedef struct {
     long int destinatario;
     int mensaje; //viene a quien responderle - va el mensaje

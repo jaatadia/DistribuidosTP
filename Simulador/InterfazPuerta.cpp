@@ -90,14 +90,14 @@ using namespace std;
     // devuelve si pudo entrar o no 
     bool InterfazPuerta::entrar(int numeroPuerta){
         MensajeAPuerta msg;
-        entrar(numeroPuerta,TIPO_NORMAL,0,msg);
+        entrar(numeroPuerta,PERSONA,0,msg);
         return (msg.mensaje==MENSAJE_PASAR);
     }
     
     //devuelve -1 si no pudo entrar, o la tarjeta en caso contrario
     int InterfazPuerta::entrarInvestigador(int numeroPuerta,int pertenencias){
         MensajeAPuerta msg;
-        entrar(numeroPuerta,TIPO_INVESTIGADOR,pertenencias,msg);
+        entrar(numeroPuerta,INVESTIGADOR,pertenencias,msg);
         return msg.pertenenciasOTarjeta;
     }
     
@@ -112,7 +112,7 @@ using namespace std;
         MensajeAPuerta msg;
         msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
-        msg.tipo=TIPO_NORMAL;
+        msg.tipo=PERSONA;
 
         stringstream ss;
         ss<<numeroPuerta;
@@ -141,7 +141,7 @@ using namespace std;
         MensajeAPuerta msg;
         msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
-        msg.tipo=TIPO_NORMAL;
+        msg.tipo=PERSONA;
         msg.pertenenciasOTarjeta=tarjeta;
 
         stringstream ss;

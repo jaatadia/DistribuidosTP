@@ -105,24 +105,24 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
 }
 
 void InterfazPersonaSalida::responder(int idPersona,bool puedePasar){
-    //TODO
-    /*MensajeAPuerta msg;
+
+    MensajeAPuerta msg;
     msg.destinatario  = idPersona;
-    msg.mensaje = MENSAJE_PASAR;
-    if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
-        Logger::loggError("Error responder a la persona");
+    msg.mensaje = (puedePasar) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
+    if(msgsnd(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
+        Logger::loggError("Error al responder a la persona");
         exit(1);   
-    }*/
+    }
 }
 
 void InterfazPersonaSalida::responderInvestigador(int idInvestigador,int pertenencias){
-    //TODO
-    /*MensajeAPuerta msg;
+
+    MensajeAPuerta msg;
     msg.destinatario  = idInvestigador;
-    msg.mensaje = (pertenencias) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
+    msg.mensaje = (pertenencias!=-1) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta = pertenencias;
-    if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
-        Logger::loggError("Error responder a la persona");
+    if(msgsnd(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
+        Logger::loggError("Error al responder al investigador");
         exit(1);   
-    }*/
+    }
 }

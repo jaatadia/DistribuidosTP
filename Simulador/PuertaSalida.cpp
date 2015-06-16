@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
     Persona datos;
     while(true){
         persona.tomarPersona(datos);
-        if(datos.tipoPersona==TIPO_INVESTIGADOR){
-            int resultado = locker.guardarPertenencia(1);
+        if(datos.tipoPersona==INVESTIGADOR){
+            int resultado = locker.guardarPertenencia(datos.pertenencias);
             if(resultado!=-1) museo.salir();
             persona.responderInvestigador(datos.idPersona,resultado);
         }else{
