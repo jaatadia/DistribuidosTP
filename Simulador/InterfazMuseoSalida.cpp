@@ -5,7 +5,7 @@
  * Created on June 14, 2015, 5:05 PM
  */
 
-#include "InterfazMuseoEntrada.h"
+#include "InterfazMuseoSalida.h"
 #include "Simulador.h"
 #include "semaforo.h"
 #include "Logger.h"
@@ -16,7 +16,7 @@
 #include <sstream>
 
 
-InterfazMuseoEntrada::InterfazMuseoEntrada() {
+InterfazMuseoSalida::InterfazMuseoSalida() {
     
     Logger::logg("Obteniendo el mutex");
     if ( (mutexEstado = getsem(MUTEX_ESTADO)) == -1){
@@ -48,7 +48,7 @@ InterfazMuseoEntrada::InterfazMuseoEntrada() {
     }
 }
 
-bool InterfazMuseoEntrada::entrar(){
+bool InterfazMuseoSalida::salir(){
         
     Logger::logg("esperando el estado del museo");
     if (p(mutexEstado)==-1){
@@ -88,7 +88,7 @@ bool InterfazMuseoEntrada::entrar(){
     return true;
 }
 
-InterfazMuseoEntrada::~InterfazMuseoEntrada() {
+InterfazMuseoSalida::~InterfazMuseoSalida() {
     Logger::logg("Desuniendose de la memoria compartida");
     if(shmdt(myMuseum)==-1){
         Logger::loggError("Error al desatachearse de la memoria compartida");

@@ -10,11 +10,11 @@
 
 #include "Simulador.h"
 
-class InterfazMuseoEntrada {
+class InterfazMuseoSalida {
 public:
-    InterfazMuseoEntrada();
+    InterfazMuseoSalida();
     bool salir();//devuelve si pudo pasar o no
-    virtual ~InterfazMuseoEntrada();
+    virtual ~InterfazMuseoSalida();
 
 private:
     int mutexEstado,mutexLugar,mutexPersonas;
