@@ -309,13 +309,13 @@ void crearLocker(){
         exit(1);   
     }
     
-    Logger::logg(string("Creando cola para respuesta de pedidos del locker"));
+    Logger::logg(string("Creando cola para respuesta de pedidos de extracciones del locker"));
     if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_EXTRACCION),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
         Logger::loggError("Error al crear la cola de respuesta para el locker");
         exit(1);   
     }
     
-    Logger::logg(string("Creando cola para respuesta de pedidos del locker"));
+    Logger::logg(string("Creando cola para respuesta de pedidos de depositos del locker"));
     if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_DEPOSITO),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
         Logger::loggError("Error al crear la cola de respuesta para el locker");
         exit(1);   
@@ -341,9 +341,10 @@ int main(int argc, char** argv) {
     
     crearCarpeta();
     crearMuseo();
+    crearLocker();
     crearPuertas();
     crearClientes();
-    crearLocker();
+    
     
     Logger::closeLogger();
     

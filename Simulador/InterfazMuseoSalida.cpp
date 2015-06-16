@@ -18,7 +18,7 @@
 
 InterfazMuseoSalida::InterfazMuseoSalida() {
     
-    Logger::logg("Obteniendo el mutex");
+    Logger::logg("Obteniendo los mutex de estado de museo, lugar y cant de personas");
     if ( (mutexEstado = getsem(MUTEX_ESTADO)) == -1){
         Logger::loggError("No se pudo encontrar el mutex de estado");
         exit(1);

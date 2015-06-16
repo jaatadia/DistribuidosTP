@@ -41,6 +41,7 @@ void InterfazPersonaEntrada::tomarPersona(Persona& persona){
     persona.idPersona = msg.mensaje;
     persona.tipoPersona = msg.tipo;
     
+    Logger::logg("Recibi persona");
 }
     
 void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
@@ -48,21 +49,25 @@ void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
     MensajeAPuerta msg;
     msg.destinatario  = idPersona;
     msg.mensaje = (puedePasar) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
+    Logger::logg("Respondiendo a persona que puede pasar");
     if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
         Logger::loggError("Error responder a la persona");
         exit(1);   
     }
+    (puedePasar) ? Logger::logg("Respondido a persona que puede pasar") : Logger::logg("Respondido a persona que NO puede pasar");
 }
     
 void InterfazPersonaEntrada::responderInvestigador(int idInvestigador,int tarjeta){ 
     MensajeAPuerta msg;
     msg.destinatario  = idInvestigador;
-    msg.mensaje = (tarjeta) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
+    msg.mensaje = (tarjeta!=-1) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta = tarjeta;
+    Logger::logg("Respondiendo al investigador que puede pasar");
     if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
         Logger::loggError("Error responder a la persona");
         exit(1);   
     }
+    (tarjeta!=-1) ? Logger::logg("Respondido a investigador que puede pasar") : Logger::logg("Respondido a investigador que NO puede pasar");
     
 }
     

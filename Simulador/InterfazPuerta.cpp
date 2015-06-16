@@ -60,7 +60,7 @@ using namespace std;
  }
 
     
-   void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){ //TODO no usa el tipo ni la tarjeta
+   void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){
 
         stringstream ss;
         ss<<numeroPuerta;
@@ -68,7 +68,9 @@ using namespace std;
         MensajeAPuerta msg;
         msg.destinatario=1;
         msg.mensaje=getpid();
-
+        msg.tipo=tipo;
+        msg.pertenenciasOTarjeta=tarjeta;
+        
         Logger::logg("Enviando mensaje");
         if(msgsnd(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje "+ss.str());

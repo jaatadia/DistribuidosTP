@@ -40,8 +40,11 @@ int main(int argc, char** argv) {
     
 
     InterfazPuerta puerta;
+    Logger::logg("solicitando entrada");
     puerta.entrar(entrada);
+    Logger::logg("yendo a pasear");
     puerta.pasear(dormir);
+    Logger::logg("solicitando salida");
     puerta.salir(salida);
     
     return 0;

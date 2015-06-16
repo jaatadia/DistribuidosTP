@@ -14,7 +14,7 @@
 #include <stdlib.h>
 
 InterfazMuseoAdministrador::InterfazMuseoAdministrador() {
-    Logger::logg("Obteniendo el mutex");
+    Logger::logg("Obteniendo el mutex del estado del museo");
     if ( (mutexEstado = getsem(MUTEX_ESTADO)) == -1){
         Logger::loggError("No se pudo encontrar el mutex");
         exit(1);
@@ -26,7 +26,7 @@ InterfazMuseoAdministrador::InterfazMuseoAdministrador() {
         exit(1);
     };
     
-    Logger::logg("Obteniendo el museo");
+    Logger::logg("Obteniendo el museo (shm)");
     int shmid;
     if( (shmid = shmget(ftok(DIRECTORIO_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
         Logger::loggError("Error al encontrar la memoria compartida");
@@ -51,7 +51,6 @@ void InterfazMuseoAdministrador::abrir(){
     
     myMuseum->estaAbierto=true;    
     
-    Logger::logg("Liberando las puertas");
     if(v(mutexEstado)==-1){
         myMuseum->estaAbierto=false;    
         Logger::loggError("Error al liberar el mutex");
@@ -69,8 +68,6 @@ void InterfazMuseoAdministrador::cerrar(){
     
     Logger::logg("Cerrando el museo");
     myMuseum->estaAbierto=false;    
-    
-    Logger::logg("Liberando las puertas");
     
     //TODO ver como matar las personas
     

@@ -7,7 +7,7 @@ PROYECTO = Simulador
 PROYECT = .
 RELEASE = $(PROYECT)/Release
 OBJECTS = $(PROYECT)/Objects
-PROCESOS = Initializer Puerta PuertaSalida Destroyer Cerrar Abrir Waker Persona
+PROCESOS = Initializer Puerta PuertaSalida Destroyer Cerrar Abrir Waker Persona Locker
 SRC = ./Simulador
 
 OBJETOS = semaforo.o Logger.o Parser.o InterfazPuerta.o InterfazPersonaEntrada.o InterfazPersonaSalida.o InterfazMuseoEntrada.o InterfazMuseoSalida.o InterfazMuseoAdministrador.o InterfazPuertaLocker.o InterfazLocker.o
@@ -53,7 +53,7 @@ CERRAR_SOURCE = Cerrar.cpp
 CERRAR_EXE = Cerrar
 
 #parametros para la compilacion del proceso locker
-OBJETOS_LOCKER = InterfazPuertaLocker.o
+OBJETOS_LOCKER = InterfazPuertaLocker.o Logger.o
 LOCKER_SOURCE = Locker.cpp
 LOCKER_EXE = Locker
 

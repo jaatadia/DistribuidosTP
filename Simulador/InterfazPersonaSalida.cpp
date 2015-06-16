@@ -31,6 +31,7 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     }
         
     //obtiene mutexs
+    Logger::logg("Obtengo mutex de si hay personas y de los contadores de colas");
     mutexPuertaEsperando = getsem(MUTEX_PUERTA_ESPERANDO+(numeroPuerta-1)*DESP);
     mutexColas = getsem(MUTEX_CONTADOR_COLAS_PUERTAS+(numeroPuerta-1)*DESP);
 
@@ -42,7 +43,7 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
         exit(1);   
     }
 
-    Logger::logg("Uniendose a la memoria compartida");
+    Logger::logg("Uniendose a la memoria compartida de contadores de colas");
     ColasPuertas* contador;
     if ( (contador = (ColasPuertas*) shmat(shmid,NULL,0)) == (ColasPuertas*) -1 ){
         Logger::loggError("Error al atachearse a la memoria compartida");
@@ -61,11 +62,13 @@ InterfazPersonaSalida::~InterfazPersonaSalida() {
 
 void InterfazPersonaSalida::tomarPersona(Persona& persona){
     //TODO
+    Logger::logg("Espero a que haya personas");
     if(p(mutexPuertaEsperando)==-1){
         Logger::loggError("Error al obtener el mutex de personas esperando para salir");
         exit(1);   
     }
     
+    Logger::logg("Espero mutex de la gente esperando");
     if(p(mutexColas)==-1){
         Logger::loggError("Error al obtener el mutex de el contador de las colas");
         exit(1);   
@@ -93,12 +96,14 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
             Logger::loggError("Error al liberar la puerta de la espera");
             exit(1);   
         }
+        Logger::logg("Libero mutex de que hay personas");
     }
     
     persona.idPersona = msg.mensaje;
     persona.tipoPersona = msg.tipo;
     
-     if(v(mutexColas)==-1){
+    Logger::logg("Libero mutex de la gente esperando");
+    if(v(mutexColas)==-1){
         Logger::loggError("Error al liberar el mutex de el contador de las colas");
         exit(1);   
     }
@@ -113,6 +118,7 @@ void InterfazPersonaSalida::responder(int idPersona,bool puedePasar){
         Logger::loggError("Error al responder a la persona");
         exit(1);   
     }
+    (puedePasar) ? Logger::logg("Respondido a la persona que puede salir del museo") : Logger::logg("Respondido a la persona que NO puede salir del museo");
 }
 
 void InterfazPersonaSalida::responderInvestigador(int idInvestigador,int pertenencias){
@@ -125,4 +131,5 @@ void InterfazPersonaSalida::responderInvestigador(int idInvestigador,int pertene
         Logger::loggError("Error al responder al investigador");
         exit(1);   
     }
-}
+    (pertenencias!=-1) ? Logger::logg("Respondido al investigador que puede salir del museo") : Logger::logg("Respondido al investigador que NO puede salir del museo");
+}   
