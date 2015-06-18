@@ -40,17 +40,17 @@ int main(int argc, char** argv) {
     Persona persona;
     
     while(true){
-        Logger::logg("Tomo persona");
+        Logger::logg(APP_LEVEL,"Tomo persona");
         entrada.tomarPersona(persona);
-        Logger::logg("Me fijo si puede entrar al museo");
+        Logger::logg(APP_LEVEL,"Me fijo si puede entrar al museo");
         bool pudoEntrar = museo.entrar();
-        Logger::logg("obtuve si la persona pudo entrar");
+        Logger::logg(APP_LEVEL,"obtuve si la persona pudo entrar");
         if (persona.tipoPersona == PERSONA) {
             entrada.responder(persona.idPersona,pudoEntrar);
-            Logger::logg("Respondido a la persona");
+            Logger::logg(APP_LEVEL,"Respondido a la persona");
         } else {
             entrada.responderInvestigador(persona.idPersona,locker.guardarPertenencia(1));//TODO Cambiar pertenencia
-            Logger::logg("Respondido al investigador");
+            Logger::logg(APP_LEVEL,"Respondido al investigador");
         }       
     }
 

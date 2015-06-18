@@ -37,7 +37,7 @@ InterfazLocker::InterfazLocker(int nroPuerta) {
 
 int InterfazLocker::guardarPertenencia(int pertenencia){
     MensajeAPuerta msg;
-    msg.destinatario=1;
+    msg.destinatario=nroPuerta;
     msg.tipo=TIPO_DEPOSITO;
     msg.pertenenciasOTarjeta=pertenencia;
     if(msgsnd(colaEntrada,&msg,sizeof(msg)-sizeof(long),0)==-1){
@@ -54,7 +54,7 @@ int InterfazLocker::guardarPertenencia(int pertenencia){
 
 int InterfazLocker::tomarPertenencia(int tarjeta){
     MensajeAPuerta msg;
-    msg.destinatario=1;
+    msg.destinatario=nroPuerta;
     msg.tipo=TIPO_RETIRO;
     msg.pertenenciasOTarjeta=tarjeta;
     if(msgsnd(colaEntrada,&msg,sizeof(msg)-sizeof(long),0)==-1){

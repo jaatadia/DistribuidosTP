@@ -104,15 +104,15 @@ std::string getTimeStamp(){
 	return ss.str();
 }
 
-std::string formatMessage(std::string identifier,std::string message){
+std::string formatMessage(std::string identifier,std::string level,std::string message){
     std::stringstream ss;
-    ss << "Process: " << identifier << " PID: " << getpid() << " Time: " << getTimeStamp() << " Message: " << message << std::endl;
+    ss << "Process: " << identifier<<" PID: " << getpid()  << " Level: " << level << " Time: " << getTimeStamp() << " Message: " << message << std::endl;
     return ss.str();
 }
 
-std::string formatError(std::string identifier,std::string message){
+std::string formatError(std::string identifier,std::string level,std::string message){
     std::stringstream ss;
-    ss << "Process: " << identifier << " PID: " << getpid() << " Time: " << getTimeStamp() << " Error: " << message <<": "<< strerror(errno) << std::endl;
+    ss << "Process: " << identifier <<" PID: " << getpid() << " Level: " << level  << " Time: " << getTimeStamp() << " Error: " << message <<": "<< strerror(errno) << std::endl;
     return ss.str();
 }
 
@@ -123,11 +123,15 @@ void Logger::startLog(const char* path,const char* identifier){
 }
 
 void Logger::logg(const std::string message){
-    Logger::logger_instance->loggMessage(formatMessage(logger_instance->identifier,message));
+    logg(SYSTEM_LEVEL,message);
+}
+
+void Logger::logg(const std::string level, const std::string message){
+    Logger::logger_instance->loggMessage(formatMessage(logger_instance->identifier,level,message));
 }
 
 void Logger::loggError(const std::string message){
-    Logger::logger_instance->loggMessage(formatError(logger_instance->identifier,message));
+    Logger::logger_instance->loggMessage(formatError(logger_instance->identifier,SYSTEM_LEVEL,message));
     Logger::logger_instance->reset();
 }
 

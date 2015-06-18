@@ -12,13 +12,14 @@
 
 class InterfazPuertaLocker {
 public:
-    InterfazPuertaLocker();
+    InterfazPuertaLocker(int nroPuerta);
     void recivirPedido(Pedido& pedido);
-    void responderDeposito(int puerta, int tarjeta);
-    void responderExtraccion(int puerta, int pertenencia);
+    void responderDeposito(int tarjeta);
+    void responderExtraccion(int pertenencia);
     
     virtual ~InterfazPuertaLocker();
 private:
+    int nroPuerta;
     int colaEntrada;
     int colaRespuestaDeposito;
     int colaRespuestaExtraccion;
