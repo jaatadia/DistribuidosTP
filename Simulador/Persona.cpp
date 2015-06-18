@@ -74,6 +74,8 @@ int main(int argc, char** argv) {
         Logger::logg(APP_LEVEL,"Investigador solicitando salida");
         int pertenencias = puerta.salirInvestigador(salida,tarjeta);
         while (pertenencias == -1) {
+            Logger::logg(APP_LEVEL,"Investigador no pudo salir");
+            Logger::logg(APP_LEVEL,"Investigador solicitando salida");
             pertenencias = puerta.salirInvestigador(rand()%cantPuertas+1,tarjeta);
         }
     } else {

@@ -319,7 +319,7 @@ void crearClientes(){
         puertaEntrada<<(rand()%puertas)+1;
         espera<<rand()%10000000;
         puertaSalida<<(rand()%puertas)+1;
-        if ( (rand()%2) == INVESTIGADOR ) {
+        if ( ((rand()%2) +1) == INVESTIGADOR ) {
             tipoPersona<<INVESTIGADOR;
         } else { tipoPersona<<PERSONA; }
         std::stringstream cantPuertas;
