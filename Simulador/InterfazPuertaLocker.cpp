@@ -31,7 +31,7 @@ InterfazPuertaLocker::InterfazPuertaLocker() {
         Logger::loggError("Error al encontrar la cola de respuesta del Locker");
         exit(1);   
     }
-    //TODO Agregar una tercera cola para leer respuestas de un tipo de un lado y otras del otro (crearla en el initializer)
+
 }
 
 void InterfazPuertaLocker::recivirPedido(Pedido& pedido){

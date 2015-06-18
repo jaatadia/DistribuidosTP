@@ -69,13 +69,12 @@ bool InterfazMuseoSalida::salir(){
             exit(1);       
         }
     }
-    //TODO en el diagrama primero decrementa y despues libera el mutex!! -F
+    //TODO en el diagrama primero decrementa y despues libera el mutex!! -F es lo mismo cambia la condicion del if -J
     myMuseum->personasAdentro=myMuseum->personasAdentro-1;
     std::stringstream ss;
     ss<<myMuseum->personasAdentro;
     Logger::logg(std::string("Ahora hay ")+ss.str()+" personas adentro del museo");
    
-    //TODO ver como destruir el museo
     
     Logger::logg("Devolviendo el mutex");
         if(v(mutexPersonas)==-1){

@@ -32,7 +32,7 @@ InterfazLocker::InterfazLocker(int nroPuerta) {
         exit(1);   
     }
     
-    //TODO Agregar una tercera cola para leer respuestas de un tipo de un lado y otras del otro (crearla en el initializer)
+    
 }
 
 int InterfazLocker::guardarPertenencia(int pertenencia){

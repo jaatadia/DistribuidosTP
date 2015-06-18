@@ -55,7 +55,6 @@ void crearMuseo(){
     }
     
     
-    //TODO cargar configuracion de memoria un archivo
     Logger::logg("Inicializando la memoria compartida");
     
     int result;
@@ -184,7 +183,6 @@ void crearPuertas(){
         ss<<i;
         Logger::logg(string("Creando la puerta nro ")+ss.str());
            
-        //TODO Preguntar sobre el pasaje del parametro
         Logger::logg("Creando el proceso puerta");
         //preparo los parametros para la puerta
         if ((childpid=fork())<0){
@@ -242,7 +240,6 @@ void crearPuertas(){
             exit(1);   
         }    
         
-        //TODO Preguntar sobre el pasaje del parametro
         Logger::logg("Creando el proceso puerta de salida");
         //preparo los parametros para la puerta
         if ((childpid=fork())<0){

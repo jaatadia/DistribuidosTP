@@ -29,7 +29,7 @@ public:
     //devuelve -1 si no pudo entrar, o el numero de tarjeta en caso contrario
     int entrarInvestigador(int numeroPuerta,int pertenencias);
     
-    //pasea por tanto tiempo o hasta que le digan que salga TODO
+    //pasea por tanto tiempo o hasta que le digan que salga
     void pasear(int milisegundos);
     
     //true pudo salir, false no

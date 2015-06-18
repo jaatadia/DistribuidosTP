@@ -66,7 +66,7 @@ using namespace std;
         ss<<numeroPuerta;
 
         MensajeAPuerta msg;
-        msg.destinatario=1;
+        msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
         msg.tipo=tipo;
         msg.pertenenciasOTarjeta=tarjeta;
@@ -106,7 +106,6 @@ using namespace std;
     
     //pasea por tanto tiempo o hasta que le digan que salga
     void InterfazPuerta::pasear(int milisegundos){
-        //TODO
         usleep(milisegundos);
     }
     
