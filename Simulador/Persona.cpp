@@ -28,7 +28,7 @@ using namespace std;
 int main(int argc, char** argv) {
     Logger::startLog(LOGGER_DEFAULT_PATH,PERSONA_ID);
     
-    if (argc != 5 ){
+    if (argc != 6 ){
         Logger::loggError("No se pasaron los parametros correctos 1: numero de puerta, 2: tiempo a dormir, 3: puerta para salir, 4: tipo de persona (1:P o 2:I), 5: cant de puertas totales");
         exit(1);
     }
@@ -45,16 +45,16 @@ int main(int argc, char** argv) {
     InterfazPuerta puerta;
     
     if (tipoPersona == PERSONA) {
-        Logger::logg("Persona solicitando entrada");
+        Logger::logg(APP_LEVEL,"Persona solicitando entrada");
         if (!puerta.entrar(entrada)) {
-            Logger::logg("No pude entrar. Me voy");
+            Logger::logg(APP_LEVEL,"No pude entrar. Me voy");
             exit(1);
         }
     } else if (tipoPersona == INVESTIGADOR) {
-        Logger::logg("Investigador solicitando entrada");
+        Logger::logg(APP_LEVEL,"Investigador solicitando entrada");
         tarjeta = puerta.entrarInvestigador(entrada,pertenenciasIn);
         if ( tarjeta == -1) {
-            Logger::logg("No pude entrar. Me voy");
+            Logger::logg(APP_LEVEL,"No pude entrar. Me voy");
             exit(1);
         }
     } else {
@@ -62,16 +62,16 @@ int main(int argc, char** argv) {
         exit(1);
     }
     
-    Logger::logg("Yendo a pasear");
+    Logger::logg(APP_LEVEL,"Yendo a pasear");
     puerta.pasear(dormir);
     
     if (tipoPersona == PERSONA) {
-        Logger::logg("Persona solicitando salida");
+        Logger::logg(APP_LEVEL,"Persona solicitando salida");
         if (!puerta.salir(salida)) {
             Logger::loggError("Persona no puede salir");
         };
     } else if (tipoPersona == INVESTIGADOR) {
-        Logger::logg("Investigador solicitando salida");
+        Logger::logg(APP_LEVEL,"Investigador solicitando salida");
         int pertenencias = puerta.salirInvestigador(salida,tarjeta);
         while (pertenencias == -1) {
             pertenencias = puerta.salirInvestigador(rand()%cantPuertas+1,tarjeta);
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
         Logger::loggError("Tipo de persona invalido");
         exit(1);
     }
-    Logger::logg("Ya salí!");
+    Logger::logg(APP_LEVEL,"Ya salí!");
     return 0;
 }
 
