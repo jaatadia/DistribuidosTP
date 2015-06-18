@@ -287,19 +287,26 @@ void crearClientes(){
         stringstream puertaEntrada;
         stringstream espera;
         stringstream puertaSalida;
+        stringstream tipoPersona;
         
         puertaEntrada<<(rand()%puertas)+1;
         espera<<rand()%10000000;
         puertaSalida<<(rand()%puertas)+1;
+        if ( (rand()%2) == INVESTIGADOR ) {
+            tipoPersona<<INVESTIGADOR;
+        } else { tipoPersona<<PERSONA; }
+        std::stringstream cantPuertas;
+        cantPuertas<<puertas;
         
-        Logger::logg("Creando una persona Entra: "+puertaEntrada.str()+" Duerme: "+espera.str()+" Sale:"+puertaSalida.str());
+        
+        Logger::logg("Creando una persona Entra: "+puertaEntrada.str()+" Duerme: "+espera.str()+" Sale: "+puertaSalida.str()+" Tipo: "+tipoPersona.str());
         
         int childpid;
         if( ( childpid = fork() ) < 0 ){
             Logger::loggError("Error al forkearse");
             exit(1);   
         }else if(childpid==0){
-            execlp(PATH_PERSONA_EXEC,NAME_PERSONA_EXEC,puertaEntrada.str().c_str(),espera.str().c_str(),puertaSalida.str().c_str(),(char*)NULL);
+            execlp(PATH_PERSONA_EXEC,NAME_PERSONA_EXEC,puertaEntrada.str().c_str(),espera.str().c_str(),puertaSalida.str().c_str(),tipoPersona.str().c_str(),cantPuertas.str().c_str(),(char*)NULL);
             Logger::loggError("Error al generar la persona");
             exit(1);
         }

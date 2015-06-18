@@ -24,29 +24,63 @@ using namespace std;
  */
 #define PERSONA_ID "Persona"
 
-//argv[1] que puerta debe usar para entrar,argv[2] tiempo a dormir, argv[3] puerta para slir
+//argv[1] que puerta debe usar para entrar,argv[2] tiempo a dormir, argv[3] puerta para slir, argv[4] si es PERSONA o INVESTIGADOR
 int main(int argc, char** argv) {
     Logger::startLog(LOGGER_DEFAULT_PATH,PERSONA_ID);
     
-    if (argc != 4 ){
-        Logger::loggError("No se pasaron los parametros correctos 1: numero de puerta, 2: tiempo a dormri, 3: puerta para salir");
+    if (argc != 5 ){
+        Logger::loggError("No se pasaron los parametros correctos 1: numero de puerta, 2: tiempo a dormir, 3: puerta para salir, 4: tipo de persona (1:P o 2:I), 5: cant de puertas totales");
         exit(1);
     }
-    
+    srand(time(NULL));
     
     int entrada = atoi(argv[1]);
     int dormir = atoi(argv[2]);
     int salida = atoi(argv[3]);
-    
+    int tipoPersona = atoi(argv[4]);
+    int cantPuertas = atoi(argv[5]);
+    int pertenenciasIn = getpid(); //TODO pertenencias?? -F
+    int tarjeta;
 
     InterfazPuerta puerta;
-    Logger::logg("solicitando entrada");
-    puerta.entrar(entrada);
-    Logger::logg("yendo a pasear");
-    puerta.pasear(dormir);
-    Logger::logg("solicitando salida");
-    puerta.salir(salida);
     
+    if (tipoPersona == PERSONA) {
+        Logger::logg("Persona solicitando entrada");
+        if (!puerta.entrar(entrada)) {
+            Logger::logg("No pude entrar. Me voy");
+            exit(1);
+        }
+    } else if (tipoPersona == INVESTIGADOR) {
+        Logger::logg("Investigador solicitando entrada");
+        tarjeta = puerta.entrarInvestigador(entrada,pertenenciasIn);
+        if ( tarjeta == -1) {
+            Logger::logg("No pude entrar. Me voy");
+            exit(1);
+        }
+    } else {
+        Logger::loggError("Tipo de persona invalido");
+        exit(1);
+    }
+    
+    Logger::logg("Yendo a pasear");
+    puerta.pasear(dormir);
+    
+    if (tipoPersona == PERSONA) {
+        Logger::logg("Persona solicitando salida");
+        if (!puerta.salir(salida)) {
+            Logger::loggError("Persona no puede salir");
+        };
+    } else if (tipoPersona == INVESTIGADOR) {
+        Logger::logg("Investigador solicitando salida");
+        int pertenencias = puerta.salirInvestigador(salida,tarjeta);
+        while (pertenencias == -1) {
+            pertenencias = puerta.salirInvestigador(rand()%cantPuertas+1,tarjeta);
+        }
+    } else {
+        Logger::loggError("Tipo de persona invalido");
+        exit(1);
+    }
+    Logger::logg("Ya salí!");
     return 0;
 }
 
