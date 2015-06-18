@@ -86,6 +86,7 @@ using namespace std;
         if(mensaje.mensaje==MENSAJE_NO_PASAR){
             Logger::logg("El museo esta cerrado me voy");
         }
+        Logger::logg("Recibi el mensaje que puedo pasar");
         
     }
     
@@ -191,6 +192,7 @@ using namespace std;
             exit(1);   
         }
 
+        Logger::logg("Espero mutex para contador de personas en la cola");
         if(p(mutexColas)==-1){
             Logger::loggError("Error al obtener el mutex de el contador de las colas");
             exit(1);   
@@ -208,11 +210,13 @@ using namespace std;
         }else{
             contador->investigadores=contador->investigadores+1;
         }
+        Logger::logg("Liberado mutex de que hay personas y aumentada la cantidad en la cola");
         
         if(v(mutexColas)==-1){
             Logger::loggError("Error al liberar la puerta de la espera");
             exit(1);   
         }
+        Logger::logg("Liberado mutex de colas");
                 
         Logger::logg("Desuniendose de la memoria compartida");
         if(shmdt(contador)==-1){

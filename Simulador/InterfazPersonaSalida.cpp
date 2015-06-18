@@ -44,7 +44,6 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     }
 
     Logger::logg("Uniendose a la memoria compartida de contadores de colas");
-    ColasPuertas* contador;
     if ( (contador = (ColasPuertas*) shmat(shmid,NULL,0)) == (ColasPuertas*) -1 ){
         Logger::loggError("Error al atachearse a la memoria compartida");
         exit(1);   
@@ -61,7 +60,7 @@ InterfazPersonaSalida::~InterfazPersonaSalida() {
 }
 
 void InterfazPersonaSalida::tomarPersona(Persona& persona){
-    //TODO
+
     Logger::logg("Espero a que haya personas");
     if(p(mutexPuertaEsperando)==-1){
         Logger::loggError("Error al obtener el mutex de personas esperando para salir");
@@ -96,7 +95,7 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
             Logger::loggError("Error al liberar la puerta de la espera");
             exit(1);   
         }
-        Logger::logg("Libero mutex de que hay personas");
+        Logger::logg("Liberado mutex de que hay personas");
     }
     
     persona.idPersona = msg.mensaje;

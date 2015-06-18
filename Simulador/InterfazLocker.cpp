@@ -20,13 +20,13 @@ InterfazLocker::InterfazLocker(int nroPuerta) {
         exit(1);   
     }
     
-    Logger::logg("Buscando la cola de respuesta del Locker");
+    Logger::logg("Buscando la cola de respuesta deposito del Locker");
     if( (colaRespuestaDeposito = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_DEPOSITO),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de respuesta del Locker");
         exit(1);   
     }
     
-    Logger::logg("Buscando la cola de respuesta del Locker");
+    Logger::logg("Buscando la cola de respuesta extraccion del Locker");
     if( (colaRespuestaExtraccion = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_EXTRACCION),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de respuesta del Locker");
         exit(1);   

@@ -57,8 +57,8 @@ bool InterfazMuseoSalida::salir(){
     }
 
     Logger::logg("esperando el mutex sobre la cantidad de cosas");
-    if (p(mutexEstado)==-1){
-        Logger::loggError("Error al obtener el mutex de estado");
+    if (p(mutexPersonas)==-1){
+        Logger::loggError("Error al obtener el mutex de la cantidad de cosas");
         exit(1);   
     }
     
@@ -69,8 +69,11 @@ bool InterfazMuseoSalida::salir(){
             exit(1);       
         }
     }
-    
+    //TODO en el diagrama primero decrementa y despues libera el mutex!! -F
     myMuseum->personasAdentro=myMuseum->personasAdentro-1;
+    std::stringstream ss;
+    ss<<myMuseum->personasAdentro;
+    Logger::logg(std::string("Ahora hay ")+ss.str()+" personas adentro del museo");
    
     //TODO ver como destruir el museo
     

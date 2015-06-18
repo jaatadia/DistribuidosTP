@@ -179,6 +179,7 @@ void crearPuertas(){
     
     for (int i=1;i<=result;i++){
     
+        int semid;
         std::stringstream ss;
         ss<<i;
         Logger::logg(string("Creando la puerta nro ")+ss.str());
@@ -195,14 +196,26 @@ void crearPuertas(){
             exit(1);
         }
         
-        if (creasem(MUTEX_PUERTA_ESPERANDO+(i-1)*DESP)== -1){
-          Logger::loggError("Error al crear el semaforo de  personas esperando para una puerta");
+        if ((semid = creasem(MUTEX_PUERTA_ESPERANDO+(i-1)*DESP)) == -1){
+          Logger::loggError("Error al crear el semaforo de personas esperando para una puerta");
           exit(1);   
         }
         
-        if (creasem(MUTEX_CONTADOR_COLAS_PUERTAS+(i-1)*DESP)== -1){
-          Logger::loggError("Error al crear el semaforo de exclusion mutua del contador de personas esperando para una puerta en la fila prioritaria");
+        Logger::logg("Inicializando el semaforo de personas esperando para una puerta");
+        if (inisem(semid,0)==-1){
+            Logger::loggError("Error al inicializar el semaforo de personas esperando para una puerta");
+            exit(1);   
+        }
+        
+        if ((semid = creasem(MUTEX_CONTADOR_COLAS_PUERTAS+(i-1)*DESP)) == -1){
+          Logger::loggError("Error al crear el semaforo de exclusion mutua del contador de personas esperando en una puerta");
           exit(1);   
+        }
+        
+        Logger::logg("Inicializando el semaforo de exclusion mutua del contador de personas esperando en una puerta");
+        if (inisem(semid,1)==-1){
+            Logger::loggError("Error al inicializar el semaforo de exclusion mutua del contador de personas esperando en una puerta");
+            exit(1);   
         }
         
         
@@ -261,7 +274,7 @@ void crearClientes(){
     std::stringstream per;
     per << personas;
     
-    Logger::logg("Creando "+per.str()+"personas");
+    Logger::logg("Creando "+per.str()+" personas");
     
     int cola;
     Logger::logg(string("Creando cola para terminacion de las personas"));
