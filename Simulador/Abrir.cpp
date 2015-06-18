@@ -26,8 +26,9 @@ int main(int argc, char** argv) {
     Logger::startLog(LOGGER_DEFAULT_PATH,ABRIR_ID);
     
     InterfazMuseoAdministrador museo;
+    Logger::logg(APP_LEVEL,"Iniciando Apertura de museo");
     museo.abrir();
-    
+    Logger::logg(APP_LEVEL,"Finalizado Apertura de museo");
     
     
     Logger::closeLogger();

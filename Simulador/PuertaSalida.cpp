@@ -44,12 +44,20 @@ int main(int argc, char** argv) {
     InterfazLocker locker(numero);
     Persona datos;
     while(true){
+        Logger::logg(APP_LEVEL,"Esperando una persona");
         persona.tomarPersona(datos);
         if(datos.tipoPersona==INVESTIGADOR){
+            Logger::logg(APP_LEVEL,"Buscando pertenencias del investigador al locker");
             int resultado = locker.guardarPertenencia(datos.pertenencias);
-            if(resultado!=-1) museo.salir();
+            if(resultado!=-1) {
+                museo.salir();
+            }else{
+                Logger::logg(APP_LEVEL,"No se pudieron encontrar las pertenencias en el locker");
+            };
+            Logger::logg(APP_LEVEL,"Respondiendo al investigador");
             persona.responderInvestigador(datos.idPersona,resultado);
         }else{
+            Logger::logg(APP_LEVEL,"Respondiendo a la persona");
             persona.responder(datos.idPersona,museo.salir());
         }
         

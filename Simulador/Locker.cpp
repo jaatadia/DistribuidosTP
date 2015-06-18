@@ -9,24 +9,35 @@
 
 #include "InterfazPuertaLocker.h"
 #include "Simulador.h"
+#include "Logger.h"
 
 using namespace std;
 
+#define LOCKER_ID "Locker"
 /*
  * 
  */
 int main(int argc, char** argv) {
-    InterfazPuertaLocker puerta;
+    
+    int nroPuerta = atoi(argv[1]);
+    string puertaid=string(LOCKER_ID)+argv[1];
+    Logger::startLog(LOGGER_DEFAULT_PATH,puertaid.c_str());
+    
+    InterfazPuertaLocker puerta(nroPuerta);
     Pedido pedido;
     while(true){
+        Logger::logg(APP_LEVEL,"Esperando un Pedido");
         puerta.recivirPedido(pedido);
         if(pedido.tipo==TIPO_DEPOSITO){
-            puerta.responderDeposito(pedido.puerta,pedido.puerta); //TODO cambiar respuesta de tarjeta
+            Logger::logg(APP_LEVEL,"Respondiendo un deposito");
+            puerta.responderDeposito(nroPuerta); //TODO cambiar respuesta de tarjeta
         }else{
-            puerta.responderExtraccion(pedido.puerta,(pedido.puerta==pedido.pertenenciaOTarjeta)? -1:1);//TODO cambiar respuesta de pertenencias
+            Logger::logg(APP_LEVEL,"Respondiendo una extraccion");
+            puerta.responderExtraccion( (nroPuerta ==pedido.pertenenciaOTarjeta)? -1:1);//TODO cambiar respuesta de pertenencias
         }
     }
     
+    Logger::closeLogger();
     return 0;
 }
 

@@ -13,6 +13,9 @@
 #include <iostream>
 #include <string>
 
+#define APP_LEVEL "APP"
+#define SYSTEM_LEVEL "SYS"
+
 class Logger {
 public:
     Logger( const Logger& other );
@@ -22,6 +25,7 @@ public:
     
     static void startLog(const char* path,const char* identifier);
     static void logg(const std::string message);
+    static void logg(const std::string level,const std::string message);
     static void loggError(const std::string message);
     static void closeLogger();
     

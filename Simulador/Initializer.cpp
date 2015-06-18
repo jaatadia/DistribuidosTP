@@ -174,7 +174,23 @@ void crearPuertas(){
         exit(1);   
     }
     
+    Logger::logg(string("Creando cola para recepcion de pedidos del locker"));
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola para el locker");
+        exit(1);   
+    }
     
+    Logger::logg(string("Creando cola para respuesta de pedidos de extracciones del locker"));
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_EXTRACCION),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola de respuesta para el locker");
+        exit(1);   
+    }
+    
+    Logger::logg(string("Creando cola para respuesta de pedidos de depositos del locker"));
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_DEPOSITO),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola de respuesta para el locker");
+        exit(1);   
+    }
     
     for (int i=1;i<=result;i++){
     
@@ -183,16 +199,6 @@ void crearPuertas(){
         ss<<i;
         Logger::logg(string("Creando la puerta nro ")+ss.str());
            
-        Logger::logg("Creando el proceso puerta");
-        //preparo los parametros para la puerta
-        if ((childpid=fork())<0){
-            Logger::loggError(string("Error al crear la puerta nro ") + ss.str());
-            exit(1);   
-        }else if (childpid == 0){
-            execlp(PATH_PUERTA_EXEC,NAME_PUERTA_EXEC,ss.str().c_str(),(char*)NULL);
-            Logger::loggError(string("Error al cargar la imagen de ejecutable en la puerta nro ") + ss.str());
-            exit(1);
-        }
         
         if ((semid = creasem(MUTEX_PUERTA_ESPERANDO+(i-1)*DESP)) == -1){
           Logger::loggError("Error al crear el semaforo de personas esperando para una puerta");
@@ -240,6 +246,17 @@ void crearPuertas(){
             exit(1);   
         }    
         
+        Logger::logg("Creando el proceso puerta");
+        //preparo los parametros para la puerta
+        if ((childpid=fork())<0){
+            Logger::loggError(string("Error al crear la puerta nro ") + ss.str());
+            exit(1);   
+        }else if (childpid == 0){
+            execlp(PATH_PUERTA_EXEC,NAME_PUERTA_EXEC,ss.str().c_str(),(char*)NULL);
+            Logger::loggError(string("Error al cargar la imagen de ejecutable en la puerta nro ") + ss.str());
+            exit(1);
+        }
+        
         Logger::logg("Creando el proceso puerta de salida");
         //preparo los parametros para la puerta
         if ((childpid=fork())<0){
@@ -248,6 +265,16 @@ void crearPuertas(){
         }else if (childpid == 0){
             execlp(PATH_PUERTA_SALIDA_EXEC,NAME_PUERTA_SALIDA_EXEC,ss.str().c_str(),(char*)NULL);
             Logger::loggError(string("Error al cargar la imagen de ejecutable en la puerta de salida nro ") + ss.str());
+            exit(1);
+        }
+        
+        Logger::logg("Creando el proceso locker");
+        if ((childpid=fork())<0){
+            Logger::loggError(string("Error al crear el locker"));
+            exit(1);   
+        }else if (childpid == 0){
+            execlp(PATH_LOCKER_EXEC,NAME_LOCKER_EXEC,ss.str().c_str(),(char*)NULL);
+            Logger::loggError(string("Error al cargar la imagen de ejecutable en la locker "));
             exit(1);
         }
         
@@ -317,36 +344,8 @@ void crearClientes(){
     
 }
 
-void crearLocker(){
+void crearLocker(int puertas){
     
-    int cola;
-    Logger::logg(string("Creando cola para recepcion de pedidos del locker"));
-    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
-        Logger::loggError("Error al crear la cola para el locker");
-        exit(1);   
-    }
-    
-    Logger::logg(string("Creando cola para respuesta de pedidos de extracciones del locker"));
-    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_EXTRACCION),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
-        Logger::loggError("Error al crear la cola de respuesta para el locker");
-        exit(1);   
-    }
-    
-    Logger::logg(string("Creando cola para respuesta de pedidos de depositos del locker"));
-    if( (cola = msgget(ftok(DIRECTORIO_IPC,COLA_LOCKER_RESPUESTA_DEPOSITO),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
-        Logger::loggError("Error al crear la cola de respuesta para el locker");
-        exit(1);   
-    }
-    
-    int childpid;
-    if ((childpid=fork())<0){
-        Logger::loggError(string("Error al crear el locker"));
-        exit(1);   
-    }else if (childpid == 0){
-        execlp(PATH_LOCKER_EXEC,NAME_LOCKER_EXEC,(char*)NULL);
-        Logger::loggError(string("Error al cargar la imagen de ejecutable en la locker "));
-        exit(1);
-    }
     
 }
 
@@ -358,7 +357,6 @@ int main(int argc, char** argv) {
     
     crearCarpeta();
     crearMuseo();
-    crearLocker();
     crearPuertas();
     crearClientes();
     
