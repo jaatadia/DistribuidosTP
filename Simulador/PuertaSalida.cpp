@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
         persona.tomarPersona(datos);
         if(datos.tipoPersona==INVESTIGADOR){
             Logger::logg(APP_LEVEL,"Buscando pertenencias del investigador al locker");
-            int resultado = locker.guardarPertenencia(datos.pertenencias);
+            int resultado = locker.tomarPertenencia(datos.tarjeta);
             if(resultado!=-1) {
                 museo.salir();
             }else{

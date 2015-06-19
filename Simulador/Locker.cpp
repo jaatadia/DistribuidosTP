@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
             puerta.responderDeposito(nroPuerta); //TODO cambiar respuesta de tarjeta
         }else{
             Logger::logg(APP_LEVEL,"Respondiendo una extraccion");
-            puerta.responderExtraccion( (nroPuerta ==pedido.pertenenciaOTarjeta)? -1:1);//TODO cambiar respuesta de pertenencias
+            puerta.responderExtraccion( (nroPuerta ==pedido.pertenenciaOTarjeta)? 1:-1);//TODO cambiar respuesta de pertenencias
         }
     }
     

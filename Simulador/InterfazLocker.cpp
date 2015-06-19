@@ -49,7 +49,7 @@ int InterfazLocker::guardarPertenencia(int pertenencia){
         Logger::loggError("Error al recibir respuesta");
         exit(1);   
     }
-    return (msg.mensaje==MENSAJE_PASAR) ? -1:msg.pertenenciasOTarjeta;
+    return (msg.mensaje==MENSAJE_NO_PASAR) ? -1:msg.pertenenciasOTarjeta;
 }
 
 int InterfazLocker::tomarPertenencia(int tarjeta){
@@ -66,7 +66,7 @@ int InterfazLocker::tomarPertenencia(int tarjeta){
         Logger::loggError("Error al recibir respuesta");
         exit(1);   
     }
-    return (msg.mensaje==MENSAJE_PASAR) ? -1:msg.pertenenciasOTarjeta;   
+    return (msg.mensaje==MENSAJE_PASAR) ? msg.pertenenciasOTarjeta:-1;   
 }
 
 InterfazLocker::~InterfazLocker() {

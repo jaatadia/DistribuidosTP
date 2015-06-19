@@ -101,6 +101,7 @@ using namespace std;
     int InterfazPuerta::entrarInvestigador(int numeroPuerta,int pertenencias){
         MensajeAPuerta msg;
         entrar(numeroPuerta,INVESTIGADOR,pertenencias,msg);
+        if(msg.mensaje==MENSAJE_NO_PASAR) return -1;
         return msg.pertenenciasOTarjeta;
     }
     
@@ -143,7 +144,7 @@ using namespace std;
         MensajeAPuerta msg;
         msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
-        msg.tipo=PERSONA;
+        msg.tipo=INVESTIGADOR;
         msg.pertenenciasOTarjeta=tarjeta;
 
         stringstream ss;

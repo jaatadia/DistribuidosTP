@@ -49,7 +49,11 @@ int main(int argc, char** argv) {
             entrada.responder(persona.idPersona,pudoEntrar);
             Logger::logg(APP_LEVEL,"Respondido a la persona");
         } else {
-            entrada.responderInvestigador(persona.idPersona,locker.guardarPertenencia(1));//TODO Cambiar pertenencia
+            int tarjeta=-1;
+            if(pudoEntrar){
+                tarjeta = locker.guardarPertenencia(1);//TODO Cambiar pertenencia
+            }
+            entrada.responderInvestigador(persona.idPersona,tarjeta);
             Logger::logg(APP_LEVEL,"Respondido al investigador");
         }       
     }

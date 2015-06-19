@@ -100,6 +100,7 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
     
     persona.idPersona = msg.mensaje;
     persona.tipoPersona = msg.tipo;
+    persona.tarjeta = msg.pertenenciasOTarjeta;
     
     Logger::logg("Libero mutex de la gente esperando");
     if(v(mutexColas)==-1){

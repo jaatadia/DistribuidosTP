@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
         Logger::logg(APP_LEVEL,"Investigador solicitando entrada");
         tarjeta = puerta.entrarInvestigador(entrada,pertenenciasIn);
         if ( tarjeta == -1) {
-            Logger::logg(APP_LEVEL,"No pude entrar. Me voy");
+            Logger::logg(APP_LEVEL,"Investigador no pude entrar. Me voy");
             exit(1);
         }
     } else {

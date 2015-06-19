@@ -11,7 +11,7 @@
 typedef struct {
     int idPersona;
     int tipoPersona;
-    int pertenencias;
+    int tarjeta;
 } Persona; //TODO esta repetido en entrada
 
 #include <stdlib.h>
