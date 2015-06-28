@@ -82,7 +82,7 @@ void killIPCs(){
             }
             
             Logger::logg("Buscando la cola de salida nro "+ss.str());
-            if( (cola = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA + DESP * i),PERMISOS)) == -1){
+            if( (cola = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA_NORMAL + DESP * i),PERMISOS)) == -1){
                 Logger::loggError("Error al encontrar la cola de salida numero " + ss.str());
             }else{
                 if(msgctl(cola,IPC_RMID,NULL) == -1){

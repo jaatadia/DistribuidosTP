@@ -7,7 +7,7 @@ PROYECTO = Simulador
 PROYECT = .
 RELEASE = $(PROYECT)/Release
 OBJECTS = $(PROYECT)/Objects
-PROCESOS = Initializer Puerta PuertaSalida Destroyer Cerrar Abrir Waker Persona Locker
+PROCESOS = Initializer Puerta PuertaSalida Destroyer Cerrar Abrir Waker Persona Locker Encolador
 SRC = ./Simulador
 
 OBJETOS = semaforo.o Logger.o Parser.o InterfazPuerta.o InterfazPersonaEntrada.o InterfazPersonaSalida.o InterfazMuseoEntrada.o InterfazMuseoSalida.o InterfazMuseoAdministrador.o InterfazPuertaLocker.o InterfazLocker.o
@@ -36,6 +36,12 @@ PUERTA_EXE = Puerta
 OBJETOS_PUERTA_SALIDA = semaforo.o Logger.o InterfazMuseoSalida.o InterfazPersonaSalida.o InterfazLocker.o
 PUERTA_SALIDA_SOURCE = PuertaSalida.cpp
 PUERTA_SALIDA_EXE = PuertaSalida
+
+
+#parametros para la compilacion del proceso Encolador
+OBJETOS_ENCOLADOR = semaforo.o Logger.o
+ENCOLADOR_SOURCE = EncoladorPuertaSalida.cpp
+ENCOLADOR_EXE = Encolador
 
 #parametros para la compilacion del proceso Waker
 OBJETOS_WAKER = Logger.o
@@ -126,6 +132,12 @@ Locker: carpetas Objetos
 	#-----------compilando-----------
 	var="";for i in $(OBJETOS_LOCKER); do var="$$var $(OBJECTS)/$$i";done;$(PARAMETROS) $$var $(SRC)/$(LOCKER_SOURCE) -o $(RELEASE)/$(LOCKER_EXE)
 
+
+#////////////////////////Encolador////////////////////
+Encolador: carpetas Objetos
+	@echo
+	#-----------compilando-----------
+	var="";for i in $(OBJETOS_ENCOLADOR); do var="$$var $(OBJECTS)/$$i";done;$(PARAMETROS) $$var $(SRC)/$(ENCOLADOR_SOURCE) -o $(RELEASE)/$(ENCOLADOR_EXE)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

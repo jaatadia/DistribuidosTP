@@ -13,7 +13,7 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     
     //busco las colas
     Logger::logg("Buscando la cola de salida");
-    if( (colaSalida = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA),PERMISOS)) == -1){
+    if( (colaSalida = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA_NORMAL),PERMISOS)) == -1){
         Logger::loggError("Error al encontrar la cola de entrada");
         exit(1);   
     }

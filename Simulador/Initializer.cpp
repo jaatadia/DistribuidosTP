@@ -155,8 +155,16 @@ void crearPuertas(){
     }    
 
     //creo las colas para la puerta de salida
+    
+    Logger::logg("Creando la cola para el recibidor de personas de salida");
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA_ENCOLADOR),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola de salida");
+        exit(1);   
+    }
+    
+    
     Logger::logg("Creando la cola de salida");
-    if( (cola = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+    if( (cola = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA_NORMAL),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
         Logger::loggError("Error al crear la cola de salida");
         exit(1);   
     }
@@ -254,6 +262,17 @@ void crearPuertas(){
         }else if (childpid == 0){
             execlp(PATH_PUERTA_EXEC,NAME_PUERTA_EXEC,ss.str().c_str(),(char*)NULL);
             Logger::loggError(string("Error al cargar la imagen de ejecutable en la puerta nro ") + ss.str());
+            exit(1);
+        }
+        
+        Logger::logg("Creando el proceso Encolador");
+        //preparo los parametros para la puerta
+        if ((childpid=fork())<0){
+            Logger::loggError(string("Error al crear el encolador nro ") + ss.str());
+            exit(1);   
+        }else if (childpid == 0){
+            execlp(PATH_ENCOLADOR_EXEC,NAME_ENCOLADOR_EXEC,ss.str().c_str(),(char*)NULL);
+            Logger::loggError(string("Error al cargar la imagen de ejecutable en la puerta de salida nro ") + ss.str());
             exit(1);
         }
         

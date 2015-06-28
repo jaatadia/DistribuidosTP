@@ -40,17 +40,11 @@ using namespace std;
         }
         
         Logger::logg("Buscando la cola de salida");
-        if( (colaSalida = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA),PERMISOS)) == -1){
+        if( (colaSalida = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA_ENCOLADOR),PERMISOS)) == -1){
             Logger::loggError("Error al encontrar la cola de entrada");
             exit(1);   
         }
         
-        Logger::logg("Buscando la cola de salida prioritaria");
-        if( (colaSalidaPrioritaria = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_FILA_PRIORITARIA),PERMISOS)) == -1){
-            Logger::loggError("Error al encontrar la cola de salida prioritaria");
-            exit(1);   
-        }
-
         Logger::logg("Buscando la cola de respuesta");
         if( (colaSalidaRespuesta = msgget(ftok(DIRECTORIO_IPC,PUERTA_SALIDA_RESP),PERMISOS)) == -1){
             Logger::loggError("Error al encontrar la cola de respuesta");
@@ -110,12 +104,14 @@ using namespace std;
         usleep(milisegundos);
     }
     
-    //true pudo salir, false no
-    bool InterfazPuerta::salir(int numeroPuerta){
-        MensajeAPuerta msg;
+
+    
+    void InterfazPuerta::salir(int numeroPuerta, int tipo, int tarjeta,MensajeAPuerta& msg){
+        
         msg.destinatario=numeroPuerta;
         msg.mensaje=getpid();
-        msg.tipo=PERSONA;
+        msg.tipo= tipo;
+        msg.pertenenciasOTarjeta=tarjeta;
 
         stringstream ss;
         ss<<numeroPuerta;
@@ -126,102 +122,29 @@ using namespace std;
             Logger::loggError("Error al escribir el mensaje "+ss.str());
             exit(1);
         }
-
-        aumentarEsperando(true,numeroPuerta);
         
         Logger::logg("Esperando respuesta");
         if(msgrcv(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
-        
+    }
+
+
+    //true pudo salir, false no
+    bool InterfazPuerta::salir(int numeroPuerta){
+        MensajeAPuerta msg;
+        salir(numeroPuerta,PERSONA,0,msg);
         return msg.mensaje==MENSAJE_PASAR;
     }
     
     //devuelve -1 en caso de que no sea la puerta correcta o las pertenencias
     int InterfazPuerta::salirInvestigador(int numeroPuerta,int tarjeta){
-        
         MensajeAPuerta msg;
-        msg.destinatario=numeroPuerta;
-        msg.mensaje=getpid();
-        msg.tipo=INVESTIGADOR;
-        msg.pertenenciasOTarjeta=tarjeta;
-
-        stringstream ss;
-        ss<<numeroPuerta;
-
-        msg.mensaje=getpid();
-        Logger::logg("Enviando mensaje para salir");
-        if(msgsnd(colaSalidaPrioritaria,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
-            Logger::loggError("Error al escribir el mensaje "+ss.str());
-            exit(1);
-        }
-        
-        aumentarEsperando(false,numeroPuerta);
-        
-        Logger::logg("Esperando respuesta");
-        if(msgrcv(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){
-            Logger::loggError("Error al leer el mensaje ");
-            exit(1);
-        }
-        
+        salir(numeroPuerta,INVESTIGADOR,tarjeta,msg);
         return (msg.mensaje==MENSAJE_PASAR) ? msg.pertenenciasOTarjeta:-1;
     }
     
     InterfazPuerta::~InterfazPuerta(){
-        
-    }
-
-    void InterfazPuerta::aumentarEsperando(bool normal,int nroPuerta){
-        
-        //obtiene mutex
-        int mutexPuertaEsperando = getsem(MUTEX_PUERTA_ESPERANDO+(nroPuerta-1)*DESP);
-        int mutexColas = getsem(MUTEX_CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP);
-                
-        Logger::logg("buscando la memoria compartida para la puerta");
-        int shmid;
-        if( (shmid = shmget(ftok(DIRECTORIO_IPC,CONTADOR_COLAS_PUERTAS+(nroPuerta-1)*DESP), sizeof(ColasPuertas),PERMISOS)) == -1 ){
-            Logger::loggError("Error al obtener la memoria compartida");
-            exit(1);   
-        }
-
-        Logger::logg("Uniendose a la memoria compartida");
-        ColasPuertas* contador;
-        if ( (contador = (ColasPuertas*) shmat(shmid,NULL,0)) == (ColasPuertas*) -1 ){
-            Logger::loggError("Error al atachearse a la memoria compartida");
-            exit(1);   
-        }
-
-        Logger::logg("Espero mutex para contador de personas en la cola");
-        if(p(mutexColas)==-1){
-            Logger::loggError("Error al obtener el mutex de el contador de las colas");
-            exit(1);   
-        }
-        
-        if((contador->personasNormales==0)&&(contador->investigadores==0)){
-            if(v(mutexPuertaEsperando)==-1){
-                Logger::loggError("Error al liberar la puerta de la espera");
-                exit(1);   
-            }
-        }
-        
-        if(normal){
-            contador->personasNormales=contador->personasNormales+1;
-        }else{
-            contador->investigadores=contador->investigadores+1;
-        }
-        Logger::logg("Liberado mutex de que hay personas y aumentada la cantidad en la cola");
-        
-        if(v(mutexColas)==-1){
-            Logger::loggError("Error al liberar la puerta de la espera");
-            exit(1);   
-        }
-        Logger::logg("Liberado mutex de colas");
-                
-        Logger::logg("Desuniendose de la memoria compartida");
-        if(shmdt(contador)==-1){
-            Logger::loggError("Error al desatachearse de la memoria compartida");
-            exit(1);   
-        }    
         
     }
