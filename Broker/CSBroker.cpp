@@ -8,11 +8,12 @@
 #include <cstdlib>
 #include <sys/msg.h>
 
-#include "enviar.cpp"
-#include "recibir.cpp"
-#include "Logger.h"
+#include "../Common/enviar.cpp"
+#include "../Common/recibir.cpp"
+#include "../Common/Logger.h"
+#include "../Common/MensajeAPuerta.h"
 #include "Constantes.h"
-#include "MensajeAPuerta.h"
+
 
 using namespace std;
 

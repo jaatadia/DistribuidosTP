@@ -1,8 +1,7 @@
 
-#include "tcpoppas.cpp"
-#include "tcpopact.cpp"
-#include "Logger.h"
-#include "inet.h"
+#include "../Common/tcpoppas.cpp"
+#include "../Common/Logger.h"
+#include "../Common/Logger.h"
 #include "Constantes.h"
 
 #define ID "BrokerConectionListener"
@@ -63,9 +62,12 @@ int main (int argc, char** argv){
         sprintf(CS,"%d",newsockfdCS);
         sprintf(tokill,"%d",0);
         
+        //TODO cambiar al orden correcto
+        
         //bifurco el proceso de comunicaciones salientes
             //parametro 1 el int par ftok cola
             //parametro 2 el newsockfdCS
+            //parametro 3 el pid de entrantes para hacerle kill
             //hacer close del newsockfdCE sockfdCE y sockfdCS
         int childpid;
         if ((childpid=fork())<0){

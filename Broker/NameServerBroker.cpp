@@ -1,8 +1,9 @@
 
-#include "tcpoppas.cpp"
-#include "tcpopact.cpp"
-#include "Logger.h"
-#include "inet.h"
+#include "../Common/tcpoppas.cpp"
+#include "../Common/tcpopact.cpp"
+#include "../Common/Logger.h"
+#include "../Common/inet.h"
+
 #include "Constantes.h"
 
 #define ID "NameServerBroker"

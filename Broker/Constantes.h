@@ -9,7 +9,7 @@
 #define	CONSTANTES_H
 
 #define BROKER_LOGGER_DEFAULT_PATH "./BrokerLog.txt"
-#define BROKER_DIRECTORIO_IPC  "/home/knoppix/Atadia/Simulador"
+#define BROKER_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/Simulador"
 #define BROKER_FILE_IPC BROKER_DIRECTORIO_IPC+"/broker.txt"
 
 #define PATH_BROKER_EXEC "./Broker"

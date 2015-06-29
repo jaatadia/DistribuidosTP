@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#include "Logger.h"
+#include "../Common/Logger.h"
 #include "Constantes.h"
 
 #define BROKER_INITIALIZER_ID "BrokerInitializer"

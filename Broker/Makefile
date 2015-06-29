@@ -1,14 +1,16 @@
  
+COMMON = ../Common
 
-all: Broker.cpp Conectador.cpp BrokerInitializer.cpp CSBroker.cpp CEBroker.cpp CSCliente.cpp CECliente.cpp NameServerBroker.cpp NameServer.cpp
-	g++ -c Logger.cpp
-	g++ -Wall -g Logger.o Broker.cpp -o Broker
-	g++ -Wall -g Logger.o BrokerInitializer.cpp -o BrokerInitializer
-	g++ -Wall -g Logger.o CSBroker.cpp -o CSBroker
-	g++ -Wall -g Logger.o CEBroker.cpp -o CEBroker
-	g++ -Wall -g Logger.o NameServerBroker.cpp -o NameServerBroker
-	g++ -Wall -g Logger.o NameServer.cpp -o NameServer
-	
+all: Broker.cpp BrokerInitializer.cpp CSBroker.cpp CEBroker.cpp NameServerBroker.cpp NameServer.cpp $(COMMON)/Logger.o
+	g++ -Wall -g $(COMMON)/Logger.o Broker.cpp -o Broker
+	g++ -Wall -g $(COMMON)/Logger.o BrokerInitializer.cpp -o BrokerInitializer
+	g++ -Wall -g $(COMMON)/Logger.o CSBroker.cpp -o CSBroker
+	g++ -Wall -g $(COMMON)/Logger.o CEBroker.cpp -o CEBroker
+	g++ -Wall -g $(COMMON)/Logger.o NameServerBroker.cpp -o NameServerBroker
+	g++ -Wall -g $(COMMON)/Logger.o NameServer.cpp -o NameServer
+
+$(COMMON)/Logger.o:
+	cd $(COMMON);make 
 	
 clean:
 	- rm *.o

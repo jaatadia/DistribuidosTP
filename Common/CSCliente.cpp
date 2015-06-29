@@ -8,20 +8,19 @@
 #include <cstdlib>
 #include <sys/msg.h>
 
-#include "../Common/recibir.cpp"
-#include "../Common/Logger.h"
-#include "../Common/MensajeAPuerta.h"
-
-#include "Constantes.h"
+#include "enviar.cpp"
+#include "Logger.h"
+#include "MensajeAPuerta.h"
 
 
 using namespace std;
 
-#define ID "CEBroker"
-
 //argv[1] fd socket
 //argv[2] fd cola
 //argv[3] kill
+
+#define ID "CSCliente"
+
 int main(int argc, char** argv) {
     
     if(argc<4){
@@ -30,28 +29,30 @@ int main(int argc, char** argv) {
     }
     
     int cola = atoi(argv[1]);
-    int socket = atoi(argv[2]);
+    int socket = atoi(argv[1]);
     int pidkill = atoi(argv[3]);
     
-    Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,ID);
+    Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
     if( (cola = msgget(cola,0660)) == -1){
-        Logger::loggError("Error al encontrar la cola del broker");
+        Logger::loggError("Error al encontrar la cola del cliente");
         exit(1);   
     }
-    
+
     while(true){
         MensajeAPuerta msg;
         
-        if(recibir(socket,&msg,sizeof(MensajeAPuerta))<0){
+        if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0,0)==-1){
+            Logger::loggError("Error al escribir el mensaje ");
+            exit(1);
+        }
+        
+        if(enviar(socket,&msg,sizeof(MensajeAPuerta))<0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);
         };
         
-        if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
-            Logger::loggError("Error al escribir el mensaje ");
-            exit(1);
-        }
+        
     }
     
     Logger::closeLogger();

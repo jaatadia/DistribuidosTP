@@ -41,6 +41,9 @@
 #define PATH_DEST_EXEC "./Destroyer"
 #define NAME_DEST_EXEC "Destroyer"
 
+#define PATH_CONECTADOR_EXEC "./Conectador"
+#define NAME_CONECTADOR_EXEC "Conectador"
+
 #define PERMISOS 0660
 
 
