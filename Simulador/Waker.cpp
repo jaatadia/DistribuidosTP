@@ -12,6 +12,7 @@
 #include <signal.h>
 #include "Logger.h"
 #include "Simulador.h"
+#include "MensajeAPuerta.h"
 
 using namespace std;
 

@@ -6,6 +6,7 @@
  */
 
 #include "InterfazPersonaSalida.h"
+#include "MensajeAPuerta.h"
 
 InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     

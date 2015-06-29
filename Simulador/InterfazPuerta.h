@@ -8,7 +8,8 @@
 #ifndef INTERFAZPUERTA_H
 #define	INTERFAZPUERTA_H
 
-#include "Simulador.h"
+#include "MensajeAPuerta.h"
+
 class InterfazPuerta {
 private:
     int colaEntrada;

@@ -156,5 +156,7 @@ clean:
 	rm -f -r $(OBJECTS)
 	./IPC_RM.sh
 
-$(PROYECTO): $(PROCESOS)
-	
+$(PROYECTO): $(PROCESOS)	
+	g++ -Wall -g $(OBJECTS)/Logger.o $(SRC)/Conectador.cpp  -o $(RELEASE)/Conectador
+	g++ -Wall -g $(OBJECTS)/Logger.o $(SRC)/CSCliente.cpp -o $(RELEASE)/CSCliente
+	g++ -Wall -g $(OBJECTS)/Logger.o $(SRC)/CECliente.cpp -o $(RELEASE)/CECliente

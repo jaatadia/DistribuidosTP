@@ -8,6 +8,8 @@
 #ifndef INTERFAZLOCKER_H
 #define	INTERFAZLOCKER_H
 
+#include "MensajeAPuerta.h"
+
 class InterfazLocker {
 public:
     InterfazLocker(int nroPuerta);

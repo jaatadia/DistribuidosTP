@@ -14,6 +14,7 @@
 #include <sys/msg.h>
 #include <sys/types.h>
 
+#include "MensajeAPuerta.h"
 #define ENCOLADOR_PUERTA_ID "EncoladorPuerta"
 
 using namespace std;

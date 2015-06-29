@@ -11,6 +11,7 @@
 #include "Logger.h"
 #include <stdlib.h>
 #include "Simulador.h"
+#include "MensajeAPuerta.h"
 
 InterfazPuertaLocker::InterfazPuertaLocker(int nroPuerta) {
     this->nroPuerta=nroPuerta;

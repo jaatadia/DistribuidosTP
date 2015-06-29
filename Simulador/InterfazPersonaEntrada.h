@@ -18,7 +18,7 @@ typedef struct {
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <sys/types.h>
-#include "Simulador.h"
+
 #include "Logger.h"
 
 class InterfazPersonaEntrada {
