@@ -148,7 +148,13 @@ using namespace std;
     }
     
     InterfazPuerta::~InterfazPuerta(){
+        MensajeAPuerta msg;
+        msg.mensaje=MENSAJE_END_COMMUNICATION;
+        Logger::logg("Enviando mensaje para cerrar comunicaciones");
+        if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
+            Logger::loggError("Error al escribir el mensaje ");
+            exit(1);
+        }
         
-        //TODO enviar mensaje de cierre de comunicaciones
         //TODO  liberar id
     }

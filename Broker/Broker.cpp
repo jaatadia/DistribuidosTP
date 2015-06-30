@@ -37,8 +37,11 @@ int main (int argc, char** argv){
     while(true){
         
         int status;
-        while(waitpid(1,&status,WNOHANG)>0){};
+        while(waitpid(-1,&status,WNOHANG)>0){
+            Logger::logg("Mate un zombie");
+        };
         
+        Logger::logg("Esperando nueva conexion");
         //leo un nuevo pedido de union
         struct sockaddr_in cli_addr;
         unsigned clilen = sizeof(cli_addr);
@@ -54,15 +57,14 @@ int main (int argc, char** argv){
             Logger::loggError("server: error en el accept");
             exit(1); 
         }
-                        
+        Logger::logg("conexiones detectadas, creando procesos");
+        
         static char CE[12];
         static char CS[12];
         static char tokill[12];
         sprintf(CE,"%d",newsockfdCE);
         sprintf(CS,"%d",newsockfdCS);
         sprintf(tokill,"%d",0);
-        
-        //TODO cambiar al orden correcto
         
         //bifurco el proceso de comunicaciones salientes
             //parametro 1 el int par ftok cola

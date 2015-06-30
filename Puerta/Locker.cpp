@@ -19,9 +19,13 @@ using namespace std;
 #define LOCKER_ID "Locker"
 
 int guardarPertenencias(std::map<int,int>* myMap, int nroPuerta, int pertenencias){
-    int i=nroPuerta;
+    int i=nroPuerta*1000;
     while(myMap->find(i)!=myMap->end()){
-        i+=nroPuerta;
+        i--;
+        if(i==(nroPuerta-1)*1000){
+            Logger::logg(APP_LEVEL,"No tengo mas tarjetas");
+            return -1;
+        }
     }
     (*myMap)[i]=pertenencias;
     char nro[20];

@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     long id = atoi(argv[1]);
     int cola = atoi(argv[2]);
     int socket = atoi(argv[3]);
-    int pidkill = atoi(argv[4]);
+    //int pidkill = atoi(argv[4]);
     
     if( (cola = msgget(cola,0660)) == -1){
         Logger::loggError("Error al encontrar la cola del cliente");
@@ -62,7 +62,6 @@ int main(int argc, char** argv) {
     }
     
     Logger::closeLogger();
-    kill(pidkill,SIGUSR1);
     
     return 0;
 }

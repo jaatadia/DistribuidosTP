@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     
     int cola = atoi(argv[1]);
     int socket = atoi(argv[2]);
-    int pidkill = atoi(argv[3]);
+    //int pidkill = atoi(argv[3]);
     
     Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,ID);
     
@@ -71,7 +71,6 @@ int main(int argc, char** argv) {
     }
     
     Logger::closeLogger();
-    kill(pidkill,SIGUSR1);
     
     return 0;
 }

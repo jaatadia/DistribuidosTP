@@ -47,13 +47,30 @@ int main (int argc, char** argv){
     sprintf(CS,"%d",newsockfdCS);
     sprintf(tokill,"%d",0);
     
-    //TODO cambiar al orden correcto
+    //bifurco el proceso de comunicaciones entrantes
+        //parametro 1 id
+        //parametro 2 el fd de la cola
+        //parametro 3 el newsockfdCE
+        //parametro 4 el pid de salientes para hacerle kill
+        //hacer close del newsockfdCS sockfdCE y sockfdCS
+    int childpid;
+    if ((childpid=fork())<0){
+        Logger::loggError("Error al crear CE ");
+        exit(1);   
+    }else if (childpid == 0){
+        close(newsockfdCS);
+        execlp(PATH_CLIENTE_CE,NAME_CLIENTE_CE,argv[2],argv[3],CE,tokill,(char*)NULL);
+        Logger::loggError("Error al cargar la imagen de ejecutable del CSCliente");
+        exit(1);
+    }
     
     //bifurco el proceso de comunicaciones salientes
        //parametro 1 el fd de la cola
        //parametro 2 el newsockfdCS
        //hacer close del newsockfdCE
-    int childpid;
+    
+    sprintf(tokill,"%d",childpid);
+    
     if ((childpid=fork())<0){
         Logger::loggError("Error al crear CS ");
         exit(1);   
@@ -64,21 +81,7 @@ int main (int argc, char** argv){
         exit(1);
     }
     
-    sprintf(tokill,"%d",childpid);
     
-    //bifurco el proceso de comunicaciones entrantes
-        //parametro 1 id
-        //parametro 2 el fd de la cola
-        //parametro 3 el newsockfdCE
-        //parametro 4 el pid de salientes para hacerle kill
-        //hacer close del newsockfdCS sockfdCE y sockfdCS
-    if ((childpid=fork())<0){
-        Logger::loggError("Error al crear CE ");
-        exit(1);   
-    }else if (childpid == 0){
-        close(newsockfdCS);
-        execlp(PATH_CLIENTE_CE,NAME_CLIENTE_CE,argv[2],argv[3],CE,tokill,(char*)NULL);
-        Logger::loggError("Error al cargar la imagen de ejecutable del CSCliente");
-        exit(1);
-    }
+    
+
 }

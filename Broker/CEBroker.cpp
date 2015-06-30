@@ -49,6 +49,8 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
+        if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
+        
         Logger::logg("Reenviando mensaje");
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje ");
