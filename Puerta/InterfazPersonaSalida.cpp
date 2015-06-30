@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "../Common/semaforo.h"
 #include "../Common/MensajeAPuerta.h"
@@ -56,14 +58,16 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     }
     
     //TODO pedir id
-    static char broker[12];
-    static char id[12];
-    static char colaEntrada[12];
-    static char colaSalida[12];
+    static char broker[18];
+    static char nroPuerta[18];
+    static char id[18];
+    static char colaEntrada[18];
+    static char colaSalida[18];
     sprintf(broker,"broker");//TODO cambiar esto
+    sprintf(nroPuerta,"%d",numeroPuerta);
     sprintf(id,"%d",(numeroPuerta*2)-1);//TODO cambiar esto
-    sprintf(colaEntrada,"%d",ftok(PUERTA_DIRECTORIO_IPC,COLA_PUERTA_SALIDA));
-    sprintf(colaSalida,"%d",ftok(PUERTA_DIRECTORIO_IPC,COLA_PUERTA_SALIDA_RESPUESTA));
+    sprintf(colaEntrada,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA));
+    sprintf(colaSalida,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA));
     
     int childpid;
     if ((childpid=fork())<0){
@@ -75,12 +79,14 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
         exit(1);
     }
     
+    int status;
+    wait(&status);
     
     if ((childpid=fork())<0){
-        Logger::loggError("Error al crear el conectador ");
+        Logger::loggError("Error al crear el Encolador ");
         exit(1);   
     }else if (childpid == 0){
-        execlp(PATH_ENCOLADOR_EXEC,NAME_ENCOLADOR_EXEC,id,(char*)NULL);
+        execlp(PATH_ENCOLADOR_EXEC,NAME_ENCOLADOR_EXEC,nroPuerta,id,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del Encolador");
         exit(1);
     }

@@ -31,7 +31,7 @@ InterfazMuseoEntrada::InterfazMuseoEntrada() {
     
     Logger::logg("Obteniendo el museo");
     int shmid;
-    if( (shmid = shmget(ftok(PUERTA_DIRECTORIO_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
+    if( (shmid = shmget(ftok(PUERTA_FILE_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
         Logger::loggError("Error al encontrar la memoria compartida");
         exit(1);   
     }

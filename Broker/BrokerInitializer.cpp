@@ -28,7 +28,7 @@ void crearCarpeta(){
 
 void crearColaBroker(){
     Logger::logg("Creando la cola del broker");
-    if( (msgget(ftok(BROKER_DIRECTORIO_IPC,COLA_BROKER),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
+    if( (msgget(ftok(BROKER_FILE_IPC,COLA_BROKER),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1){
         Logger::loggError("Error al crear la cola del broker");
         exit(1);   
     }
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     
     crearCarpeta();
     crearColaBroker();
-    crearBroker(ftok(BROKER_DIRECTORIO_IPC,COLA_BROKER));
+    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER));
     
     Logger::closeLogger();
     

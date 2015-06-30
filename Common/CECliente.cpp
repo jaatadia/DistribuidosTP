@@ -40,6 +40,7 @@ int main(int argc, char** argv) {
         exit(1);   
     }
     
+    Logger::logg(string("Enviando mi ID: ")+argv[1]);
     MensajeAPuerta msg;
     msg.destinatario=id;
     if(enviar(socket,&msg,sizeof(MensajeAPuerta))<0){

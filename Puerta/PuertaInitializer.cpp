@@ -80,7 +80,7 @@ void crearColas(){
     }
 }
 
-int crearMemoria(int nroPuerta){
+void crearMemoria(int nroPuerta){
         int semid;
         if ((semid = creasem(PUERTA_FILE_IPC,SEM_PUERTA_ESPERANDO+(nroPuerta-1)*DESP,PERMISOS)) == -1){
           Logger::loggError("Error al crear el semaforo de personas esperando para una puerta");
@@ -133,6 +133,7 @@ int main(int argc, char** argv) {
 
     if(argc!=2){
         printf("parametros incorrectos 1: numero de puerta");
+        return -1;
     }
     
     Logger::startLog(PUERTA_LOGGER_DEFAULT_PATH,ID);

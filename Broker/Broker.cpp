@@ -13,7 +13,7 @@ int main (int argc, char** argv){
         return -1;
     }
     
-    Logger::startLog("./log.txt",ID); //TODO cambiar de aca
+    Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,ID);
     
     
     int sockfdCE,sockfdCS;

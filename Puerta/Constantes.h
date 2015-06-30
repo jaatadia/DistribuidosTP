@@ -34,7 +34,7 @@ typedef struct{
     int pertenenciaOTarjeta;
 } Pedido;
 
-#define MUSEO_CONF "./museo.cfg"
+#define MUSEO_CONF "../museo.cfg"
 #define MUSEO_OPEN "MUSEO_OPEN"
 #define MUSEO_CANT_GENTE "MUSEO_CANT"
 #define MUSEO_PUERTAS "MUSEO_PUERTAS"
@@ -42,8 +42,8 @@ typedef struct{
 #define CANT_PERSONAS "CANT_PERSONAS"
 
 #define PUERTA_LOGGER_DEFAULT_PATH "./log.txt"
-#define PUERTA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/Simulador"
-#define PUERTA_FILE_IPC "/home/knoppix/Atadia_Etcheverry/Simulador/puerta.txt"
+#define PUERTA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre"
+#define PUERTA_FILE_IPC "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre/puerta.txt"
 
 #define PATH_CONECTADOR_EXEC "../Common/Conectador"
 #define NAME_CONECTADOR_EXEC "Conectador"
@@ -63,8 +63,8 @@ typedef struct{
 #define PERMISOS 0660
 
 #define MUSEO 1
-#define MUTEX_MUSEO 2
-#define SEM_LUGAR 3
+#define MUTEX_MUSEO 1
+#define SEM_LUGAR 2
 
 #define COLA_PUERTA_ENTRADA 4
 #define COLA_PUERTA_ENTRADA_RESPUESTA 5

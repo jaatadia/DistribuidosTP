@@ -7,18 +7,19 @@
 #define ID "ConectionConecter"
 
 
-#define PATH_CLIENTE_CS "./CSCliente"
+#define PATH_CLIENTE_CS "../Common/CSCliente"
 #define NAME_CLIENTE_CS "CSCliente"
 
-#define PATH_CLIENTE_CE "./CECliente"
+#define PATH_CLIENTE_CE "../Common/CECliente"
 #define NAME_CLIENTE_CE "CECliente"
 
 const char* name="broker"; //TODO cambiar a leer de un archivo
 
 int main (int argc, char** argv){
     
-    if(argc<3){
-        printf("Mal uso 1:nombreBroker 1:id 2:ftok cola entrada 3: ftok cola salida");
+    if(argc<4){
+        printf("Mal uso 1:nombreBroker 2:id 3:ftok cola entrada 4: ftok cola salida\n");
+        return -1;
     }
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);//TODO CAMBIAR

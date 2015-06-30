@@ -49,7 +49,8 @@ using namespace std;
             Logger::loggError("Error al cargar la imagen de ejecutable del Conectador");
             exit(1);
         }
-        
+        int status;
+        wait(&status);
  }
 
     

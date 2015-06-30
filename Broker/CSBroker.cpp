@@ -41,6 +41,7 @@ int main(int argc, char** argv) {
         exit(1);   
     }
 
+    Logger::logg("Esperando ID a leer");
     MensajeAPuerta msg;
     if(recibir(socket,&msg,sizeof(MensajeAPuerta))<0){
         Logger::loggError("Error al recibir el mensaje ");
@@ -48,14 +49,19 @@ int main(int argc, char** argv) {
     };
     long id = msg.destinatario;
     
+    char idNumber[20];
+    sprintf(idNumber,"%ld",id);
+    Logger::logg(string("ID recibido: ")+idNumber);
+    
     while(true){
         
-        
+        Logger::logg("Esperando un mensaje");
         if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),id,0)==-1){
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);
         }
         
+        Logger::logg("Enviando el mensaje");
         if(enviar(socket,&msg,sizeof(MensajeAPuerta))<0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);

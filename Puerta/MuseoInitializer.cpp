@@ -21,6 +21,15 @@ using namespace std;
 
 #define ID "MuseoInitializer"
 
+void crearCarpetas(){
+    string commandoCrear=string("sudo mkdir --mode=0777 -p ")+PUERTA_DIRECTORIO_IPC;
+    string commandoArchivo=string("sudo touch ")+PUERTA_FILE_IPC;
+    Logger::logg(string("Creando carpeta de IPCs: ")+PUERTA_DIRECTORIO_IPC);
+    Logger::logg(string("Creando archivo de IPCs: ")+PUERTA_FILE_IPC);
+    system(commandoCrear.c_str());
+    system(commandoArchivo.c_str());
+}
+
 void crearMuseo(){
     
     Logger::logg("Creando la memoria compartida");
@@ -89,7 +98,7 @@ void crearMuseo(){
     
     Logger::logg("Creando semaforo que indica si hay lugar");
     if ((semid = creasem(PUERTA_FILE_IPC,SEM_LUGAR,PERMISOS))== -1){
-        Logger::loggError("Error al crear el semaforo de mutex");
+        Logger::loggError("Error al crear el semaforo de lugar libre");
         exit(1);   
     };
     
@@ -102,7 +111,9 @@ void crearMuseo(){
 }
 
 int main(int argc, char** argv) {
+    Parser::setPath(MUSEO_CONF);
     Logger::startLog(PUERTA_LOGGER_DEFAULT_PATH,ID);
+    crearCarpetas();
     crearMuseo();
     Logger::closeLogger();
     return 0;

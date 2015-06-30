@@ -29,12 +29,13 @@ class EncoladorPuertaSalida{
     private:
         int colaSalida,colaSalidaNormal,colaSalidaPrioritaria;
         int SemaforoPuertaEsperando, mutexColas;
-        int nroPuerta;
+        int nroPuerta,id;
         ColasPuertas* contador;
         
     public:
-        EncoladorPuertaSalida(int nroPuerta){
+        EncoladorPuertaSalida(int nroPuerta,int id){
             this->nroPuerta=nroPuerta;
+            this->id=id;
             Logger::logg("Buscando la cola de personas por salir");
             if( (colaSalida = msgget(ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA),PERMISOS)) == -1){
                 Logger::loggError("Error al encontrar la cola de entrada");
@@ -73,7 +74,7 @@ class EncoladorPuertaSalida{
     void tratar(){
         MensajeAPuerta msg;
         Logger::logg("EsperandoMensaje");
-        if(msgrcv(colaSalida,&msg,sizeof(MensajeAPuerta)-sizeof(long),nroPuerta,0)==-1){
+        if(msgrcv(colaSalida,&msg,sizeof(MensajeAPuerta)-sizeof(long),id,0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
@@ -135,16 +136,17 @@ class EncoladorPuertaSalida{
 
 int main(int argc, char** argv) {
 
-    if (argc != 2 ){
+    if (argc != 3 ){
         Logger::startLog(LOGGER_DEFAULT_PATH,ENCOLADOR_PUERTA_ID);
-        Logger::loggError("No se pasaron los parametros correctos 1: id de puerta");
+        Logger::loggError("No se pasaron los parametros correctos 1: nro de puerta 2: id de la puerta");
         exit(1);
     }
     
     int numero = atoi(argv[1]);
+    int id = atoi(argv[2]);
     string puertaid=string(ENCOLADOR_PUERTA_ID)+argv[1];
     Logger::startLog(LOGGER_DEFAULT_PATH,puertaid.c_str());
-    EncoladorPuertaSalida encolador(numero);
+    EncoladorPuertaSalida encolador(numero,id);
     
     while(true){
         encolador.tratar();

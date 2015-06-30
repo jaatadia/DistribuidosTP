@@ -3,3 +3,5 @@ Objects/*
 Release/*
 .directory
 *~
+*nbproject*
+*.o
