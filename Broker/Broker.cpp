@@ -93,10 +93,10 @@ int main (int argc, char** argv){
             Logger::loggError("Error al crear CE ");
             exit(1);   
         }else if (childpid == 0){
-            close(newsockfdCE);
+            close(newsockfdCS);
             close(sockfdCE);
             close(sockfdCS);
-            execlp(PATH_BROKER_CE,NAME_BROKER_CE,argv[1],CS,tokill,(char*)NULL);
+            execlp(PATH_BROKER_CE,NAME_BROKER_CE,argv[1],CE,tokill,(char*)NULL);
             Logger::loggError("Error al cargar la imagen de ejecutable del CEbroker");
             exit(1);
         }

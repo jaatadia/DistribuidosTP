@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        if(enviar(socket,&msg,sizeof(MensajeAPuerta))<0){
+        if(enviar(socket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);
         };

@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         MensajeAPuerta msg;
         
         Logger::logg("Esperando mensaje");
-        if(recibir(socket,&msg,sizeof(MensajeAPuerta))<0){
+        if(recibir(socket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);
         };
