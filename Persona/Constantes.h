@@ -9,8 +9,8 @@
 #define	CONSTANTES_H
 
 #define PERSONA_LOGGER_DEFAULT_PATH "./log.txt"
-#define PERSONA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/Simulador"
-#define PERSONA_FILE_IPC PERSONA_DIRECTORIO_IPC+"/persona.txt"
+//#define PERSONA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre"
+#define PERSONA_FILE_IPC "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre/persona.txt"
 
 #define PATH_CONECTADOR_EXEC "../Common/Conectador"
 #define NAME_CONECTADOR_EXEC "Conectador"

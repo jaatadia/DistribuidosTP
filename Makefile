@@ -156,6 +156,11 @@ clean:
 	rm -f -r $(OBJECTS)
 	./IPC_RM.sh
 
+run:
+	cd Broker; ./BrokerInitializer
+	cd Puerta; ./MuseoInitializer;./PuertaInitializer 1;./PuertaInitializer 2
+	cd Persona; ./PersonaInitializer
+
 $(PROYECTO): $(PROCESOS)	
 	g++ -Wall -g $(OBJECTS)/Logger.o $(SRC)/Conectador.cpp  -o $(RELEASE)/Conectador
 	g++ -Wall -g $(OBJECTS)/Logger.o $(SRC)/CSCliente.cpp -o $(RELEASE)/CSCliente

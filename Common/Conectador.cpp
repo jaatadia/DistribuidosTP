@@ -17,7 +17,7 @@ const char* name="broker"; //TODO cambiar a leer de un archivo
 
 int main (int argc, char** argv){
     
-    if(argc<4){
+    if(argc<5){
         printf("Mal uso 1:nombreBroker 2:id 3:ftok cola entrada 4: ftok cola salida\n");
         return -1;
     }

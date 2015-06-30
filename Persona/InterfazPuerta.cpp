@@ -28,24 +28,26 @@ using namespace std;
         //busco la cola
         Logger::logg("Buscando la cola de entrada");
         
-        if( (cola = msgget(ftok(PERSONA_DIRECTORIO_IPC,COLA),PERMISOS)) == -1){
+        if( (cola = msgget(ftok(PERSONA_FILE_IPC,COLA),PERMISOS)) == -1){
             Logger::loggError("Error al encontrar la cola de entrada");
             exit(1);   
         }
 
         //TODO PEDIR id
         
+        static char broker[255];
         static char colaEntrada[12];
         static char id[12];
-        sprintf(colaEntrada,"%d",ftok(PERSONA_DIRECTORIO_IPC,COLA));
-        sprintf(id,"%d",getpid());//reemplazar por el id
+        sprintf(broker,"broker");//TODO leer de un archivo
+        sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA));
+        sprintf(id,"%d",getpid());//TODO reemplazar por el id
         
         int childpid;
         if ((childpid=fork())<0){
             Logger::loggError("Error al crear conectador");
             exit(1);   
         }else if (childpid == 0){
-            execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,id,colaEntrada,colaEntrada,(char*)NULL);
+            execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaEntrada,(char*)NULL);
             Logger::loggError("Error al cargar la imagen de ejecutable del Conectador");
             exit(1);
         }

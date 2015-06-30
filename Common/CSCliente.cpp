@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     }
     
     int cola = atoi(argv[1]);
-    int socket = atoi(argv[1]);
+    int socket = atoi(argv[2]);
     int pidkill = atoi(argv[3]);
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);

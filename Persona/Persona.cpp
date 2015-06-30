@@ -80,6 +80,9 @@ int main(int argc, char** argv) {
             Logger::logg(APP_LEVEL,"Investigador solicitando salida");
             pertenencias = puerta.salirInvestigador(rand()%cantPuertas+1,tarjeta);
         }
+        if(pertenencias!=pertenenciasIn){
+            Logger::logg(APP_LEVEL,"Me dieron otras pertenencias");
+        }
     } else {
         Logger::loggError("Tipo de persona invalido");
         exit(1);

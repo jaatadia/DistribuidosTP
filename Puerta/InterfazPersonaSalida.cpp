@@ -65,7 +65,7 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     static char colaSalida[18];
     sprintf(broker,"broker");//TODO cambiar esto
     sprintf(nroPuerta,"%d",numeroPuerta);
-    sprintf(id,"%d",(numeroPuerta*2)-1);//TODO cambiar esto
+    sprintf(id,"%d",(numeroPuerta*2)-1);//TODO PEDIR id
     sprintf(colaEntrada,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA));
     sprintf(colaSalida,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA));
     
