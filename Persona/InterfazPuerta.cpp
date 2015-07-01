@@ -33,13 +33,20 @@ using namespace std;
             exit(1);   
         }
 
+        if( (colaRespuesta = msgget(ftok(PERSONA_FILE_IPC,COLA_RESPUESTA),PERMISOS)) == -1){
+            Logger::loggError("Error al encontrar la cola de respuesta");
+            exit(1);   
+        }
+        
         //TODO PEDIR id
         
         static char broker[255];
         static char colaEntrada[12];
+        static char colaSalida[12];
         static char id[12];
         sprintf(broker,"broker");//TODO leer de un archivo
         sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA));
+        sprintf(colaSalida,"%d",ftok(PERSONA_FILE_IPC,COLA_RESPUESTA));
         sprintf(id,"%d",getpid());//TODO reemplazar por el id
         
         int childpid;
@@ -52,7 +59,7 @@ using namespace std;
             exit(1);
         }
         int status;
-        wait(&status);
+        wait(&status);//TODO ver que no haya terminado mal
  }
 
     
@@ -74,7 +81,7 @@ using namespace std;
         }
 
         Logger::logg("Esperando respuesta");
-        if(msgrcv(cola,&mensaje,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){//TODO poner aca el id
+        if(msgrcv(colaRespuesta,&mensaje,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){//TODO poner aca el id
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
@@ -126,7 +133,7 @@ using namespace std;
         }
         
         Logger::logg("Esperando respuesta");
-        if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){//TODO poner id aca
+        if(msgrcv(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){//TODO poner id aca
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }

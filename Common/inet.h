@@ -15,8 +15,6 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#define	PORT_FIJO	 5000		/* port por defecto */
-
 
 
 

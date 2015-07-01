@@ -59,6 +59,13 @@ int Parser::getIntParam(std::string keyword){
     return atoi(line.substr(line.find(":")+1).c_str());
 }
 
+std::string Parser::getStringParam(std::string keyword){
+    int result=0;
+    std::string line = getLine(Parser::path,keyword,&result);
+    if(result < 0) return NULL;
+    return line.substr(line.find(":")+1).c_str();
+}
+
 Parser::Parser() {
 }
 

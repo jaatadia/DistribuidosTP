@@ -22,6 +22,7 @@ public:
     static void setPath(const char* path);
     static int getBoolParam(std::string key);
     static int getIntParam(std::string key);
+    static std::string getStringParam(std::string key);
     virtual ~Parser();
     
 private:

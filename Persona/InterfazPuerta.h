@@ -12,7 +12,7 @@
 
 class InterfazPuerta {
 private:
-    int cola;
+    int cola,colaRespuesta;
 
     void entrar(int numeroPuerta,int tipo,int tarjeta,MensajeAPuerta& mensaje);
     void salir(int numeroPuerta,int tipo,int tarjeta,MensajeAPuerta& mensaje);

@@ -8,8 +8,8 @@
 
 int main (int argc, char** argv){
     
-    if(argc<2){
-        printf("Mal uso 1: key Cola");
+    if(argc<4){
+        printf("Mal uso 1: key Cola 2: port1 3:port2");
         return -1;
     }
     
@@ -17,22 +17,22 @@ int main (int argc, char** argv){
     
     
     int sockfdCE,sockfdCS;
-    int portCE = PORT_FIJO;//TODO cambiar a un port leido desde algun lado
-    int portCS = PORT_FIJO +1;
+    int portCE = atoi(argv[2]);
+    int portCS = atoi(argv[3]);
     
     //abro el socket para recibir pedidos de union
     if ( (sockfdCE = tcpoppas(portCE)) < 0){
         Logger::loggError("server: no se puede abrir el stream socket");
         exit(1);
     }
-    Logger::logg("server: se hizo el open pasivo");
+    Logger::logg("server: se hizo el open pasivo de CE");
 
     //abro el socket para recibir pedidos de union
     if ( (sockfdCS = tcpoppas(portCS)) < 0){
         Logger::loggError("server: no se puede abrir el stream socket");
         exit(1);
     }
-    Logger::logg("server: se hizo el open pasivo");
+    Logger::logg("server: se hizo el open pasivo de CS");
     
     while(true){
         
@@ -102,6 +102,9 @@ int main (int argc, char** argv){
             Logger::loggError("Error al cargar la imagen de ejecutable del CEbroker");
             exit(1);
         }
+        
+        close(newsockfdCS);
+        close(newsockfdCE);
     }
     
     Logger::closeLogger();

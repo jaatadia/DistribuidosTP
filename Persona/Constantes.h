@@ -9,7 +9,7 @@
 #define	CONSTANTES_H
 
 #define PERSONA_LOGGER_DEFAULT_PATH "./log.txt"
-//#define PERSONA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre"
+#define PERSONA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre"
 #define PERSONA_FILE_IPC "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre/persona.txt"
 
 #define PATH_CONECTADOR_EXEC "../Common/Conectador"
@@ -17,6 +17,7 @@
 
 #define PERMISOS 0660
 #define COLA 1
+#define COLA_RESPUESTA 2
 
 #endif	/* CONSTANTES_H */
 

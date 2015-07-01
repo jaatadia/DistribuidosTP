@@ -2,6 +2,7 @@
 #include "tcpoppas.cpp"
 #include "tcpopact.cpp"
 #include "Logger.h"
+#include "Parser.h"
 #include "inet.h"
 
 #define ID "ConectionConecter"
@@ -13,8 +14,6 @@
 #define PATH_CLIENTE_CE "../Common/CECliente"
 #define NAME_CLIENTE_CE "CECliente"
 
-const char* name="broker"; //TODO cambiar a leer de un archivo
-
 int main (int argc, char** argv){
     
     if(argc<5){
@@ -22,10 +21,21 @@ int main (int argc, char** argv){
         return -1;
     }
     
-    Logger::startLog(LOGGER_DEFAULT_PATH,ID);//TODO CAMBIAR
+    Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
-    int portCS = PORT_FIJO;//TODO cambiar a un port leido desde algun lado
-    int portCE = PORT_FIJO+1;
+    Parser::setPath("../Broker.conf");
+    int portCS = Parser::getIntParam("PUERTO_1");
+    int portCE = Parser::getIntParam("PUERTO_2");
+    
+    if(portCS<0){
+        Logger::loggError("Error al leer los puertos del broker");
+        exit(1);   
+    }
+    
+    if(portCE<0){
+        Logger::loggError("Error al leer los puertos del broker");
+        exit(1);   
+    }
     
     //pido unirme al broker
     int newsockfdCS = tcpopact(argv[1],portCS);
@@ -34,7 +44,7 @@ int main (int argc, char** argv){
         exit(1); 
     }
     
-    int newsockfdCE = tcpopact(name,portCE);
+    int newsockfdCE = tcpopact(argv[1],portCE);
     if (newsockfdCE < 0) {
         Logger::loggError("cliente: error al generar segunda conexion");
         exit(1); 
@@ -81,7 +91,8 @@ int main (int argc, char** argv){
         exit(1);
     }
     
-    
+    close(newsockfdCE);
+    close(newsockfdCS);
     
 
 }
