@@ -1,4 +1,4 @@
-#parametro 1: -a add rutas to host -r restore hosts 2: ruta del archivo con los hosts a agregar
+#parametro 1: ruta del archivo con los hosts a agregar
 
 #obtengo los datos nuevos
 
@@ -24,12 +24,12 @@ while read -r line || [[ -n $line ]]; do
       cantHostsPorIp[$cantIP]=$j
       let cantIP=cantIP+1
     fi
-done < "$2"
+done < "$1"
 
-echo ${ip[@]}
-echo ${cantHostsPorIp[@]}
-echo ${hosts[@]}
-echo "---------------"
+#echo ${ip[@]}
+#echo ${cantHostsPorIp[@]}
+#echo ${hosts[@]}
+#echo "---------------"
 
 #obtengo los datos actuales
 
@@ -57,10 +57,10 @@ while read -r line || [[ -n $line ]]; do
     fi
 done < "/etc/hosts"
 
-echo ${ipH[@]}
-echo ${cantHostsPorIpH[@]}
-echo ${hostsH[@]}
-echo "----------"
+#echo ${ipH[@]}
+#echo ${cantHostsPorIpH[@]}
+#echo ${hostsH[@]}
+#echo "----------"
 
 #saco los del actual que concuerdan con los nombres de host que quiero poner
 cantIpSobrevivientes=0
@@ -143,3 +143,12 @@ while [ $i -lt $cantIpSobrevivientes ]; do
 done
 
 cat tmp
+
+i=0
+while [[ -f "./hosts.bak$i" ]]; do
+  let i=i+1
+done
+
+cp /etc/hosts ./hosts.bak$i
+sudo cp tmp /etc/hosts
+rm tmp
