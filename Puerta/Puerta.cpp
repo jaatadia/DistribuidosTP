@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
         } else {
             int tarjeta=-1;
             if(pudoEntrar){
-                tarjeta = locker.guardarPertenencia(1);//TODO Cambiar pertenencia
+                tarjeta = locker.guardarPertenencia(persona.pertenencias);
             }
             entrada.responderInvestigador(persona.idPersona,tarjeta);
             Logger::logg(APP_LEVEL,"Respondido al investigador");

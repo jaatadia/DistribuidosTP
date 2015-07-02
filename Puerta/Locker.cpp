@@ -64,10 +64,10 @@ int main(int argc, char** argv) {
         puerta.recivirPedido(pedido);
         if(pedido.tipo==TIPO_DEPOSITO){
             Logger::logg(APP_LEVEL,"Respondiendo un deposito");
-            puerta.responderDeposito(guardarPertenencias(&myMap,nroPuerta,pedido.pertenenciaOTarjeta)); //TODO cambiar respuesta de tarjeta
+            puerta.responderDeposito(guardarPertenencias(&myMap,nroPuerta,pedido.pertenenciaOTarjeta));
         }else{
             Logger::logg(APP_LEVEL,"Respondiendo una extraccion");
-            puerta.responderExtraccion(sacarPertenencias(&myMap,pedido.pertenenciaOTarjeta));//TODO cambiar respuesta de pertenencias
+            puerta.responderExtraccion(sacarPertenencias(&myMap,pedido.pertenenciaOTarjeta));
         }
     }
     

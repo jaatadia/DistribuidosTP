@@ -117,7 +117,7 @@ using namespace std;
     
     void InterfazPuerta::salir(int numeroPuerta, int tipo, int tarjeta,MensajeAPuerta& msg){
        //TODO pedir id puerta 
-        msg.destinatario=(2*numeroPuerta)-1;//TODO reemplazar por numero de puerta
+        msg.destinatario=(2*numeroPuerta)-1;//TODO reemplazar por id de puerta
         msg.mensaje=getpid();//Poner esto en otro campo
         msg.tipo= tipo;
         msg.pertenenciasOTarjeta=tarjeta;

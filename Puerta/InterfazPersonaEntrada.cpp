@@ -73,6 +73,7 @@ void InterfazPersonaEntrada::tomarPersona(Persona& persona){
     
     persona.idPersona = msg.mensaje;
     persona.tipoPersona = msg.tipo;
+    persona.pertenencias = msg.pertenenciasOTarjeta;
     
     Logger::logg("Recibi persona");
 }
