@@ -10,10 +10,14 @@
 
 int main (int argc, char** argv){
     
+    if(argc<2){
+        printf("mal uso, 1:puerto por el que escuchar");
+    }
+    
     Logger::startLog("./log.txt",ID);
     
     int sockfd;
-    int port = PORT_FIJO +2;
+    int port = atoi(argv[1]);
     
     //abro el socket para recibir pedidos de union
     if ( (sockfd = tcpoppas(port)) < 0){

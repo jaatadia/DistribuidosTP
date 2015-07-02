@@ -54,8 +54,13 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
         exit(1);
     }
     
+    Logger::logg("Esperando que las conexiones se realizen");
     int status;
     wait(&status);
+        if(WEXITSTATUS(status)!=0){
+        Logger::loggError("Error al crear las conexiones");
+        exit(1);   
+    }
 }
 
 InterfazPersonaEntrada::~InterfazPersonaEntrada() {    

@@ -43,11 +43,13 @@ int main(int argc, char** argv) {
     while(continuaComunicacion){
         MensajeAPuerta msg;
         
+        Logger::logg("Esperando mensaje sobre la cola");
         if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0,0)==-1){
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);
         }
        
+        Logger::logg("Reenvio mensaje por el socket");
         if(enviar(socket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);

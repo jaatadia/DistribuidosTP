@@ -45,8 +45,8 @@ using namespace std;
         static char colaSalida[12];
         static char id[12];
         sprintf(broker,"broker");//TODO leer de un archivo
-        sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA));
-        sprintf(colaSalida,"%d",ftok(PERSONA_FILE_IPC,COLA_RESPUESTA));
+        sprintf(colaSalida,"%d",ftok(PERSONA_FILE_IPC,COLA));
+        sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA_RESPUESTA));
         sprintf(id,"%d",getpid());//TODO reemplazar por el id
         
         int childpid;
@@ -54,7 +54,7 @@ using namespace std;
             Logger::loggError("Error al crear conectador");
             exit(1);   
         }else if (childpid == 0){
-            execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaEntrada,(char*)NULL);
+            execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaSalida,(char*)NULL);
             Logger::loggError("Error al cargar la imagen de ejecutable del Conectador");
             exit(1);
         }

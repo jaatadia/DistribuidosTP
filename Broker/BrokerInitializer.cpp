@@ -39,26 +39,26 @@ void crearBroker(key_t key){
     
     Logger::logg("Creando el proceso broker");
     
-    Parser::setPath("../Broker.conf");
+    Parser::setPath("../broker.conf");
     static char strkey[12];
     static char puerto1[12];
     static char puerto2[12];
     sprintf(strkey,"%d",key);
-    std::string port1 = Parser::getStringParam("PUERTO_1");
-    std::string port2 = Parser::getStringParam("PUERTO_2");
+    int port1 = Parser::getIntParam("PUERTO_1");
+    int port2 = Parser::getIntParam("PUERTO_2");
     
-    if(port1.empty()){
+    if(port1<0){
         Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
     
-    if(port2.empty()){
+    if(port2<0){
         Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
     
-    sprintf(puerto1,"%s",port1.c_str());
-    sprintf(puerto2,"%s",port2.c_str());
+    sprintf(puerto1,"%d",port1);
+    sprintf(puerto2,"%d",port2);
     
     int childpid;
     if ((childpid=fork())<0){

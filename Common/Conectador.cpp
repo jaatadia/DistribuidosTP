@@ -23,7 +23,7 @@ int main (int argc, char** argv){
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
-    Parser::setPath("../Broker.conf");
+    Parser::setPath("../broker.conf");
     int portCS = Parser::getIntParam("PUERTO_1");
     int portCE = Parser::getIntParam("PUERTO_2");
     
@@ -94,5 +94,6 @@ int main (int argc, char** argv){
     close(newsockfdCE);
     close(newsockfdCS);
     
+    return 0;
 
 }
