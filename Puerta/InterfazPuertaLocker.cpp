@@ -38,28 +38,19 @@ void InterfazPuertaLocker::recivirPedido(Pedido& pedido){
     pedido.tipo=msg.tipo;
     pedido.puerta=msg.mensaje;
     pedido.pertenenciaOTarjeta=msg.pertenenciasOTarjeta;
+    pedido.origen=msg.origen;
 }
 
-void InterfazPuertaLocker::responderDeposito(int tarjeta){
+void InterfazPuertaLocker::responder(long destino, int tipo,int pertenenciasOTarjeta){
     MensajeAPuerta msg;
-    msg.destinatario=2*nroPuerta;//TODO revisar 
-    msg.tipo=TIPO_DEPOSITO;
-    msg.mensaje= (tarjeta!=-1) ? MENSAJE_PASAR:MENSAJE_NO_PASAR;
-    msg.pertenenciasOTarjeta=tarjeta;
+    msg.myType=destino;
+    msg.origen=nroPuerta;
+    msg.destino=destino;
+    msg.tipo=tipo;
+    msg.mensaje= (pertenenciasOTarjeta!=-1) ? MENSAJE_PASAR:MENSAJE_NO_PASAR;
+    msg.pertenenciasOTarjeta=pertenenciasOTarjeta;
     if( (msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
-        Logger::loggError("Error al responder el mensaje de deposito");
-        exit(1);   
-    }
-}
-
-void InterfazPuertaLocker::responderExtraccion(int pertenencia){
-    MensajeAPuerta msg;
-    msg.destinatario=(2*nroPuerta)-1;//TODO revisar 
-    msg.tipo=TIPO_RETIRO;
-    msg.mensaje= (pertenencia!=-1) ? MENSAJE_PASAR:MENSAJE_NO_PASAR;
-    msg.pertenenciasOTarjeta=pertenencia;
-    if( (msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
-        Logger::loggError("Error al responder el mensaje de extraccion");
+        Logger::loggError("Error al responder el mensaje del pedido");
         exit(1);   
     }
 }

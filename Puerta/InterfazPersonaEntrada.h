@@ -24,15 +24,16 @@ public:
     void tomarPersona(Persona& persona);
     
     //responde a la persona con el id "id", si puede pasar o no
-    void responder(int idPersona,bool puedePasar);
+    void responder(long idPersona,bool puedePasar);
     
     //responde al investigador. el numero de tarjeta es 0 si no puede entrar
-    void responderInvestigador(int idInvestigador,int tarjeta);
+    void responderInvestigador(long idInvestigador,int tarjeta);
     
 private:
         int colaEntrada;
         int colaRespuesta;
         int numero; //numero de la puerta de entrada
+        long myID;
         //MensajeAPuerta request;
 
 };

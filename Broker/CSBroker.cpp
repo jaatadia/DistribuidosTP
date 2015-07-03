@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
         Logger::loggError("Error al recibir el mensaje ");
         exit(1);
     };
-    long id = msg.destinatario;
+    long id = msg.myType;
     
     char idNumber[20];
     sprintf(idNumber,"%ld",id);

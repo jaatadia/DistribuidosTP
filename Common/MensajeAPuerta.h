@@ -16,7 +16,9 @@
 #define MENSAJE_PASAR 1
 
 typedef struct {
-    long int destinatario;
+    long myType;
+    long origen;
+    long destino;
     int mensaje; //viene a quien responderle - va el mensaje
     int tipo;
     int pertenenciasOTarjeta;

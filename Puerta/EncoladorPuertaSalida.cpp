@@ -78,7 +78,7 @@ class EncoladorPuertaSalida{
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
-        msg.destinatario=nroPuerta;//TODO ver si esto lo dejamos o InterfazPersonaSalida.cpp busca por su id
+        
         if(msg.tipo==PERSONA){
             aumentarEsperando(true);
             Logger::logg("reenviando mensaje por cola normal");

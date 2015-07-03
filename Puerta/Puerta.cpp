@@ -9,6 +9,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <sstream>
+#include <stdio.h>
 
 #include "../Common/Logger.h"
 #include "../Common/MensajeAPuerta.h"
@@ -45,16 +46,18 @@ int main(int argc, char** argv) {
         Logger::logg(APP_LEVEL,"Me fijo si puede entrar al museo");
         bool pudoEntrar = museo.entrar();
         Logger::logg(APP_LEVEL,"obtuve si la persona pudo entrar");
+        char nro[20];
+        sprintf(nro,"%ld",persona.idPersona);
         if (persona.tipoPersona == PERSONA) {
             entrada.responder(persona.idPersona,pudoEntrar);
-            Logger::logg(APP_LEVEL,"Respondido a la persona");
+            Logger::logg(APP_LEVEL,string("Respondido a la persona: ")+nro);
         } else {
             int tarjeta=-1;
             if(pudoEntrar){
                 tarjeta = locker.guardarPertenencia(persona.pertenencias);
             }
             entrada.responderInvestigador(persona.idPersona,tarjeta);
-            Logger::logg(APP_LEVEL,"Respondido al investigador");
+            Logger::logg(APP_LEVEL,string("Respondido al investigador: ")+nro);
         }       
     }
 

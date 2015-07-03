@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
             exit(1);   
     }
     
-    crearClientes();
+    if(argc==1){crearClientes();}
     
     Logger::closeLogger();
     return 0;

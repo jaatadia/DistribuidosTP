@@ -26,10 +26,10 @@ public:
     void tomarPersona(Persona& persona);
     
     //responde a la persona con el id "id", si puede pasar o no
-    void responder(int idPersona,bool puedePasar);
+    void responder(long idPersona,bool puedePasar);
     
     //responde al investigador. el id de pertenencias es null si no pudo salir
-    void responderInvestigador(int idInvestigador,int pertenencias);
+    void responderInvestigador(long idInvestigador,int pertenencias);
     
 private:
     int colaSalida;
@@ -39,7 +39,7 @@ private:
     int mutexColas;
     ColasPuertas* contador;
     int numero; //numero de la puerta de salida
-    //MensajeAPuerta request;
+    long myID;
 };
 
 #endif	/* INTERFAZPERSONASALIDA_H */

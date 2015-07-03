@@ -38,7 +38,8 @@ using namespace std;
             exit(1);   
         }
         
-        //TODO PEDIR id
+        
+        myID=getpid();//TODO PEDIR id
         
         static char broker[255];
         static char colaEntrada[12];
@@ -47,7 +48,7 @@ using namespace std;
         sprintf(broker,"broker");//TODO leer de un archivo
         sprintf(colaSalida,"%d",ftok(PERSONA_FILE_IPC,COLA));
         sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA_RESPUESTA));
-        sprintf(id,"%d",getpid());//TODO reemplazar por el id
+        sprintf(id,"%ld",myID);
         
         int childpid;
         if ((childpid=fork())<0){
@@ -59,18 +60,24 @@ using namespace std;
             exit(1);
         }
         int status;
-        wait(&status);//TODO ver que no haya terminado mal
+        wait(&status);
+        if(WEXITSTATUS(status)!=0){
+            Logger::loggError("Error al crear las conexiones");
+            exit(1);   
+        }
  }
 
     
    void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){
-       //TODO pedir id puerta
+
         stringstream ss;
         ss<<numeroPuerta;
 
         MensajeAPuerta msg;
-        msg.destinatario=2*numeroPuerta;//TODO remplazar por el id de la puerta
-        msg.mensaje=getpid();//TODO poner esto en otro campo
+        msg.myType=myID;
+        msg.origen=myID;
+        msg.destino=2*numeroPuerta;//TODO pedir y remplazar por el id de la puerta
+        msg.mensaje=0;
         msg.tipo=tipo;
         msg.pertenenciasOTarjeta=tarjeta;
         
@@ -81,7 +88,7 @@ using namespace std;
         }
 
         Logger::logg("Esperando respuesta");
-        if(msgrcv(colaRespuesta,&mensaje,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){//TODO poner aca el id
+        if(msgrcv(colaRespuesta,&mensaje,sizeof(MensajeAPuerta)-sizeof(long),myID,0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
@@ -116,16 +123,17 @@ using namespace std;
 
     
     void InterfazPuerta::salir(int numeroPuerta, int tipo, int tarjeta,MensajeAPuerta& msg){
-       //TODO pedir id puerta 
-        msg.destinatario=(2*numeroPuerta)-1;//TODO reemplazar por id de puerta
-        msg.mensaje=getpid();//Poner esto en otro campo
+
+        msg.myType=myID;
+        msg.origen=myID;
+        msg.destino=(2*numeroPuerta)-1;//TODO pedir y reemplazar por id de puerta
+        msg.mensaje=0;
         msg.tipo= tipo;
         msg.pertenenciasOTarjeta=tarjeta;
 
         stringstream ss;
         ss<<numeroPuerta;
 
-        msg.mensaje=getpid();
         Logger::logg("Enviando mensaje para salir");
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje "+ss.str());
@@ -133,7 +141,7 @@ using namespace std;
         }
         
         Logger::logg("Esperando respuesta");
-        if(msgrcv(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),getpid(),0)==-1){//TODO poner id aca
+        if(msgrcv(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),myID,0)==-1){
             Logger::loggError("Error al leer el mensaje ");
             exit(1);
         }
@@ -156,6 +164,7 @@ using namespace std;
     
     InterfazPuerta::~InterfazPuerta(){
         MensajeAPuerta msg;
+        msg.myType=myID;
         msg.mensaje=MENSAJE_END_COMMUNICATION;
         Logger::logg("Enviando mensaje para cerrar comunicaciones");
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){

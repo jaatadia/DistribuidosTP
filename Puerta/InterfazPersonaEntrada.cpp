@@ -35,12 +35,14 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
     }
     
     //TODO pedir id
+    myID=numeroPuerta*2;
+    
     static char broker[18];
     static char id[18];
     static char colaEntrada[18];
     static char colaSalida[18];
-    sprintf(broker,"broker");//TODO cambiar esto
-    sprintf(id,"%d",numeroPuerta*2);//TODO cambiar esto
+    sprintf(broker,"broker");//TODO leer de un archivo
+    sprintf(id,"%ld",myID);
     sprintf(colaEntrada,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA));
     sprintf(colaSalida,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA_RESPUESTA));
     
@@ -57,7 +59,7 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
     Logger::logg("Esperando que las conexiones se realizen");
     int status;
     wait(&status);
-        if(WEXITSTATUS(status)!=0){
+    if(WEXITSTATUS(status)!=0){
         Logger::loggError("Error al crear las conexiones");
         exit(1);   
     }
@@ -70,25 +72,27 @@ void InterfazPersonaEntrada::tomarPersona(Persona& persona){
     
     Logger::logg("Esperando persona");
     MensajeAPuerta msg;
-    if( (msgrcv(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero*2,0)) == -1){//TODO cambiar esto
+    if( (msgrcv(colaEntrada,&msg,sizeof(MensajeAPuerta)-sizeof(long),myID,0)) == -1){
         Logger::loggError("Error leer mensaje de entrada");
         exit(1);   
     }
     //request = msg; 
     
-    persona.idPersona = msg.mensaje;
+    persona.idPersona = msg.origen;
     persona.tipoPersona = msg.tipo;
     persona.pertenencias = msg.pertenenciasOTarjeta;
     
     Logger::logg("Recibi persona");
 }
     
-void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
+void InterfazPersonaEntrada::responder(long idPersona,bool puedePasar){
     
     MensajeAPuerta msg;
-    msg.destinatario  = idPersona;
+    msg.myType = myID;
+    msg.origen = myID;
+    msg.destino = idPersona;
     msg.mensaje = (puedePasar) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
-    Logger::logg("Respondiendo a persona que puede pasar");
+    Logger::logg("Respondiendo a persona si puede pasar");
     if(msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
         Logger::loggError("Error responder a la persona");
         exit(1);   
@@ -96,9 +100,11 @@ void InterfazPersonaEntrada::responder(int idPersona,bool puedePasar){
     (puedePasar) ? Logger::logg("Respondido a persona que puede pasar") : Logger::logg("Respondido a persona que NO puede pasar");
 }
     
-void InterfazPersonaEntrada::responderInvestigador(int idInvestigador,int tarjeta){ 
+void InterfazPersonaEntrada::responderInvestigador(long idInvestigador,int tarjeta){ 
     MensajeAPuerta msg;
-    msg.destinatario  = idInvestigador;
+    msg.myType = myID;
+    msg.origen = myID;
+    msg.destino  = idInvestigador;
     msg.mensaje = (tarjeta!=-1) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta = tarjeta;
     Logger::logg("Respondiendo al investigador que puede pasar");

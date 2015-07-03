@@ -4,6 +4,11 @@ all:
 	cd Persona; make
 	cd Common; make
 
+cleanLog:
+	- cd Broker; rm BrokerLog.txt
+	- cd Puerta; rm log.txt
+	- cd Persona; rm log.txt
+
 clean:
 	cd Broker; make clean
 	cd Puerta; make clean

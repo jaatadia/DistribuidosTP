@@ -7,6 +7,9 @@
 
 #include <sys/msg.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "../Common/Logger.h"
 #include "../Common/MensajeAPuerta.h"
 
@@ -34,7 +37,9 @@ InterfazLocker::InterfazLocker(int nroPuerta) {
 
 int InterfazLocker::guardarPertenencia(int pertenencia){
     MensajeAPuerta msg;
-    msg.destinatario=nroPuerta;//TODO ver
+    msg.myType=nroPuerta;
+    msg.origen=getpid();//aca no es necesario el id por que el locker esta en la misma pc
+    msg.destino=nroPuerta;
     msg.tipo=TIPO_DEPOSITO;
     msg.pertenenciasOTarjeta=pertenencia;
     if(msgsnd(colaEntrada,&msg,sizeof(msg)-sizeof(long),0)==-1){
@@ -42,7 +47,7 @@ int InterfazLocker::guardarPertenencia(int pertenencia){
         exit(1);   
     }
     
-    if(msgrcv(colaRespuesta,&msg,sizeof(msg)-sizeof(long),nroPuerta*2,0)==-1){//TODO ver
+    if(msgrcv(colaRespuesta,&msg,sizeof(msg)-sizeof(long),getpid(),0)==-1){
         Logger::loggError("Error al recibir respuesta");
         exit(1);   
     }
@@ -51,7 +56,9 @@ int InterfazLocker::guardarPertenencia(int pertenencia){
 
 int InterfazLocker::tomarPertenencia(int tarjeta){
     MensajeAPuerta msg;
-    msg.destinatario=nroPuerta;
+    msg.myType=nroPuerta;
+    msg.origen=getpid();//aca no es necesario poner id por que el locker esta en la mimsa pc
+    msg.destino=nroPuerta;
     msg.tipo=TIPO_RETIRO;
     msg.pertenenciasOTarjeta=tarjeta;
     if(msgsnd(colaEntrada,&msg,sizeof(msg)-sizeof(long),0)==-1){
@@ -59,7 +66,7 @@ int InterfazLocker::tomarPertenencia(int tarjeta){
         exit(1);   
     }
     
-    if(msgrcv(colaRespuesta,&msg,sizeof(msg)-sizeof(long),(2*nroPuerta)-1,0)==-1){//TODO ver
+    if(msgrcv(colaRespuesta,&msg,sizeof(msg)-sizeof(long),getpid(),0)==-1){
         Logger::loggError("Error al recibir respuesta");
         exit(1);   
     }

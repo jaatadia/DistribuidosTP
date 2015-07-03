@@ -86,7 +86,7 @@ int main (int argc, char** argv){
         exit(1);   
     }else if (childpid == 0){
         close(newsockfdCE);
-        execlp(PATH_CLIENTE_CS,NAME_CLIENTE_CS,argv[4],CS,tokill,(char*)NULL);
+        execlp(PATH_CLIENTE_CS,NAME_CLIENTE_CS,argv[2],argv[4],CS,tokill,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del CSCliente");
         exit(1);
     }

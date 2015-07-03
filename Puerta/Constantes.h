@@ -9,7 +9,7 @@
 #define	CONSTANTES_H
 
 typedef struct {
-    int idPersona;
+    long idPersona;
     int tipoPersona;
     int pertenencias;
 } Persona;
@@ -32,6 +32,7 @@ typedef struct{
     int tipo;
     int puerta;
     int pertenenciaOTarjeta;
+    long origen;
 } Pedido;
 
 #define MUSEO_CONF "../museo.cfg"

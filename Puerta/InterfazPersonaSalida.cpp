@@ -58,14 +58,16 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     }
     
     //TODO pedir id
+    myID=(numeroPuerta*2)-1;
+    
     static char broker[18];
     static char nroPuerta[18];
     static char id[18];
     static char colaEntrada[18];
     static char colaSalida[18];
-    sprintf(broker,"broker");//TODO cambiar esto
+    sprintf(broker,"broker");//TODO leer de un archivo
     sprintf(nroPuerta,"%d",numeroPuerta);
-    sprintf(id,"%d",(numeroPuerta*2)-1);//TODO PEDIR id
+    sprintf(id,"%ld",myID);
     sprintf(colaEntrada,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA));
     sprintf(colaSalida,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA));
     
@@ -123,14 +125,14 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
     MensajeAPuerta msg;
     if(contador->investigadores == 0){
         Logger::logg("Tomo persona para salir");
-        if( (msgrcv(colaSalida,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero,0)) == -1){
+        if( (msgrcv(colaSalida,&msg,sizeof(MensajeAPuerta)-sizeof(long),myID,0)) == -1){
             Logger::loggError("Error al leer mensaje de salida de persona");
             exit(1);   
         }
         contador->personasNormales=contador->personasNormales-1;
     }else{
         Logger::logg("Tomo investigador para salir");
-        if( (msgrcv(colaSalidaPrioritaria,&msg,sizeof(MensajeAPuerta)-sizeof(long),numero,0)) == -1){
+        if( (msgrcv(colaSalidaPrioritaria,&msg,sizeof(MensajeAPuerta)-sizeof(long),myID,0)) == -1){
             Logger::loggError("Error al leer mensaje de salida de investigador");
             exit(1);   
         }
@@ -145,7 +147,7 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
         Logger::logg("Liberado mutex de que hay personas");
     }
     
-    persona.idPersona = msg.mensaje;
+    persona.idPersona = msg.origen;
     persona.tipoPersona = msg.tipo;
     persona.pertenencias = msg.pertenenciasOTarjeta;
     
@@ -156,10 +158,12 @@ void InterfazPersonaSalida::tomarPersona(Persona& persona){
     }
 }
 
-void InterfazPersonaSalida::responder(int idPersona,bool puedePasar){
+void InterfazPersonaSalida::responder(long idPersona,bool puedePasar){
 
     MensajeAPuerta msg;
-    msg.destinatario  = idPersona;
+    msg.myType = myID;
+    msg.origen = myID;
+    msg.destino  = idPersona;
     msg.mensaje = (puedePasar) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     if(msgsnd(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
         Logger::loggError("Error al responder a la persona");
@@ -168,10 +172,12 @@ void InterfazPersonaSalida::responder(int idPersona,bool puedePasar){
     (puedePasar) ? Logger::logg("Respondido a la persona que puede salir del museo") : Logger::logg("Respondido a la persona que NO puede salir del museo");
 }
 
-void InterfazPersonaSalida::responderInvestigador(int idInvestigador,int pertenencias){
+void InterfazPersonaSalida::responderInvestigador(long idInvestigador,int pertenencias){
 
     MensajeAPuerta msg;
-    msg.destinatario  = idInvestigador;
+    msg.myType = myID;
+    msg.origen = myID;
+    msg.destino  = idInvestigador;
     msg.mensaje = (pertenencias!=-1) ? MENSAJE_PASAR : MENSAJE_NO_PASAR;
     msg.pertenenciasOTarjeta = pertenencias;
     if(msgsnd(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){

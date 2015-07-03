@@ -15,22 +15,24 @@
 
 using namespace std;
 
-//argv[1] fd socket
-//argv[2] fd cola
-//argv[3] kill
+//argv[1] id
+//argv[2] fd socket
+//argv[3] fd cola
+//argv[4] kill
 
 #define ID "CSCliente"
 
 int main(int argc, char** argv) {
     
     if(argc<4){
-        printf("Mal uso 1: keyCola 2:fdSocket 3:pidKill");
+        printf("Mal uso 1:id 1: keyCola 2:fdSocket 3:pidKill");
         return -1;
     }
     
-    int cola = atoi(argv[1]);
-    int socket = atoi(argv[2]);
-    int pidkill = atoi(argv[3]);
+    int id = atoi(argv[1]);
+    int cola = atoi(argv[2]);
+    int socket = atoi(argv[3]);
+    int pidkill = atoi(argv[4]);
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
@@ -44,11 +46,13 @@ int main(int argc, char** argv) {
         MensajeAPuerta msg;
         
         Logger::logg("Esperando mensaje sobre la cola");
-        if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0,0)==-1){
+        if(msgrcv(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),id,0)==-1){
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);
         }
        
+        msg.myType=msg.destino;
+        
         Logger::logg("Reenvio mensaje por el socket");
         if(enviar(socket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");

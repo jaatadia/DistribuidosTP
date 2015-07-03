@@ -14,8 +14,7 @@ class InterfazPuertaLocker {
 public:
     InterfazPuertaLocker(int nroPuerta);
     void recivirPedido(Pedido& pedido);
-    void responderDeposito(int tarjeta);
-    void responderExtraccion(int pertenencia);
+    void responder(long idDestino, int tipoOperacion,int tarjeta);
     
     virtual ~InterfazPuertaLocker();
 private:

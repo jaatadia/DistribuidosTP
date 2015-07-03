@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
-        msg.destinatario = 10;//TODO cambiar
+        //msg.destinatario = 10;//TODO cambiar
         
         if(enviar(socket,&msg,sizeof(MensajeAPuerta))<0){
             Logger::loggError("Error al recibir el mensaje ");

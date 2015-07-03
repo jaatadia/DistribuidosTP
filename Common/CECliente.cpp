@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     
     Logger::logg(string("Enviando mi ID: ")+argv[1]);
     MensajeAPuerta msg;
-    msg.destinatario=id;
+    msg.myType=id;
     if(enviar(socket,&msg,sizeof(MensajeAPuerta))<0){
         Logger::loggError("Error al recibir el mensaje ");
         exit(1);

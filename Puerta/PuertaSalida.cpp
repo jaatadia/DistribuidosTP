@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <sys/shm.h>
 #include <unistd.h>
-#include <sstream>
+#include <stdio.h>
 
 #include "../Common/Logger.h"
 #include "../Common/MensajeAPuerta.h"
@@ -45,6 +45,8 @@ int main(int argc, char** argv) {
     while(true){
         Logger::logg(APP_LEVEL,"Esperando una persona");
         persona.tomarPersona(datos);
+        char nro[20];
+        sprintf(nro,"%ld",datos.idPersona);
         if(datos.tipoPersona==INVESTIGADOR){
             Logger::logg(APP_LEVEL,"Buscando pertenencias del investigador al locker");
             int resultado = locker.tomarPertenencia(datos.pertenencias);
@@ -53,11 +55,11 @@ int main(int argc, char** argv) {
             }else{
                 Logger::logg(APP_LEVEL,"No se pudieron encontrar las pertenencias en el locker");
             };
-            Logger::logg(APP_LEVEL,"Respondiendo al investigador");
+            Logger::logg(APP_LEVEL,string("Respondido al investigador: ")+nro);
             persona.responderInvestigador(datos.idPersona,resultado);
         }else{
-            Logger::logg(APP_LEVEL,"Respondiendo a la persona");
             persona.responder(datos.idPersona,museo.salir());
+            Logger::logg(APP_LEVEL,string("Respondido a la persona: ")+nro);
         }
         
     }
