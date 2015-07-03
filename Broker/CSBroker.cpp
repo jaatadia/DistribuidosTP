@@ -7,6 +7,8 @@
 
 #include <cstdlib>
 #include <sys/msg.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include "../Common/enviar.cpp"
 #include "../Common/recibir.cpp"
@@ -14,15 +16,20 @@
 #include "../Common/MensajeAPuerta.h"
 #include "Constantes.h"
 
-
+#define ID "CSBroker"
 using namespace std;
+
+static int mySocket;
+
+void myHandler(int sigNum){
+    close(mySocket);
+    Logger::closeLogger();
+    exit(1);
+}
 
 //argv[1] fd socket
 //argv[2] fd cola
 //argv[3] kill
-
-#define ID "CSBroker"
-
 int main(int argc, char** argv) {
     
     if(argc<4){
@@ -31,10 +38,21 @@ int main(int argc, char** argv) {
     }
     
     int cola = atoi(argv[1]);
-    int socket = atoi(argv[2]);
+    mySocket = atoi(argv[2]);
     //int pidkill = atoi(argv[3]);
     
     Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,ID);
+
+    struct sigaction oldHandler;
+    struct sigaction newHandler;
+    newHandler.sa_handler=myHandler;
+    newHandler.sa_flags=0;
+    sigfillset(&(newHandler.sa_mask));
+    
+    if(sigaction(SIGUSR1,&newHandler,&oldHandler) == -1){
+        Logger::loggError("Error al encontrar asignar el signal handler a CSBroker");
+        exit(1);   
+    }
     
     if( (cola = msgget(cola,0660)) == -1){
         Logger::loggError("Error al encontrar la cola del broker");
@@ -43,7 +61,7 @@ int main(int argc, char** argv) {
 
     Logger::logg("Esperando ID a leer");
     MensajeAPuerta msg;
-    if(recibir(socket,&msg,sizeof(MensajeAPuerta))<=0){
+    if(recibir(mySocket,&msg,sizeof(MensajeAPuerta))<=0){
         Logger::loggError("Error al recibir el mensaje ");
         exit(1);
     };
@@ -62,7 +80,7 @@ int main(int argc, char** argv) {
         }
         
         Logger::logg("Enviando el mensaje");
-        if(enviar(socket,&msg,sizeof(MensajeAPuerta))<=0){
+        if(enviar(mySocket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);
         };
@@ -70,7 +88,7 @@ int main(int argc, char** argv) {
         
     }
     
-    Logger::closeLogger();
+
     
     return 0;
 }

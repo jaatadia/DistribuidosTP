@@ -61,7 +61,8 @@ int main(int argc, char** argv) {
         
         continuaComunicacion=(msg.mensaje!=MENSAJE_END_COMMUNICATION);
     }
-    //TODO averiguar si hacer close de los sockets  
+    
+    close(socket);
     Logger::closeLogger();
     kill(pidkill,SIGUSR1);
     

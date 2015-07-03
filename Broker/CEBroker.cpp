@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
         }
     }
     
+    close(socket);
     Logger::closeLogger();
     kill(pidkill,SIGUSR1);
     
