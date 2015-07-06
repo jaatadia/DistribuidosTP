@@ -91,6 +91,10 @@ int main (int argc, char** argv){
         exit(1);
     }
     
+    char pidCS[12];
+    sprintf(pidCS,"%d",childpid);
+    Logger::logg(std::string("Creada conexion bajo procesos CE: ")+tokill+" y CS: "+pidCS);
+        
     close(newsockfdCE);
     close(newsockfdCS);
     

@@ -165,6 +165,8 @@ using namespace std;
     InterfazPuerta::~InterfazPuerta(){
         MensajeAPuerta msg;
         msg.myType=myID;
+        msg.origen=myID;
+        msg.destino=myID;
         msg.mensaje=MENSAJE_END_COMMUNICATION;
         Logger::logg("Enviando mensaje para cerrar comunicaciones");
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){

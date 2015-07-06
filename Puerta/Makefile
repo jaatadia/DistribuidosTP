@@ -2,7 +2,7 @@
 COMMON = ../Common
 
 all: Puerta.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoEntrada.cpp InterfazPersonaEntrada.cpp InterfazMuseoSalida.cpp InterfazPersonaSalida.cpp InterfazLocker.cpp PuertaSalida.cpp Puerta.cpp EncoladorPuertaSalida.cpp Locker.cpp InterfazPuertaLocker.cpp PuertaInitializer.cpp
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o MuseoInitializer.cpp -o MuseoInitializer
+
 	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o PuertaInitializer.cpp -o PuertaInitializer
 	g++ -Wall -g -c InterfazMuseoEntrada.cpp 
 	g++ -Wall -g -c InterfazPersonaEntrada.cpp 

@@ -13,25 +13,25 @@
 #include <string>
 #include <stdlib.h>
 #include <sstream>
-
+#include "Constantes.h"
 
 InterfazMuseoEntrada::InterfazMuseoEntrada() {
     
     Logger::logg("Obteniendo el semaforo para blokeo");
-    if ( (semLugar = getsem(PUERTA_FILE_IPC,SEM_LUGAR,PERMISOS)) == -1){
+    if ( (semLugar = getsem(MUSEO_FILE_IPC,SEM_LUGAR,PERMISOS)) == -1){
         Logger::loggError("No se pudo encontrar el semaforo para bloqueo");
         exit(1);
     };
     
     Logger::logg("Obteniendo el mutex para el museo");
-    if ( (mutexMuseo = getsem(PUERTA_FILE_IPC,MUTEX_MUSEO,PERMISOS)) == -1){
+    if ( (mutexMuseo = getsem(MUSEO_FILE_IPC,MUTEX_MUSEO,PERMISOS)) == -1){
         Logger::loggError("No se pudo encontrar el mutex del museo");
         exit(1);
     };
     
     Logger::logg("Obteniendo el museo");
     int shmid;
-    if( (shmid = shmget(ftok(PUERTA_FILE_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
+    if( (shmid = shmget(ftok(MUSEO_FILE_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
         Logger::loggError("Error al encontrar la memoria compartida");
         exit(1);   
     }

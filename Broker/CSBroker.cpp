@@ -22,6 +22,7 @@ using namespace std;
 static int mySocket;
 
 void myHandler(int sigNum){
+    Logger::logg("Terminando conexion");
     close(mySocket);
     Logger::closeLogger();
     exit(1);
@@ -79,7 +80,11 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        Logger::logg("Enviando el mensaje");
+        char origen[14];
+        char destino[14];
+        sprintf(origen,"%ld",msg.origen);
+        sprintf(destino,"%ld",msg.destino);
+        Logger::logg(string("Reenviando mensaje recibido de: ")+origen+" sobre el socket hacia: "+destino);
         if(enviar(mySocket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);

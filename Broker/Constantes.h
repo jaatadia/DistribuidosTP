@@ -8,7 +8,7 @@
 #ifndef CONSTANTES_H
 #define	CONSTANTES_H
 
-#define BROKER_LOGGER_DEFAULT_PATH "./BrokerLog.txt"
+#define BROKER_LOGGER_DEFAULT_PATH "./log.txt"
 #define BROKER_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre"
 #define BROKER_FILE_IPC "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre/broker.txt"
 

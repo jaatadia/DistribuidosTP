@@ -9,7 +9,7 @@
 int main (int argc, char** argv){
     
     if(argc<4){
-        printf("Mal uso 1: key Cola 2: port1 3:port2");
+        printf("Mal uso 1: key Cola 2: portCE 3:portCS");
         return -1;
     }
     
@@ -105,6 +105,10 @@ int main (int argc, char** argv){
         
         close(newsockfdCS);
         close(newsockfdCE);
+        
+        char pidCE[12];
+        sprintf(pidCE,"%d",childpid);
+        Logger::logg(std::string("Creada conexion bajo procesos CS: ")+tokill+" y CE: "+pidCE);
     }
     
     Logger::closeLogger();

@@ -50,14 +50,14 @@ int main(int argc, char** argv) {
         Logger::logg(APP_LEVEL,"Persona solicitando entrada");
         if (!puerta.entrar(entrada)) {
             Logger::logg(APP_LEVEL,"No pude entrar. Me voy");
-            exit(1);
+            return 0;
         }
     } else if (tipoPersona == INVESTIGADOR) {
         Logger::logg(APP_LEVEL,"Investigador solicitando entrada");
         tarjeta = puerta.entrarInvestigador(entrada,pertenenciasIn);
         if ( tarjeta == -1) {
             Logger::logg(APP_LEVEL,"Investigador no pude entrar. Me voy");
-            exit(1);
+            return 0;
         }
     } else {
         Logger::loggError("Tipo de persona invalido");
@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
     
     Logger::logg(APP_LEVEL,"Yendo a pasear");
     puerta.pasear(dormir);
+    Logger::logg(APP_LEVEL,"Me desperte");
     
     if (tipoPersona == PERSONA) {
         Logger::logg(APP_LEVEL,"Persona solicitando salida");
@@ -77,7 +78,7 @@ int main(int argc, char** argv) {
         int pertenencias = puerta.salirInvestigador(salida,tarjeta);
         while (pertenencias == -1) {
             Logger::logg(APP_LEVEL,"Investigador no pudo salir");
-            Logger::logg(APP_LEVEL,"Investigador solicitando salida");
+            Logger::logg(APP_LEVEL,"Investigador re-solicitando salida");
             pertenencias = puerta.salirInvestigador(rand()%cantPuertas+1,tarjeta);
         }
         if(pertenencias!=pertenenciasIn){

@@ -49,6 +49,11 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
+        char origen[14];
+        char destino[14];
+        sprintf(origen,"%ld",msg.origen);
+        sprintf(destino,"%ld",msg.destino);
+        Logger::logg(string("Reenviando mensaje recibido de: ")+origen+" sobre la cola hacia: "+destino);
         if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
         
         Logger::logg("Reenviando mensaje");
@@ -58,6 +63,7 @@ int main(int argc, char** argv) {
         }
     }
     
+    Logger::logg(string("Terminando conexion, matando: ")+argv[3]);
     close(socket);
     Logger::closeLogger();
     kill(pidkill,SIGUSR1);
