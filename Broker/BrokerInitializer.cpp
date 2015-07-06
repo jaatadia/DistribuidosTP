@@ -41,35 +41,44 @@ void crearBroker(key_t key){
     
     Parser::setPath("../broker.conf");
     static char strkey[12];
-    static char puerto1[12];
-    static char puerto2[12];
+    static char puertoCE[12];
+    static char puertoCS[12];
     sprintf(strkey,"%d",key);
-    int port1 = Parser::getIntParam("PUERTO_1");
-    int port2 = Parser::getIntParam("PUERTO_2");
+    int portCE = Parser::getIntParam("PUERTO_1");
+    int portCS = Parser::getIntParam("PUERTO_2");
     
-    if(port1<0){
+    if(portCE<0){
         Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
     
-    if(port2<0){
+    if(portCS<0){
         Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
     
-    sprintf(puerto1,"%d",port1);
-    sprintf(puerto2,"%d",port2);
+    sprintf(puertoCE,"%d",portCE);
+    sprintf(puertoCS,"%d",portCS);
     
     int childpid;
     if ((childpid=fork())<0){
-        Logger::loggError("Error al crear el broker ");
+        Logger::loggError("Error al crear el servidor de ce ");
         exit(1);   
     }else if (childpid == 0){
-        execlp(PATH_BROKER_EXEC,NAME_BROKER_EXEC,strkey,puerto1,puerto2,(char*)NULL);
+        execlp(PATH_SERVER_CE_EXEC,NAME_SERVER_CE_EXEC,strkey,puertoCE,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del broker");
         exit(1);
     }
 
+    if ((childpid=fork())<0){
+        Logger::loggError("Error al crear el servidor de cs ");
+        exit(1);   
+    }else if (childpid == 0){
+        execlp(PATH_SERVER_CS_EXEC,NAME_SERVER_CS_EXEC,strkey,puertoCS,(char*)NULL);
+        Logger::loggError("Error al cargar la imagen de ejecutable del broker");
+        exit(1);
+    }
+    
 
 }
 

@@ -24,14 +24,13 @@ using namespace std;
 //argv[3] kill
 int main(int argc, char** argv) {
     
-    if(argc<4){
-        printf("Mal uso 1: keyCola 2:fdSocket 3:pidKill");
+    if(argc!=3){
+        printf("Mal uso 1: keyCola 2:fdSocket");
         return -1;
     }
     
     int cola = atoi(argv[1]);
     int socket = atoi(argv[2]);
-    int pidkill = atoi(argv[3]);
     
     Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,ID);
     
@@ -54,19 +53,18 @@ int main(int argc, char** argv) {
         sprintf(origen,"%ld",msg.origen);
         sprintf(destino,"%ld",msg.destino);
         Logger::logg(string("Reenviando mensaje recibido de: ")+origen+" sobre la cola hacia: "+destino);
-        if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
         
-        Logger::logg("Reenviando mensaje");
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);
         }
+        
+        if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
     }
     
     Logger::logg(string("Terminando conexion, matando: ")+argv[3]);
     close(socket);
     Logger::closeLogger();
-    kill(pidkill,SIGUSR1);
     
     return 0;
 }

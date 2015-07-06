@@ -21,39 +21,20 @@ using namespace std;
 
 static int mySocket;
 
-void myHandler(int sigNum){
-    Logger::logg("Terminando conexion");
-    close(mySocket);
-    Logger::closeLogger();
-    exit(1);
-}
-
 //argv[1] fd socket
 //argv[2] fd cola
 //argv[3] kill
 int main(int argc, char** argv) {
     
-    if(argc<4){
-        printf("Mal uso 1: keyCola 2:fdSocket 3:pidKill");
+    if(argc!=3){
+        printf("Mal uso 1: keyCola 2:fdSocket");
         return -1;
     }
     
     int cola = atoi(argv[1]);
     mySocket = atoi(argv[2]);
-    //int pidkill = atoi(argv[3]);
     
     Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,ID);
-
-    struct sigaction oldHandler;
-    struct sigaction newHandler;
-    newHandler.sa_handler=myHandler;
-    newHandler.sa_flags=0;
-    sigfillset(&(newHandler.sa_mask));
-    
-    if(sigaction(SIGUSR1,&newHandler,&oldHandler) == -1){
-        Logger::loggError("Error al encontrar asignar el signal handler a CSBroker");
-        exit(1);   
-    }
     
     if( (cola = msgget(cola,0660)) == -1){
         Logger::loggError("Error al encontrar la cola del broker");
@@ -80,6 +61,8 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
+        if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
+        
         char origen[14];
         char destino[14];
         sprintf(origen,"%ld",msg.origen);
@@ -93,6 +76,9 @@ int main(int argc, char** argv) {
         
     }
     
+    Logger::logg("Terminando conexion");
+    close(mySocket);
+    Logger::closeLogger();
 
     
     return 0;
