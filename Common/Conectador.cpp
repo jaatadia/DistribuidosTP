@@ -1,11 +1,7 @@
 
-#include "tcpoppas.cpp"
 #include "tcpopact.cpp"
 #include "Logger.h"
-#include "Parser.h"
 #include "inet.h"
-
-#define ID "ConectionConecter"
 
 
 #define PATH_CLIENTE_CS "../Common/CSCliente"
@@ -14,15 +10,9 @@
 #define PATH_CLIENTE_CE "../Common/CECliente"
 #define NAME_CLIENTE_CE "CECliente"
 
-int main (int argc, char** argv){
+int conectTo(const char* normbreBroker, long id, long ftokCE, long ftokCS, int portCE, int portCS){
     
-    if(argc<5){
-        printf("Mal uso 1:nombreBroker 2:id 3:ftok cola entrada 4: ftok cola salida\n");
-        return -1;
-    }
-    
-    Logger::startLog(LOGGER_DEFAULT_PATH,ID);
-    
+    /*
     Parser::setPath("../broker.conf");
     int portCS = Parser::getIntParam("PUERTO_1");
     int portCE = Parser::getIntParam("PUERTO_2");
@@ -36,23 +26,30 @@ int main (int argc, char** argv){
         Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
-    
+    */
     //pido unirme al broker
-    int newsockfdCS = tcpopact(argv[1],portCS);
+    int newsockfdCS = tcpopact(normbreBroker,portCS);
     if (newsockfdCS < 0) {
         Logger::loggError("cliente: error al generar primera conexion");
-        exit(1); 
+        return -1;
     }
     
-    int newsockfdCE = tcpopact(argv[1],portCE);
+    int newsockfdCE = tcpopact(normbreBroker,portCE);
     if (newsockfdCE < 0) {
         Logger::loggError("cliente: error al generar segunda conexion");
-        exit(1); 
+        close(newsockfdCS);
+        return -1; 
     }
     
+    static char ID[12];
+    static char colaCE[12];
+    static char colaCS[12];
     static char CE[12];
     static char CS[12];
     static char tokill[12];
+    sprintf(ID,"%ld",id);
+    sprintf(colaCE,"%ld",ftokCE);
+    sprintf(colaCS,"%ld",ftokCS);
     sprintf(CE,"%d",newsockfdCE);
     sprintf(CS,"%d",newsockfdCS);
     sprintf(tokill,"%d",0);
@@ -66,12 +63,12 @@ int main (int argc, char** argv){
     int childpid;
     if ((childpid=fork())<0){
         Logger::loggError("Error al crear CE ");
-        exit(1);   
+        return -2; 
     }else if (childpid == 0){
         close(newsockfdCS);
-        execlp(PATH_CLIENTE_CE,NAME_CLIENTE_CE,argv[2],argv[3],CE,tokill,(char*)NULL);
+        execlp(PATH_CLIENTE_CE,NAME_CLIENTE_CE,ID,colaCE,CE,tokill,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del CSCliente");
-        exit(1);
+        return -3;
     }
     
     //bifurco el proceso de comunicaciones salientes
@@ -83,12 +80,12 @@ int main (int argc, char** argv){
     
     if ((childpid=fork())<0){
         Logger::loggError("Error al crear CS ");
-        exit(1);   
+        return -2;
     }else if (childpid == 0){
         close(newsockfdCE);
-        execlp(PATH_CLIENTE_CS,NAME_CLIENTE_CS,argv[2],argv[4],CS,tokill,(char*)NULL);
+        execlp(PATH_CLIENTE_CS,NAME_CLIENTE_CS,ID,colaCS,CS,tokill,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del CSCliente");
-        exit(1);
+        return -3;
     }
     
     char pidCS[12];

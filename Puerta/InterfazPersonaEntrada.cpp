@@ -13,6 +13,8 @@
 
 #include "../Common/MensajeAPuerta.h"
 #include "../Common/Logger.h"
+#include "../Common/Parser.h"
+#include "../Common/Conectador.cpp"
 
 #include "InterfazPersonaEntrada.h"
 #include "Constantes.h"
@@ -36,33 +38,19 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
     
     //TODO pedir id
     myID=numeroPuerta*2;
-    
-    static char broker[18];
-    static char id[18];
-    static char colaEntrada[18];
-    static char colaSalida[18];
+
+    Parser::setPath("../broker.conf");
+    int portCS = Parser::getIntParam("PUERTO_1");
+    int portCE = Parser::getIntParam("PUERTO_2");
+    if(portCS<0 || portCE<0){
+        Logger::loggError("Error al leer los puertos del broker");
+        exit(1);   
+    }
+
+    static char broker[255];
     sprintf(broker,"broker");//TODO leer de un archivo
-    sprintf(id,"%ld",myID);
-    sprintf(colaEntrada,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA));
-    sprintf(colaSalida,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA_RESPUESTA));
+    conectTo(broker,myID,ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA),ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA_RESPUESTA),portCE,portCS);
     
-    int childpid;
-    if ((childpid=fork())<0){
-        Logger::loggError("Error al crear el conectador ");
-        exit(1);   
-    }else if (childpid == 0){
-        execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaSalida,(char*)NULL);
-        Logger::loggError("Error al cargar la imagen de ejecutable del CSCliente");
-        exit(1);
-    }
-    
-    Logger::logg("Esperando que las conexiones se realizen");
-    int status;
-    wait(&status);
-    if(WEXITSTATUS(status)!=0){
-        Logger::loggError("Error al crear las conexiones");
-        exit(1);   
-    }
 }
 
 InterfazPersonaEntrada::~InterfazPersonaEntrada() {    

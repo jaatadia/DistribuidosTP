@@ -19,6 +19,8 @@
 #include <stdio.h>
 
 #include "../Common/Logger.h"
+#include "../Common/Conectador.cpp"
+#include "../Common/Parser.h"
 #include "Constantes.h"
 
 
@@ -41,30 +43,18 @@ using namespace std;
         
         myID=getpid();//TODO PEDIR id
         
+        Parser::setPath("../broker.conf");
+        int portCS = Parser::getIntParam("PUERTO_1");
+        int portCE = Parser::getIntParam("PUERTO_2");
+        if(portCS<0 || portCE<0){
+            Logger::loggError("Error al leer los puertos del broker");
+            exit(1);   
+        }
+
         static char broker[255];
-        static char colaEntrada[12];
-        static char colaSalida[12];
-        static char id[12];
         sprintf(broker,"broker");//TODO leer de un archivo
-        sprintf(colaSalida,"%d",ftok(PERSONA_FILE_IPC,COLA));
-        sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA_RESPUESTA));
-        sprintf(id,"%ld",myID);
-        
-        int childpid;
-        if ((childpid=fork())<0){
-            Logger::loggError("Error al crear conectador");
-            exit(1);   
-        }else if (childpid == 0){
-            execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaSalida,(char*)NULL);
-            Logger::loggError("Error al cargar la imagen de ejecutable del Conectador");
-            exit(1);
-        }
-        int status;
-        wait(&status);
-        if(WEXITSTATUS(status)!=0){
-            Logger::loggError("Error al crear las conexiones");
-            exit(1);   
-        }
+        conectTo(broker,myID,ftok(PERSONA_FILE_IPC,COLA_RESPUESTA),ftok(PERSONA_FILE_IPC,COLA),portCE,portCS);
+
  }
 
     

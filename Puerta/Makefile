@@ -10,8 +10,8 @@ all: Puerta.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o Inter
 	g++ -Wall -g -c InterfazPersonaSalida.cpp 
 	g++ -Wall -g -c InterfazLocker.cpp
 	g++ -Wall -g -c InterfazPuertaLocker.cpp
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o InterfazMuseoEntrada.o InterfazPersonaEntrada.o InterfazLocker.o Puerta.cpp -o Puerta
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o InterfazMuseoSalida.o InterfazPersonaSalida.o InterfazLocker.o PuertaSalida.cpp -o PuertaSalida
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoEntrada.o InterfazPersonaEntrada.o InterfazLocker.o Puerta.cpp -o Puerta
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoSalida.o InterfazPersonaSalida.o InterfazLocker.o PuertaSalida.cpp -o PuertaSalida
 	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o EncoladorPuertaSalida.cpp -o Encolador
 	g++ -Wall -g $(COMMON)/Logger.o InterfazPuertaLocker.o Locker.cpp -o Locker
 	
