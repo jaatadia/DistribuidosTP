@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+#include <fstream>
 
 #include "../Common/MensajeAPuerta.h"
 #include "../Common/Logger.h"
@@ -46,11 +46,23 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
         Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
+ 
+    char broker[255];
+    int result=-1;
+    std::ifstream file;
+    file.open("../brokers.conf");
+    Logger::logg("Buscando broker");
+    while((result==-1) && (!file.eof())){
+        file.getline(broker,255);
+        Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
+        result = conectTo(broker,myID,ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA),ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA_RESPUESTA),portCE,portCS);
+    }
+    file.close();    
+    if(result!=0){
+        Logger::loggError("Error al conectarse con el broker");
+        exit(1);   
+    }
 
-    static char broker[255];
-    sprintf(broker,"broker");//TODO leer de un archivo
-    conectTo(broker,myID,ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA),ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA_RESPUESTA),portCE,portCS);
-    
 }
 
 InterfazPersonaEntrada::~InterfazPersonaEntrada() {    

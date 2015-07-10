@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fstream>
 
 #include "../Common/semaforo.h"
 #include "../Common/MensajeAPuerta.h"
@@ -70,10 +71,22 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
         exit(1);   
     }
 
-    static char broker[255];
-    sprintf(broker,"broker");//TODO leer de un archivo
-    conectTo(broker,myID,ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA),ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA),portCE,portCS);
-
+    char broker[255];
+    int result=-1;
+    std::ifstream file;
+    file.open("../brokers.conf");
+    Logger::logg("Buscando broker");
+    while((result==-1) && (!file.eof())){
+        file.getline(broker,255);
+        Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
+        result = conectTo(broker,myID,ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA),ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA),portCE,portCS);
+    }
+    file.close();    
+    if(result!=0){
+        Logger::loggError("Error al conectarse con el broker");
+        exit(1);   
+    }
+    
     static char nroPuerta[18];
     static char id[18];
     sprintf(nroPuerta,"%d",numeroPuerta);
