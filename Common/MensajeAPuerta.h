@@ -16,11 +16,11 @@
 #define MENSAJE_PASAR 1
 
 typedef struct {
-    long myType;
-    long origen;
-    long destino;
-    int mensaje; //viene a quien responderle - va el mensaje
-    int tipo;
+    long myType; //id del origen o del destino
+    long origen; //id del origen o nro de puerta o pid
+    long destino; //id del destino o nro de puerta
+    int mensaje; //mensaje
+    int tipo; //persona normal o investigador
     int pertenenciasOTarjeta;
 } MensajeAPuerta;
 
