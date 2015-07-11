@@ -8,7 +8,7 @@
 #ifndef INTERFAZMUSEO_H
 #define	INTERFAZMUSEO_H
 
-#include "Constantes.h"
+#include "../Common/Museo.h"
 
 class InterfazMuseoEntrada {
 public:

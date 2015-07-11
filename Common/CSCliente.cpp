@@ -53,7 +53,11 @@ int main(int argc, char** argv) {
        
         msg.myType=msg.destino;
         
-        Logger::logg("Reenvio mensaje por el socket");
+        char origen[14];
+        char destino[14];
+        sprintf(origen,"%ld",msg.origen);
+        sprintf(destino,"%ld",msg.destino);
+        Logger::logg(string("Reenviando mensaje recibido de: ")+origen+" sobre el socket hacia: "+destino);
         if(enviar(socket,&msg,sizeof(MensajeAPuerta))<=0){
             Logger::loggError("Error al recibir el mensaje ");
             exit(1);
@@ -62,6 +66,7 @@ int main(int argc, char** argv) {
         continuaComunicacion=(msg.mensaje!=MENSAJE_END_COMMUNICATION);
     }
     
+    Logger::logg(string("Terminando conexion, matando: ")+argv[4]);
     close(socket);
     Logger::closeLogger();
     kill(pidkill,SIGUSR1);

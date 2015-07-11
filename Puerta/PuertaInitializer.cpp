@@ -23,6 +23,15 @@ using namespace std;
 
 #define ID "PuertaInitializer"
 
+void crearCarpetas(){
+    string commandoCrear=string("sudo mkdir --mode=0777 -p ")+PUERTA_DIRECTORIO_IPC;
+    string commandoArchivo=string("sudo touch ")+PUERTA_FILE_IPC;
+    Logger::logg(string("Creando carpeta de IPCs: ")+PUERTA_DIRECTORIO_IPC);
+    Logger::logg(string("Creando archivo de IPCs: ")+PUERTA_FILE_IPC);
+    system(commandoCrear.c_str());
+    system(commandoArchivo.c_str());
+}
+
 void crearColas(){
 
     int cola;
@@ -140,6 +149,7 @@ int main(int argc, char** argv) {
     
     int numeroPuerta = atoi(argv[1]);
     
+    crearCarpetas();
     crearColas();
     crearMemoria(numeroPuerta);
     

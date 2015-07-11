@@ -8,7 +8,7 @@
 #ifndef INTERFAZMUSEOADMINISTRADOR_H
 #define	INTERFAZMUSEOADMINISTRADOR_H
 
-#include "Simulador.h"
+#include "../Common/Museo.h"
 
 class InterfazMuseoAdministrador {
 public:

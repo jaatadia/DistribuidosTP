@@ -17,15 +17,16 @@ using namespace std;
 #include "../Common/Logger.h"
 #include "../Common/semaforo.h"
 #include "../Common/Parser.h"
+#include "../Common/Museo.h"
 #include "Constantes.h"
 
 #define ID "MuseoInitializer"
 
 void crearCarpetas(){
-    string commandoCrear=string("sudo mkdir --mode=0777 -p ")+PUERTA_DIRECTORIO_IPC;
-    string commandoArchivo=string("sudo touch ")+PUERTA_FILE_IPC;
-    Logger::logg(string("Creando carpeta de IPCs: ")+PUERTA_DIRECTORIO_IPC);
-    Logger::logg(string("Creando archivo de IPCs: ")+PUERTA_FILE_IPC);
+    string commandoCrear=string("sudo mkdir --mode=0777 -p ")+MUSEO_DIRECTORIO_IPC;
+    string commandoArchivo=string("sudo touch ")+MUSEO_FILE_IPC;
+    Logger::logg(string("Creando carpeta de IPCs: ")+MUSEO_DIRECTORIO_IPC);
+    Logger::logg(string("Creando archivo de IPCs: ")+MUSEO_FILE_IPC);
     system(commandoCrear.c_str());
     system(commandoArchivo.c_str());
 }
@@ -34,7 +35,7 @@ void crearMuseo(){
     
     Logger::logg("Creando la memoria compartida");
     int shmid;
-    if( (shmid = shmget(ftok(PUERTA_FILE_IPC,MUSEO), sizeof(Museo),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1 ){
+    if( (shmid = shmget(ftok(MUSEO_FILE_IPC,MUSEO), sizeof(Museo),IPC_CREAT|IPC_EXCL|PERMISOS)) == -1 ){
         Logger::loggError("Error al crear la memoria compartida");
         exit(1);   
     }
@@ -85,7 +86,7 @@ void crearMuseo(){
     
     Logger::logg("Creando semaforo de exclusion mutua del estado");
     int semid;
-    if ((semid = creasem(PUERTA_FILE_IPC,MUTEX_MUSEO,PERMISOS))== -1){
+    if ((semid = creasem(MUSEO_FILE_IPC,MUTEX_MUSEO,PERMISOS))== -1){
         Logger::loggError("Error al crear el semaforo de mutex del estado");
         exit(1);   
     };
@@ -97,7 +98,7 @@ void crearMuseo(){
     }
     
     Logger::logg("Creando semaforo que indica si hay lugar");
-    if ((semid = creasem(PUERTA_FILE_IPC,SEM_LUGAR,PERMISOS))== -1){
+    if ((semid = creasem(MUSEO_FILE_IPC,SEM_LUGAR,PERMISOS))== -1){
         Logger::loggError("Error al crear el semaforo de lugar libre");
         exit(1);   
     };
@@ -112,7 +113,7 @@ void crearMuseo(){
 
 int main(int argc, char** argv) {
     Parser::setPath(MUSEO_CONF);
-    Logger::startLog(PUERTA_LOGGER_DEFAULT_PATH,ID);
+    Logger::startLog(MUSEO_LOGGER_DEFAULT_PATH,ID);
     crearCarpetas();
     crearMuseo();
     Logger::closeLogger();

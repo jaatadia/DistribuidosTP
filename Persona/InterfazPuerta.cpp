@@ -17,8 +17,11 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <stdio.h>
+#include <fstream>
 
 #include "../Common/Logger.h"
+#include "../Common/Conectador.cpp"
+#include "../Common/Parser.h"
 #include "Constantes.h"
 
 
@@ -41,28 +44,27 @@ using namespace std;
         
         myID=getpid();//TODO PEDIR id
         
-        static char broker[255];
-        static char colaEntrada[12];
-        static char colaSalida[12];
-        static char id[12];
-        sprintf(broker,"broker");//TODO leer de un archivo
-        sprintf(colaSalida,"%d",ftok(PERSONA_FILE_IPC,COLA));
-        sprintf(colaEntrada,"%d",ftok(PERSONA_FILE_IPC,COLA_RESPUESTA));
-        sprintf(id,"%ld",myID);
-        
-        int childpid;
-        if ((childpid=fork())<0){
-            Logger::loggError("Error al crear conectador");
+        Parser::setPath("../broker.conf");
+        int portCS = Parser::getIntParam("PUERTO_1");
+        int portCE = Parser::getIntParam("PUERTO_2");
+        if(portCS<0 || portCE<0){
+            Logger::loggError("Error al leer los puertos del broker");
             exit(1);   
-        }else if (childpid == 0){
-            execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaSalida,(char*)NULL);
-            Logger::loggError("Error al cargar la imagen de ejecutable del Conectador");
-            exit(1);
         }
-        int status;
-        wait(&status);
-        if(WEXITSTATUS(status)!=0){
-            Logger::loggError("Error al crear las conexiones");
+
+        char broker[255];
+        int result=-1;
+        std::ifstream file;
+        file.open("../brokers.conf");
+        Logger::logg("Buscando broker");
+        while((result==-1) && (!file.eof())){
+            file.getline(broker,255);
+            Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
+            result = conectTo(broker,myID,ftok(PERSONA_FILE_IPC,COLA_RESPUESTA),ftok(PERSONA_FILE_IPC,COLA),portCE,portCS);
+        }
+        file.close();    
+        if(result!=0){
+            Logger::loggError("Error al conectarse con el broker");
             exit(1);   
         }
  }
@@ -165,6 +167,8 @@ using namespace std;
     InterfazPuerta::~InterfazPuerta(){
         MensajeAPuerta msg;
         msg.myType=myID;
+        msg.origen=myID;
+        msg.destino=myID;
         msg.mensaje=MENSAJE_END_COMMUNICATION;
         Logger::logg("Enviando mensaje para cerrar comunicaciones");
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){

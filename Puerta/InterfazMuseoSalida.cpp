@@ -15,24 +15,25 @@
 #include "../Common/semaforo.h"
 #include "../Common/Logger.h"
 
+#include "Constantes.h"
 
 
 InterfazMuseoSalida::InterfazMuseoSalida() {
     
     Logger::logg("Obteniendo los mutex de estado de museo, lugar y cant de personas");
-    if ( (mutexMuseo = getsem(PUERTA_FILE_IPC,MUTEX_MUSEO,PERMISOS)) == -1){
+    if ( (mutexMuseo = getsem(MUSEO_FILE_IPC,MUTEX_MUSEO,PERMISOS)) == -1){
         Logger::loggError("No se pudo encontrar el mutex del museo");
         exit(1);
     };
     
-    if ( (semLugar = getsem(PUERTA_FILE_IPC,SEM_LUGAR,PERMISOS)) == -1){
+    if ( (semLugar = getsem(MUSEO_FILE_IPC,SEM_LUGAR,PERMISOS)) == -1){
         Logger::loggError("No se pudo encontrar el mutex de lugar");
         exit(1);
     };
     
     Logger::logg("Obteniendo el museo");
     int shmid;
-    if( (shmid = shmget(ftok(PUERTA_FILE_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
+    if( (shmid = shmget(ftok(MUSEO_FILE_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
         Logger::loggError("Error al encontrar la memoria compartida");
         exit(1);   
     }

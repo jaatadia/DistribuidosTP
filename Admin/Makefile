@@ -1,0 +1,22 @@
+COMMON=../Common
+
+all: Abrir.cpp Cerrar.cpp InterfazMuseoAdministrador.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o
+	g++ -Wall -g -c InterfazMuseoAdministrador.cpp
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o InterfazMuseoAdministrador.o Abrir.cpp -o Abrir
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o InterfazMuseoAdministrador.o Cerrar.cpp -o Cerrar
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o MuseoInitializer.cpp -o MuseoInitializer
+
+$(COMMON)/Logger.o:
+	cd $(COMMON);make
+
+$(COMMON)/semaforo.o:
+	cd $(COMMON);make
+	
+$(COMMON)/Parser.o:
+	cd $(COMMON);make
+
+clean:
+	- rm *.o
+	- rm Abrir
+	- rm Cerrar
+	- rm MuseoInitializer

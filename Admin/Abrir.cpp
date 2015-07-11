@@ -13,23 +13,21 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "Logger.h"
-#include "Simulador.h"
-#include "semaforo.h"
+#include "../Common/Logger.h"
 #include "InterfazMuseoAdministrador.h"
 
 using namespace std;
 
-#define CERRAR_ID "Cerrar"
+#define ABRIR_ID "Abrir"
 
 int main(int argc, char** argv) {
-    Logger::startLog(LOGGER_DEFAULT_PATH,CERRAR_ID);
-  
-    InterfazMuseoAdministrador museo;
+    Logger::startLog(LOGGER_DEFAULT_PATH,ABRIR_ID);
     
-    Logger::logg(APP_LEVEL,"Iniciando Cerrado de museo");
-    museo.cerrar();
-    Logger::logg(APP_LEVEL,"Finalizado Cerrado de museo");
+    InterfazMuseoAdministrador museo;
+    Logger::logg(APP_LEVEL,"Iniciando Apertura de museo");
+    museo.abrir();
+    Logger::logg(APP_LEVEL,"Finalizado Apertura de museo");
+    
     
     Logger::closeLogger();
     

@@ -21,6 +21,7 @@ using namespace std;
 static int mySocket;
 
 void myHandler(int sigNum){
+    Logger::logg("Terminando conexion");
     close(mySocket);
     Logger::closeLogger();
     exit(1);
@@ -78,7 +79,11 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
-        Logger::logg("Reenviando sobre la cola");
+        char origen[14];
+        char destino[14];
+        sprintf(origen,"%ld",msg.origen);
+        sprintf(destino,"%ld",msg.destino);
+        Logger::logg(string("Reenviando mensaje recibido de: ")+origen+" sobre la cola hacia: "+destino);
         if(msgsnd(cola,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)==-1){
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);

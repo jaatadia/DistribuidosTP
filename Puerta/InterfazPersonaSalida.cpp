@@ -11,9 +11,12 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fstream>
 
 #include "../Common/semaforo.h"
 #include "../Common/MensajeAPuerta.h"
+#include "../Common/Parser.h"
+#include "../Common/Conectador.cpp"
 
 InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     
@@ -60,35 +63,36 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     //TODO pedir id
     myID=(numeroPuerta*2)-1;
     
-    static char broker[18];
+    Parser::setPath("../broker.conf");
+    int portCS = Parser::getIntParam("PUERTO_1");
+    int portCE = Parser::getIntParam("PUERTO_2");
+    if(portCS<0 || portCE<0){
+        Logger::loggError("Error al leer los puertos del broker");
+        exit(1);   
+    }
+
+    char broker[255];
+    int result=-1;
+    std::ifstream file;
+    file.open("../brokers.conf");
+    Logger::logg("Buscando broker");
+    while((result==-1) && (!file.eof())){
+        file.getline(broker,255);
+        Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
+        result = conectTo(broker,myID,ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA),ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA),portCE,portCS);
+    }
+    file.close();    
+    if(result!=0){
+        Logger::loggError("Error al conectarse con el broker");
+        exit(1);   
+    }
+    
     static char nroPuerta[18];
     static char id[18];
-    static char colaEntrada[18];
-    static char colaSalida[18];
-    sprintf(broker,"broker");//TODO leer de un archivo
     sprintf(nroPuerta,"%d",numeroPuerta);
     sprintf(id,"%ld",myID);
-    sprintf(colaEntrada,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA));
-    sprintf(colaSalida,"%d",ftok(PUERTA_FILE_IPC,COLA_PUERTA_SALIDA_RESPUESTA));
     
     int childpid;
-    if ((childpid=fork())<0){
-        Logger::loggError("Error al crear el conectador ");
-        exit(1);   
-    }else if (childpid == 0){
-        execlp(PATH_CONECTADOR_EXEC,NAME_CONECTADOR_EXEC,broker,id,colaEntrada,colaSalida,(char*)NULL);
-        Logger::loggError("Error al cargar la imagen de ejecutable del Conectador");
-        exit(1);
-    }
-    
-    Logger::logg("Esperando que las conexiones se realizen");
-    int status;
-    wait(&status);
-    if(WEXITSTATUS(status)!=0){
-        Logger::loggError("Error al crear las conexiones");
-        exit(1);   
-    }
-    
     if ((childpid=fork())<0){
         Logger::loggError("Error al crear el Encolador ");
         exit(1);   
