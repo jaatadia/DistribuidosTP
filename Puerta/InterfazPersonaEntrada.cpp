@@ -14,7 +14,7 @@
 #include "../Common/MensajeAPuerta.h"
 #include "../Common/Logger.h"
 #include "../Common/Parser.h"
-#include "../Common/Conectador.cpp"
+#include "../Common/Conectador.h"
 
 #include "InterfazPersonaEntrada.h"
 #include "Constantes.h"
@@ -66,6 +66,8 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
 }
 
 InterfazPersonaEntrada::~InterfazPersonaEntrada() {    
+    //TODO cerrar comunicacion
+    //TODO devolver id
 }
 
 void InterfazPersonaEntrada::tomarPersona(Persona& persona){

@@ -17,8 +17,9 @@ public:
     virtual ~InterfazMuseoSalida();
 
 private:
-    int mutexMuseo,semLugar;
-    Museo* myMuseum;
+    long myId;
+    int colaPeticion;
+    int colaRespuesta;
 
 };
 

@@ -1,7 +1,7 @@
 
 COMMON = ../Common
 
-all: Puerta.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoEntrada.cpp InterfazPersonaEntrada.cpp InterfazMuseoSalida.cpp InterfazPersonaSalida.cpp InterfazLocker.cpp PuertaSalida.cpp Puerta.cpp EncoladorPuertaSalida.cpp Locker.cpp InterfazPuertaLocker.cpp PuertaInitializer.cpp
+all: Puerta.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o $(COMMON)/tcpopact.o $(COMMON)/Conectador.o InterfazMuseoEntrada.cpp InterfazPersonaEntrada.cpp InterfazMuseoSalida.cpp InterfazPersonaSalida.cpp InterfazLocker.cpp PuertaSalida.cpp Puerta.cpp EncoladorPuertaSalida.cpp Locker.cpp InterfazPuertaLocker.cpp PuertaInitializer.cpp
 
 	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o PuertaInitializer.cpp -o PuertaInitializer
 	g++ -Wall -g -c InterfazMuseoEntrada.cpp 
@@ -10,8 +10,8 @@ all: Puerta.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o Inter
 	g++ -Wall -g -c InterfazPersonaSalida.cpp 
 	g++ -Wall -g -c InterfazLocker.cpp
 	g++ -Wall -g -c InterfazPuertaLocker.cpp
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoEntrada.o InterfazPersonaEntrada.o InterfazLocker.o Puerta.cpp -o Puerta
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoSalida.o InterfazPersonaSalida.o InterfazLocker.o PuertaSalida.cpp -o PuertaSalida
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoEntrada.o InterfazPersonaEntrada.o InterfazLocker.o $(COMMON)/tcpopact.o $(COMMON)/Conectador.o Puerta.cpp -o Puerta
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o InterfazMuseoSalida.o InterfazPersonaSalida.o InterfazLocker.o $(COMMON)/tcpopact.o $(COMMON)/Conectador.o PuertaSalida.cpp -o PuertaSalida
 	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o EncoladorPuertaSalida.cpp -o Encolador
 	g++ -Wall -g $(COMMON)/Logger.o InterfazPuertaLocker.o Locker.cpp -o Locker
 	
@@ -25,11 +25,19 @@ $(COMMON)/Parser.o:
 $(COMMON)/semforo.o:
 	cd $(COMMON);make 
 
+$(COMMON)/tcpopact.o:
+	cd $(COMMON);make 
+	
+$(COMMON)/Conectador.o:
+	cd $(COMMON);make 
+
+
+
+
 clean:
 	- rm *.o
 	- rm Puerta
 	- rm PuertaSalida
 	- rm Encolador
 	- rm Locker
-	- rm MuseoInitializer
 	- rm PuertaInitializer

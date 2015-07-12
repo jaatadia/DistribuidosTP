@@ -20,7 +20,7 @@
 #include <fstream>
 
 #include "../Common/Logger.h"
-#include "../Common/Conectador.cpp"
+#include "../Common/Conectador.h"
 #include "../Common/Parser.h"
 #include "Constantes.h"
 

@@ -35,6 +35,17 @@ void crearCarpetas(){
 void crearColas(){
 
     int cola;
+    //creo las colas para la shm
+    if( (cola = msgget(ftok(PUERTA_FILE_IPC,COLA_SHM),IPC_CREAT|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola de shm");
+        exit(1);   
+    }
+    
+    if( (cola = msgget(ftok(PUERTA_FILE_IPC,COLA_SHM_RESPUESTA),IPC_CREAT|PERMISOS)) == -1){
+        Logger::loggError("Error al crear la cola de shm");
+        exit(1);   
+    }
+    
     //creo las colas para la puerta
     Logger::logg("Creando la cola de entrada");
     if( (cola = msgget(ftok(PUERTA_FILE_IPC,COLA_PUERTA_ENTRADA),IPC_CREAT|PERMISOS)) == -1){

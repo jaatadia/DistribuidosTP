@@ -13,7 +13,7 @@
  *		  -1: si hubo error en la conexion y se debe consultar errno.
  */
 
-#include	"inet.h"
+#include	"tcpopact.h"
 
 int tcpopact(const char *server, int puerto){
  int    sockfd;			     /* socket de la conexion */
@@ -115,3 +115,4 @@ int tcpopact(in_addr server, int puerto){
   */
   return(sockfd);
 } 
+

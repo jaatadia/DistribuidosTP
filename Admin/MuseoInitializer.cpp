@@ -64,11 +64,11 @@ void crearMuseo(){
     }
     myMuseum->personasAdentro=result;
     
-    if((result = Parser::getIntParam(MUSEO_PUERTAS)) < 0 ){
+    /*if((result = Parser::getIntParam(MUSEO_PUERTAS)) < 0 ){
         Logger::loggError("Error al leer la configuracion del museo cuantas puertas");
         exit(1);   
     }
-    myMuseum->cantPuertas=result;
+    myMuseum->cantPuertas=result;*/
     
     if((result = Parser::getIntParam(MUSEO_MAX_PERSONAS)) < 0 ){
         Logger::loggError("Error al leer la configuracion del museo cual es el maximo de personas");

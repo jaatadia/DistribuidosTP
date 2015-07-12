@@ -16,7 +16,7 @@
 #include "../Common/semaforo.h"
 #include "../Common/MensajeAPuerta.h"
 #include "../Common/Parser.h"
-#include "../Common/Conectador.cpp"
+#include "../Common/Conectador.h"
 
 InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     
@@ -110,6 +110,8 @@ InterfazPersonaSalida::~InterfazPersonaSalida() {
         Logger::loggError("Error al desatachearse de la memoria compartida");
         exit(1);   
     }
+    //TODO cerrar comunicacion
+    //TODO devolver id
 }
 
 void InterfazPersonaSalida::tomarPersona(Persona& persona){
