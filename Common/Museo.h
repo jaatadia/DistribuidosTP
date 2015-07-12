@@ -16,11 +16,16 @@
 #define MUTEX_MUSEO 1
 #define SEM_LUGAR 2
 
+#define PETICION 1
+#define DEVOLUCION 2
+
 typedef struct {
+    long mytype;
+    long origen;
     bool estaAbierto;
     int personasAdentro;
     int museoMax;
-    int cantPuertas;
+    //int cantPuertas;
 } Museo;
 
 

@@ -28,18 +28,7 @@ void crearCarpeta(){
     system(commandoFile.c_str());
 }
 
-void crearClientes(){
-    Parser::setPath(MUSEO_CONF);
-    int personas;
-    if((personas = Parser::getIntParam(CANT_PERSONAS)) < 0 ){
-        Logger::loggError("Error al leer la configuracion de la cantidad personas");
-        exit(1);   
-    }
-    int puertas;
-    if((puertas = Parser::getIntParam(MUSEO_PUERTAS)) < 0 ){
-        Logger::loggError("Error al leer la configuracion de la cantidad de puertas puerta");
-        exit(1);   
-    }
+void crearClientes(int personas, int puertas){
     
     std::stringstream per;
     per << personas;
@@ -104,7 +93,9 @@ int main(int argc, char** argv) {
             exit(1);   
     }
     
-    if(argc==1){crearClientes();}
+    if(argc==3){
+        crearClientes(atoi(argv[1]),atoi(argv[2]));
+    }
     
     Logger::closeLogger();
     return 0;

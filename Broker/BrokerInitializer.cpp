@@ -35,7 +35,7 @@ void crearColaBroker(key_t key){
     }
 }
 
-void crearBroker(key_t key){
+void crearBroker(key_t key,string idPuertoCE,string idPuertoCS){
     
     Logger::logg("Creando el proceso broker");
     
@@ -44,8 +44,8 @@ void crearBroker(key_t key){
     static char puertoCE[12];
     static char puertoCS[12];
     sprintf(strkey,"%d",key);
-    int portCE = Parser::getIntParam("PUERTO_1");
-    int portCS = Parser::getIntParam("PUERTO_2");
+    int portCE = Parser::getIntParam(idPuertoCE);
+    int portCS = Parser::getIntParam(idPuertoCS);
     
     if(portCE<0){
         Logger::loggError("Error al leer los puertos del broker");
@@ -82,13 +82,56 @@ void crearBroker(key_t key){
 
 }
 
+void crearBrokerSHM(key_t key){
+    
+    Parser::setPath("../museo.cfg");
+    int resultOpen, resultCantGente, resultMaxPersonas;
+    if((resultOpen = Parser::getBoolParam("MUSEO_OPEN")) < 0 ){
+        Logger::loggError("Error al leer la configuracion del museo si esta abierto");
+        exit(1);   
+    }
+    
+    if((resultCantGente = Parser::getIntParam("MUSEO_CANT")) < 0 ){
+        Logger::loggError("Error al leer la configuracion del museo cuantas personas hay");
+        exit(1);   
+    }
+    
+    if((resultMaxPersonas = Parser::getIntParam("MUSEO_MAX_PERSONAS")) < 0 ){
+        Logger::loggError("Error al leer la configuracion del museo cual es el maximo de personas");
+        exit(1);   
+    }
+    
+    static char strkey[12];
+    static char mOpen[12];
+    static char mPer[12];
+    static char mMax[12];
+    sprintf(strkey,"%d",key);
+    sprintf(mOpen,"%d",resultOpen);
+    sprintf(mPer,"%d",resultCantGente);
+    sprintf(mMax,"%d",resultMaxPersonas);
+    int childpid;
+    if ((childpid=fork())<0){
+        Logger::loggError("Error al crear el manejador de shm");
+        exit(1);   
+    }else if (childpid == 0){
+        execlp(PATH_BROKER_SHM_EXEC,NAME_BROKER_SHM_EXEC,strkey,mOpen,mPer,mMax,(char*)NULL);
+        Logger::loggError("Error al cargar la imagen de manejador de shm");
+        exit(1);
+    }
+    
+}
+
 int main(int argc, char** argv) {
 
     Logger::startLog(BROKER_LOGGER_DEFAULT_PATH,BROKER_INITIALIZER_ID);
     
     crearCarpeta();
     crearColaBroker(ftok(BROKER_FILE_IPC,COLA_BROKER));
-    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER));
+    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER),"PUERTO_1","PUERTO_2");
+    
+    crearColaBroker(ftok(BROKER_FILE_IPC,COLA_BROKER_SHM));
+    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER),"PUERTO_3","PUERTO_4");
+    crearBrokerSHM(ftok(BROKER_FILE_IPC,COLA_BROKER));
     
     Logger::closeLogger();
     
