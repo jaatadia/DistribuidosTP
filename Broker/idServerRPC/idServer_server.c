@@ -3,7 +3,7 @@
  * These are only templates and you can use them
  * as a guideline for developing your own functions.
  */
-
+#define _GNU_SOURCE
 #include "idServer.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -19,7 +19,7 @@
 long getId(char tipo, long nroPuerta){ //devuelve -1 si no existe el ID
 	
     char buffer[TAMLINEA];
-    int fd = open(IDFILEPATH,O_RDWR|O_CREAT); //abro archivo
+    int fd = open(IDFILEPATH,O_RDWR); //abro archivo
     
     long id = 0;
     int encontrado = 0;
@@ -66,14 +66,18 @@ long getId(char tipo, long nroPuerta){ //devuelve -1 si no existe el ID
 
 long getNuevoId(char tipo,long nroPuerta){
     
-    //si ya habia pedido un id, devuelvo ese, sino (getID devuelve -1), busco uno nuevo
-    long old_id = getId(tipo,nroPuerta);
-    if (old_id != -1) {
-        return old_id;
-    }
+    //si puertas ya habian pedido un id, devuelvo ese, sino (getID devuelve -1), busco uno nuevo
+	if ((tipo == 'e') || (tipo == 's')) {
+		long old_id = getId(tipo,nroPuerta);
+		if (old_id != -1) {
+		return old_id;
+		}
+	}
     
     char buffer[TAMLINEA];
-    int fd = open(IDFILEPATH,O_RDWR|O_CREAT); //abro archivo
+    int j; for(j=0;j<TAMLINEA;j++){buffer[j]='0';}
+
+    int fd = open(IDFILEPATH,O_RDWR); //abro archivo
     
     long id = 0;
     int ocupado = 1;
@@ -85,7 +89,11 @@ long getNuevoId(char tipo,long nroPuerta){
         leido = read(fd,&buffer,TAMLINEA);
         if (leido < TAMLINEA) {
             eof = 1;
-            lseek(fd,-leido,SEEK_CUR);
+            int pos=lseek(fd,-leido,SEEK_CUR);
+	    if((leido!=0)&&(pos-TAMLINEA>=0)){
+		lseek(fd,-TAMLINEA,SEEK_CUR);
+		read(fd,&buffer,TAMLINEA);
+	    }
         } else if (buffer[11] == 'l'){
             ocupado = 0;
             lseek(fd,-TAMLINEA,SEEK_CUR); //posicionarme en la linea que decia 'l'
@@ -114,11 +122,12 @@ long getNuevoId(char tipo,long nroPuerta){
 long devolverId(long id){
 	
     char buffer[TAMLINEA];
-    int fd = open(IDFILEPATH,O_RDWR|O_CREAT); //abro archivo
+    int fd = open(IDFILEPATH,O_RDWR); //abro archivo
 
     //lseek al nro de id que me piden
     int res = lseek(fd,(id-1)*TAMLINEA,SEEK_SET);
     if (res == -1){
+        close(fd);
         return -1;
     }
     printf("res: %d \n",res);
@@ -146,6 +155,7 @@ long devolverId(long id){
         return id;
     }
     //sino, return -1
+    close(fd);
     return -1;
 }
 
