@@ -37,14 +37,17 @@ int main (int argc, char** argv){
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);
         }
-        
-        museo.mytype=museo.origen;
+
+        char origen[14];
+        sprintf(origen,"%ld",museo.origen);
+                
+        museo.myType=museo.origen;
+        museo.destino=museo.origen;
+        museo.origen=0;
         museo.estaAbierto=shm.estaAbierto;
         museo.personasAdentro=shm.personasAdentro;
         museo.museoMax=shm.museoMax;
         
-        char origen[14];
-        sprintf(origen,"%ld",museo.origen);
         Logger::logg(std::string("Enviando la shm a: ")+origen);
         
         if(msgsnd(cola,&museo,sizeof(Museo)-sizeof(long),0)==-1){

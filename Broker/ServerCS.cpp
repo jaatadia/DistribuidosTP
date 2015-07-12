@@ -8,8 +8,8 @@
 
 int main (int argc, char** argv){
     
-    if(argc!=3){
-        printf("Mal uso 1: key 2:portCS");
+    if(argc!=5){
+        printf("Mal uso 1: key 2:portCS 3:image 4:imageName");
         return -1;
     }
     
@@ -61,7 +61,7 @@ int main (int argc, char** argv){
             exit(1);   
         }else if (childpid == 0){
             close(sockfdCS);
-            execlp(PATH_BROKER_CS,NAME_BROKER_CS,argv[1],CS,(char*)NULL);
+            execlp(argv[3],argv[4],argv[1],CS,(char*)NULL);
             Logger::loggError("Error al cargar la imagen de ejecutable del CSbroker");
             exit(1);
         }

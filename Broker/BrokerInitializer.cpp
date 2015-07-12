@@ -35,7 +35,7 @@ void crearColaBroker(key_t key){
     }
 }
 
-void crearBroker(key_t key,string idPuertoCE,string idPuertoCS){
+void crearBroker(key_t key,string idPuertoCE,string idPuertoCS,const char* imageCE,const char* nameImageCE,const char* imageCS,const char* nameImageCS){
     
     Logger::logg("Creando el proceso broker");
     
@@ -65,7 +65,7 @@ void crearBroker(key_t key,string idPuertoCE,string idPuertoCS){
         Logger::loggError("Error al crear el servidor de ce ");
         exit(1);   
     }else if (childpid == 0){
-        execlp(PATH_SERVER_CE_EXEC,NAME_SERVER_CE_EXEC,strkey,puertoCE,(char*)NULL);
+        execlp(PATH_SERVER_CE_EXEC,NAME_SERVER_CE_EXEC,strkey,puertoCE,imageCE,nameImageCE,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del broker");
         exit(1);
     }
@@ -74,7 +74,7 @@ void crearBroker(key_t key,string idPuertoCE,string idPuertoCS){
         Logger::loggError("Error al crear el servidor de cs ");
         exit(1);   
     }else if (childpid == 0){
-        execlp(PATH_SERVER_CS_EXEC,NAME_SERVER_CS_EXEC,strkey,puertoCS,(char*)NULL);
+        execlp(PATH_SERVER_CS_EXEC,NAME_SERVER_CS_EXEC,strkey,puertoCS,imageCS,nameImageCS,(char*)NULL);
         Logger::loggError("Error al cargar la imagen de ejecutable del broker");
         exit(1);
     }
@@ -127,11 +127,11 @@ int main(int argc, char** argv) {
     
     crearCarpeta();
     crearColaBroker(ftok(BROKER_FILE_IPC,COLA_BROKER));
-    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER),"PUERTO_1","PUERTO_2");
+    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER),"PUERTO_1","PUERTO_2",PATH_BROKER_CE,NAME_BROKER_CE,PATH_BROKER_CS,NAME_BROKER_CS);
     
     crearColaBroker(ftok(BROKER_FILE_IPC,COLA_BROKER_SHM));
-    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER),"PUERTO_3","PUERTO_4");
-    crearBrokerSHM(ftok(BROKER_FILE_IPC,COLA_BROKER));
+    crearBroker(ftok(BROKER_FILE_IPC,COLA_BROKER_SHM),"PUERTO_3","PUERTO_4",PATH_BROKER_CE_SHM,NAME_BROKER_CE_SHM,PATH_BROKER_CS_SHM,NAME_BROKER_CS_SHM);
+    crearBrokerSHM(ftok(BROKER_FILE_IPC,COLA_BROKER_SHM));
     
     Logger::closeLogger();
     

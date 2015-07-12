@@ -20,8 +20,9 @@
 #define DEVOLUCION 2
 
 typedef struct {
-    long mytype;
+    long myType;
     long origen;
+    long destino;
     bool estaAbierto;
     int personasAdentro;
     int museoMax;

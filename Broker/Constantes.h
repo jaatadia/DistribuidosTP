@@ -27,6 +27,12 @@
 #define PATH_BROKER_CE "./CEBroker"
 #define NAME_BROKER_CE "CEBroker"
 
+#define PATH_BROKER_CS_SHM "./CSBrokerSHM"
+#define NAME_BROKER_CS_SHM "CSBrokerSHM"
+
+#define PATH_BROKER_CE_SHM "./CEBrokerSHM"
+#define NAME_BROKER_CE_SHM "CEBrokerSHM"
+
 #define PATH_BROKER_SHM_EXEC "./BrokerSHM"
 #define NAME_BROKER_SHM_EXEC "BrokerSHM"
 

@@ -8,98 +8,106 @@
 #include "InterfazMuseoEntrada.h"
 #include "../Common/semaforo.h"
 #include "../Common/Logger.h"
+#include "../Common/Conectador.h"
+#include "../Common/Parser.h"
+
 #include <sys/ipc.h>
-#include <sys/shm.h>
+#include <sys/msg.h>
 #include <string>
 #include <stdlib.h>
 #include <sstream>
+#include <fstream>
 #include "Constantes.h"
 
 InterfazMuseoEntrada::InterfazMuseoEntrada() {
     
-    Logger::logg("Obteniendo el semaforo para blokeo");
-    if ( (semLugar = getsem(MUSEO_FILE_IPC,SEM_LUGAR,PERMISOS)) == -1){
-        Logger::loggError("No se pudo encontrar el semaforo para bloqueo");
-        exit(1);
-    };
+    myId = getpid();//TODO pedir id
     
-    Logger::logg("Obteniendo el mutex para el museo");
-    if ( (mutexMuseo = getsem(MUSEO_FILE_IPC,MUTEX_MUSEO,PERMISOS)) == -1){
-        Logger::loggError("No se pudo encontrar el mutex del museo");
-        exit(1);
-    };
-    
-    Logger::logg("Obteniendo el museo");
-    int shmid;
-    if( (shmid = shmget(ftok(MUSEO_FILE_IPC,MUSEO), sizeof(Museo),PERMISOS)) == -1 ){
-        Logger::loggError("Error al encontrar la memoria compartida");
+       //busco las colas
+    Logger::logg("Buscando la cola de peticion");
+    if( (colaPeticion = msgget(ftok(PUERTA_FILE_IPC,COLA_SHM),PERMISOS)) == -1){
+        Logger::loggError("Error al encontrar la cola de entrada");
+        exit(1);   
+    }
+
+    Logger::logg("Buscando la cola de respuesta");
+    if( (colaRespuesta = msgget(ftok(PUERTA_FILE_IPC,COLA_SHM_RESPUESTA),PERMISOS)) == -1){
+        Logger::loggError("Error al encontrar la cola de respuesta");
         exit(1);   
     }
     
-    Logger::logg("Uniendose al museo");
-    if ( (myMuseum = (Museo*) shmat(shmid,0,0)) == (Museo*) -1 ){
-        Logger::loggError("Error al atachearse a la memoria compartida");
+    Parser::setPath("../broker.conf");
+    int portCS = Parser::getIntParam("PUERTO_3");
+    int portCE = Parser::getIntParam("PUERTO_4");
+    if(portCS<0 || portCE<0){
+        Logger::loggError("Error al leer los puertos del broker");
         exit(1);   
     }
+ 
+    char broker[255];
+    int result=-1;
+    std::ifstream file;
+    file.open("../brokers.conf");
+    Logger::logg("Buscando broker");
+    while((result==-1) && (!file.eof())){
+        file.getline(broker,255);
+        Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
+        result = conectToSHM(broker,myId,ftok(PUERTA_FILE_IPC,COLA_SHM_RESPUESTA),ftok(PUERTA_FILE_IPC,COLA_SHM),portCE,portCS);
+    }
+    file.close();    
+    if(result!=0){
+        Logger::loggError("Error al conectarse con el broker");
+        exit(1);   
+    }
+    
 }
 
 bool InterfazMuseoEntrada::entrar(){
-        
-    Logger::logg("Esperando un lugar");
-    if(p(semLugar)==-1){
-        Logger::loggError("Error al obtener el mutex de lugar");
-        exit(1);   
-    }
 
-    Logger::logg("hay lugar en el museo, esperando el estado del museo");
-    if (p(mutexMuseo)==-1){
-        Logger::loggError("Error al obtener el mutex de estado");
-        exit(1);   
-    }
-
-    if(!myMuseum->estaAbierto){
-        Logger::logg("El Museo esta cerrado");
-        if(v(semLugar)==-1){
-            Logger::loggError("Error al devolver el mutex de lugar");
+    bool result=false;
+    bool found=false;
+    Museo museo;
+    while(!found){
+        museo.myType=myId;
+        museo.origen=myId;
+        museo.destino=PETICION;
+        if( (msgsnd(colaPeticion,&museo,sizeof(Museo)-sizeof(long),0)) == -1){
+            Logger::loggError("Error leer mensaje de peticion");
             exit(1);   
         }
-        if(v(mutexMuseo)==-1){
-            Logger::loggError("Error al devolver el mutex de Estado");
+        
+        if( (msgrcv(colaRespuesta,&museo,sizeof(Museo)-sizeof(long),myId,0)) == -1){
+            Logger::loggError("Error leer mensaje de entrada");
             exit(1);   
         }
-        return false;
-
-    }else{    
-        myMuseum->personasAdentro++;
-        std::stringstream ss;
-        ss<<myMuseum->personasAdentro;
-        Logger::logg(std::string("Entro la persona ahora hay ")+ss.str());
         
-        if(!(myMuseum->personasAdentro==myMuseum->museoMax)){
-            Logger::logg("Sigue habiendo lugar, devuelvo el mutex de lugar");
-            if(v(semLugar)==-1){
-                Logger::loggError("Error al devolver el mutex de lugar");
-                exit(1);   
-            }
-        }else{
-            ss.str("");ss<<myMuseum->museoMax;
-            Logger::logg("El museo se lleno, maximo: "+ss.str());
+        if(!museo.estaAbierto){
+            found=true;
+            result=false;
+            Logger::logg("El museo esta cerrado");
+        }else if(museo.personasAdentro<museo.museoMax){
+            museo.personasAdentro=museo.personasAdentro+1;
+            char personas[15];
+            sprintf(personas,"%d",museo.personasAdentro);
+            Logger::logg(std::string("Entro una persona, ahora hay: ")+personas);
+            found=true;
+            result=true;
+        }
+        
+        Logger::logg("Devolviendo la shm");
+        museo.myType=myId;
+        museo.origen=myId;
+        museo.destino=DEVOLUCION;
+        if( (msgsnd(colaPeticion,&museo,sizeof(Museo)-sizeof(long),0)) == -1){
+            Logger::loggError("Error leer mensaje de peticion");
+            exit(1);   
         }
     }
-
-    Logger::logg("Devolviendo el mutex sobre el Museo");
-    if(v(mutexMuseo)==-1){
-        Logger::loggError("Error al devolver el mutex de estado del museo");
-        exit(1);   
-    }
-    return true;
+    return result;
 }
 
 InterfazMuseoEntrada::~InterfazMuseoEntrada() {
-    Logger::logg("Desuniendose de la memoria compartida");
-    if(shmdt(myMuseum)==-1){
-        Logger::loggError("Error al desatachearse de la memoria compartida");
-        exit(1);   
-    }
+    //TODO cerrar comunicacion
+    //TODO devolver id
 }
 

@@ -8,8 +8,8 @@
 
 int main (int argc, char** argv){
     
-    if(argc!=3){
-        printf("Mal uso 1: key Cola 2: portCE ");
+    if(argc!=5){
+        printf("Mal uso 1: key Cola 2: portCE 3:image 4: imageName");
         return -1;
     }
     
@@ -58,7 +58,7 @@ int main (int argc, char** argv){
             exit(1);   
         }else if (childpid == 0){
             close(sockfdCE);
-            execlp(PATH_BROKER_CE,NAME_BROKER_CE,argv[1],CE,(char*)NULL);
+            execlp(argv[3],argv[4],argv[1],CE,(char*)NULL);
             Logger::loggError("Error al cargar la imagen de ejecutable del CEbroker");
             exit(1);
         }
