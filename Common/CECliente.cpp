@@ -18,6 +18,7 @@
 #define ID "CECliente"
 using namespace std;
 
+/*
 static int mySocket;
 
 void myHandler(int sigNum){
@@ -25,7 +26,7 @@ void myHandler(int sigNum){
     close(mySocket);
     Logger::closeLogger();
     exit(1);
-}
+}*/
 //argv[1] id
 //argv[2] fd socket
 //argv[3] fd cola
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
     }
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);
-    
+    /*/
     struct sigaction oldHandler;
     struct sigaction newHandler;
     newHandler.sa_handler=myHandler;
@@ -51,11 +52,11 @@ int main(int argc, char** argv) {
         exit(1);   
     }
     
-    
+    */
     
     long id = atoi(argv[1]);
     int cola = atoi(argv[2]);
-    mySocket = atoi(argv[3]);
+    int mySocket = atoi(argv[3]);
     //int pidkill = atoi(argv[4]);
     
     if( (cola = msgget(cola,0660)) == -1){
@@ -79,6 +80,8 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
+        if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
+        
         char origen[14];
         char destino[14];
         sprintf(origen,"%ld",msg.origen);
@@ -90,7 +93,9 @@ int main(int argc, char** argv) {
         }
     }
     
-    
+    Logger::logg("Terminando conexion");
+    close(mySocket);
+    Logger::closeLogger();
     
     return 0;
 }

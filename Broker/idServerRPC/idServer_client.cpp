@@ -1,14 +1,34 @@
 #include "idServer_client.h"
+#include <rpc/rpc.h>
+#include <fstream>
 
 idServer_client* idServer_client::instance = NULL;
 
 idServer_client::idServer_client(){
-    
-    char* host = "localhost"; //TODO leer de archivo
-    this->clnt = clnt_create (host, IDSERVERPROG, IDSERVERVERS, "udp");
-    if (clnt == NULL) {
-        clnt_pcreateerror (host);
-        exit (1);
+    char broker[255];
+    bool found=false;
+    std::ifstream file;
+    file.open("../../brokers.conf");
+    Logger::logg("Buscando broker");
+    while((!found) && (!file.eof())){
+        file.getline(broker,255);
+        Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
+        this->clnt = clnt_create (broker, IDSERVERPROG, IDSERVERVERS, "tcp");
+        if (clnt == NULL) {
+            if((rpc_createerr.cf_stat==RPC_TIMEDOUT)||(rpc_createerr.cf_stat==RPC_UNKNOWNHOST)){
+                Logger::loggError(std::string("no se pudo conectar con broker: ")+broker);
+            }else{
+                Logger::loggError(std::string("Error al conectarse con el broker")+clnt_spcreateerror (broker));
+                exit(1);   
+            }
+        }else{
+            found=true;
+        }
+    }
+    file.close();    
+    if(!found){
+        Logger::loggError("Error al conectarse con el broker");
+        exit(1);   
     }
 }
 

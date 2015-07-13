@@ -17,9 +17,8 @@ public:
     void cerrar();
     virtual ~InterfazMuseoAdministrador();
 private:
-    int mutexEstado;
-    int mutexPersonas;
-    Museo* myMuseum;
+    long myId;
+    int colaPeticion,colaRespuesta;
 };
 
 #endif	/* INTERFAZMUSEOADMINISTRADOR_H */

@@ -61,8 +61,6 @@ int main(int argc, char** argv) {
             exit(1);
         }
         
-        //if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
-        
         char origen[14];
         char destino[14];
         sprintf(origen,"%ld",msg.origen);
@@ -73,7 +71,7 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
-        
+        if(msg.origen==msg.destino){break;}
     }
     
     Logger::logg("Terminando conexion");

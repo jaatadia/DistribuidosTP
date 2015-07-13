@@ -8,6 +8,13 @@
 #ifndef CONSTANTES_H
 #define	CONSTANTES_H
 
+
+#define PUERTA_DIRECTORIO_IPC  "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre"
+#define PUERTA_FILE_IPC "/home/knoppix/Atadia_Etcheverry/TPCuatrimestre/puerta.txt"
+
+#define COLA_SHM 12
+#define COLA_SHM_RESPUESTA 13
+
 #define PERMISOS 0660
 
 #define MUSEO_CONF "../museo.cfg"

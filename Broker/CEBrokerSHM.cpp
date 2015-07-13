@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
             Logger::loggError("Error al escribir el mensaje ");
             exit(1);
         }
-        //if(msg.mensaje==MENSAJE_END_COMMUNICATION){break;}
+        if(msg.origen==msg.destino){break;}
     }
     
     close(socket);

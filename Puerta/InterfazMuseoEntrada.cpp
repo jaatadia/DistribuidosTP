@@ -54,6 +54,7 @@ InterfazMuseoEntrada::InterfazMuseoEntrada() {
         Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
         result = conectToSHM(broker,myId,ftok(PUERTA_FILE_IPC,COLA_SHM_RESPUESTA),ftok(PUERTA_FILE_IPC,COLA_SHM),portCE,portCS);
     }
+    
     file.close();    
     if(result!=0){
         Logger::loggError("Error al conectarse con el broker");

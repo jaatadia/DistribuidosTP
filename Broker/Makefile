@@ -10,6 +10,7 @@ all: ServerCS.cpp ServerCE.cpp BrokerInitializer.cpp CSBroker.cpp CEBroker.cpp $
 	g++ -Wall -g $(COMMON)/Logger.o CSBrokerSHM.cpp -o CSBrokerSHM
 	g++ -Wall -g $(COMMON)/Logger.o CEBrokerSHM.cpp -o CEBrokerSHM
 	g++ -Wall -g $(COMMON)/Logger.o BrokerSHM.cpp -o BrokerSHM
+	cd idServerRPC; make
 
 $(COMMON)/Logger.o:
 	cd $(COMMON);make 
@@ -25,3 +26,4 @@ clean:
 	- rm CEBroker
 	- rm CSBrokerSHM
 	- rm CEBrokerSHM
+	- cd idServerRPC; make clean

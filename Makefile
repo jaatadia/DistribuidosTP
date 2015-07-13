@@ -1,8 +1,8 @@
 all:
+	cd Common; make
 	cd Broker; make
 	cd Puerta; make
 	cd Persona; make
-	cd Common; make
 	cd Admin; make
 
 cleanLog:

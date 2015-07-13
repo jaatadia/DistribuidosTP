@@ -1,10 +1,10 @@
 COMMON=../Common
 
-all: Abrir.cpp Cerrar.cpp InterfazMuseoAdministrador.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o
+all: Abrir.cpp Cerrar.cpp InterfazMuseoAdministrador.cpp $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o $(COMMON)/Conectador.o $(COMMON)/tcpopact.o
 	g++ -Wall -g -c InterfazMuseoAdministrador.cpp
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o InterfazMuseoAdministrador.o Abrir.cpp -o Abrir
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o InterfazMuseoAdministrador.o Cerrar.cpp -o Cerrar
-	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o MuseoInitializer.cpp -o MuseoInitializer
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o $(COMMON)/Conectador.o $(COMMON)/tcpopact.o InterfazMuseoAdministrador.o Abrir.cpp -o Abrir
+	g++ -Wall -g $(COMMON)/Logger.o $(COMMON)/semaforo.o $(COMMON)/Parser.o $(COMMON)/Conectador.o $(COMMON)/tcpopact.o InterfazMuseoAdministrador.o Cerrar.cpp -o Cerrar
+	g++ -Wall -g $(COMMON)/Logger.o AdminInitializer.cpp -o AdminInitializer
 
 $(COMMON)/Logger.o:
 	cd $(COMMON);make
@@ -15,8 +15,13 @@ $(COMMON)/semaforo.o:
 $(COMMON)/Parser.o:
 	cd $(COMMON);make
 
+$(COMMON)/Conectador.o:
+	cd $(COMMON);make
+	
+$(COMMON)/tcpopact.o:
+	cd $(COMMON);make
 clean:
 	- rm *.o
 	- rm Abrir
 	- rm Cerrar
-	- rm MuseoInitializer
+	- rm AdminInitializer

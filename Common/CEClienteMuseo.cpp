@@ -8,24 +8,16 @@
 #include <cstdlib>
 #include <sys/msg.h>
 #include <unistd.h>
-#include <signal.h>
 
 #include "enviar.cpp"
 #include "recibir.cpp"
 #include "Logger.h"
 #include "Museo.h"
 
-#define ID "CECliente"
+#define ID "CEClienteSHM"
 using namespace std;
 
-static int mySocket;
 
-void myHandler(int sigNum){
-    Logger::logg("Terminando conexion");
-    close(mySocket);
-    Logger::closeLogger();
-    exit(1);
-}
 //argv[1] id
 //argv[2] fd socket
 //argv[3] fd cola
@@ -38,25 +30,12 @@ int main(int argc, char** argv) {
         return -1;
     }
     
-    Logger::startLog(LOGGER_DEFAULT_PATH,ID);
-    
-    struct sigaction oldHandler;
-    struct sigaction newHandler;
-    newHandler.sa_handler=myHandler;
-    newHandler.sa_flags=0;
-    sigfillset(&(newHandler.sa_mask));
-    
-    if(sigaction(SIGUSR1,&newHandler,&oldHandler) == -1){
-        Logger::loggError("Error al encontrar asignar el signal handler de CECliente");
-        exit(1);   
-    }
-    
-    
-    
     long id = atoi(argv[1]);
     int cola = atoi(argv[2]);
-    mySocket = atoi(argv[3]);
+    int mySocket = atoi(argv[3]);
     //int pidkill = atoi(argv[4]);
+    
+    Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
     if( (cola = msgget(cola,0660)) == -1){
         Logger::loggError("Error al encontrar la cola del cliente");
@@ -79,6 +58,8 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
+        if(msg.origen==msg.destino){break;}
+        
         char origen[14];
         char destino[14];
         sprintf(origen,"%ld",msg.origen);
@@ -90,7 +71,9 @@ int main(int argc, char** argv) {
         }
     }
     
-    
+    Logger::logg("Terminando proceso");
+    close(mySocket);
+    Logger::closeLogger();
     
     return 0;
 }

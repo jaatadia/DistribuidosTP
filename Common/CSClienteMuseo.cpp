@@ -20,7 +20,7 @@ using namespace std;
 //argv[3] fd cola
 //argv[4] kill
 
-#define ID "CSCliente"
+#define ID "CSClienteSHM"
 
 int main(int argc, char** argv) {
     
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     int id = atoi(argv[1]);
     int cola = atoi(argv[2]);
     int socket = atoi(argv[3]);
-    int pidkill = atoi(argv[4]);
+    //int pidkill = atoi(argv[4]);
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
@@ -41,8 +41,8 @@ int main(int argc, char** argv) {
         exit(1);   
     }
 
-    bool continuaComunicacion=true;
-    while(continuaComunicacion){
+    
+    while(true){
         Museo msg;
         
         Logger::logg("Esperando mensaje sobre la cola");
@@ -63,13 +63,12 @@ int main(int argc, char** argv) {
             exit(1);
         };
         
-        //continuaComunicacion=(msg.mensaje!=MENSAJE_END_COMMUNICATION);
+        if(msg.origen==msg.destino){break;};
     }
     
-    Logger::logg(string("Terminando conexion, matando: ")+argv[4]);
+    Logger::logg("Terminando conexion");
     close(socket);
     Logger::closeLogger();
-    kill(pidkill,SIGUSR1);
     
     return 0;
 }

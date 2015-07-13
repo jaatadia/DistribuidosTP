@@ -100,7 +100,7 @@ long getNuevoId(char tipo,long nroPuerta){
         }
     }
 
-    int i; //TODO que no lea del buffer sucio (el que leyo menos de TAMLINEA)
+    int i;
     char str_id[TAMLONG+1]; //pasar el id del buffer a string
     for (i=0;i<TAMLONG;i++){
         str_id[i] = buffer[i];

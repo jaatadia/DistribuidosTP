@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     int id = atoi(argv[1]);
     int cola = atoi(argv[2]);
     int socket = atoi(argv[3]);
-    int pidkill = atoi(argv[4]);
+    //int pidkill = atoi(argv[4]);
     
     Logger::startLog(LOGGER_DEFAULT_PATH,ID);
     
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
     Logger::logg(string("Terminando conexion, matando: ")+argv[4]);
     close(socket);
     Logger::closeLogger();
-    kill(pidkill,SIGUSR1);
+    //kill(pidkill,SIGUSR1);
     
     return 0;
 }
