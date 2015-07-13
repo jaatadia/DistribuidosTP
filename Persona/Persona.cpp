@@ -70,8 +70,10 @@ int main(int argc, char** argv) {
     
     if (tipoPersona == PERSONA) {
         Logger::logg(APP_LEVEL,"Persona solicitando salida");
-        if (!puerta.salir(salida)) {
-            Logger::loggError("Persona no puede salir");
+        while(!puerta.salir(salida)) {
+            Logger::logg(APP_LEVEL,"Persona no puede salir");
+            Logger::logg(APP_LEVEL,"Persona re-solicitando salida");
+            salida=rand()%cantPuertas+1;
         };
     } else if (tipoPersona == INVESTIGADOR) {
         Logger::logg(APP_LEVEL,"Investigador solicitando salida");

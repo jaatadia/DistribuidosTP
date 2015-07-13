@@ -17,6 +17,7 @@
 #include "../Common/MensajeAPuerta.h"
 #include "../Common/Parser.h"
 #include "../Common/Conectador.h"
+#include "../Broker/idServerRPC/idServer_client.h"
 
 InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
     
@@ -60,8 +61,7 @@ InterfazPersonaSalida::InterfazPersonaSalida(int numeroPuerta) {
         exit(1);   
     }
     
-    //TODO pedir id
-    myID=(numeroPuerta*2)-1;
+    myID=idServer_client::getInst()->getNuevoIdPuertaSal(numeroPuerta);
     
     Parser::setPath("../broker.conf");
     int portCS = Parser::getIntParam("PUERTO_1");
@@ -110,8 +110,15 @@ InterfazPersonaSalida::~InterfazPersonaSalida() {
         Logger::loggError("Error al desatachearse de la memoria compartida");
         exit(1);   
     }
-    //TODO cerrar comunicacion
-    //TODO devolver id
+    MensajeAPuerta msg;
+    msg.myType=myID;
+    msg.origen=myID;
+    msg.destino=myID;
+    if( (msgsnd(colaSalidaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
+        Logger::loggError("Error leer mensaje de peticion");
+        exit(1);   
+    }
+    idServer_client::getInst()->devolverId(myID);
 }
 
 void InterfazPersonaSalida::tomarPersona(Persona& persona){

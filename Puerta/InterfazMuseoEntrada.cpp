@@ -18,10 +18,11 @@
 #include <sstream>
 #include <fstream>
 #include "Constantes.h"
+#include "../Broker/idServerRPC/idServer_client.h"
 
 InterfazMuseoEntrada::InterfazMuseoEntrada() {
     
-    myId = getpid();//TODO pedir id
+    myId = idServer_client::getInst()->getNuevoIdShMem();
     
        //busco las colas
     Logger::logg("Buscando la cola de peticion");
@@ -108,7 +109,13 @@ bool InterfazMuseoEntrada::entrar(){
 }
 
 InterfazMuseoEntrada::~InterfazMuseoEntrada() {
-    //TODO cerrar comunicacion
-    //TODO devolver id
+    Museo museo;
+    museo.myType=myId;
+    museo.origen=myId;
+    museo.destino=myId;
+    if( (msgsnd(colaPeticion,&museo,sizeof(Museo)-sizeof(long),0)) == -1){
+        exit(1);   
+    }
+    idServer_client::getInst()->devolverId(myId);
 }
 

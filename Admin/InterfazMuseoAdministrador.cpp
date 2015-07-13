@@ -17,9 +17,10 @@
 #include <fstream>
 
 #include "Constantes.h"
+#include "../Broker/idServerRPC/idServer_client.h"
 
 InterfazMuseoAdministrador::InterfazMuseoAdministrador() {
-      myId = getpid();//TODO pedir id
+      myId = idServer_client::getInst()->getNuevoIdShMem();
     
        //busco las colas
     Logger::logg("Buscando la cola de peticion");
@@ -119,7 +120,7 @@ void InterfazMuseoAdministrador::cerrar(){
 }
 
 InterfazMuseoAdministrador::~InterfazMuseoAdministrador() {
-    //TODO liberar id
+    idServer_client::getInst()->devolverId(myId);
     //Logger::logg("Cerrando conexiones");//esto se llama despues de cerrar el log y tira segfault
     Museo museo;
     museo.myType=myId;

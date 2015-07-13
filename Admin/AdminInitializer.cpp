@@ -39,8 +39,10 @@ void crearColas(){
     }
 }
 int main(int argc, char** argv) {
+    Logger::startLog(LOGGER_DEFAULT_PATH,"AdminInit");
     crearCarpetas();
     crearColas();
+    Logger::closeLogger();
     return 0;
 }
 

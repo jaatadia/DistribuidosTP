@@ -15,7 +15,7 @@
 #include "../Common/Logger.h"
 #include "../Common/Parser.h"
 #include "../Common/Conectador.h"
-
+#include "../Broker/idServerRPC/idServer_client.h"
 #include "InterfazPersonaEntrada.h"
 #include "Constantes.h"
 
@@ -36,8 +36,7 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
         exit(1);   
     }
     
-    //TODO pedir id
-    myID=numeroPuerta*2;
+    myID=idServer_client::getInst()->getNuevoIdPuertaEnt(numeroPuerta);
 
     Parser::setPath("../broker.conf");
     int portCS = Parser::getIntParam("PUERTO_1");
@@ -66,8 +65,15 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
 }
 
 InterfazPersonaEntrada::~InterfazPersonaEntrada() {    
-    //TODO cerrar comunicacion
-    //TODO devolver id
+    MensajeAPuerta msg;
+    msg.myType=myID;
+    msg.origen=myID;
+    msg.destino=myID;
+    if( (msgsnd(colaRespuesta,&msg,sizeof(MensajeAPuerta)-sizeof(long),0)) == -1){
+        Logger::loggError("Error leer mensaje de peticion");
+        exit(1);   
+    }
+    idServer_client::getInst()->devolverId(myID);
 }
 
 void InterfazPersonaEntrada::tomarPersona(Persona& persona){

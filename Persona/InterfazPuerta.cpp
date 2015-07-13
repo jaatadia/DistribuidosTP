@@ -22,6 +22,7 @@
 #include "../Common/Logger.h"
 #include "../Common/Conectador.h"
 #include "../Common/Parser.h"
+#include "../Broker/idServerRPC/idServer_client.h"
 #include "Constantes.h"
 
 
@@ -41,8 +42,7 @@ using namespace std;
             exit(1);   
         }
         
-        
-        myID=getpid();//TODO PEDIR id
+        myID=idServer_client::getInst()->getNuevoIdPersona();
         
         Parser::setPath("../broker.conf");
         int portCS = Parser::getIntParam("PUERTO_1");
@@ -72,13 +72,20 @@ using namespace std;
     
    void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){
 
+        long puertaId=idServer_client::getInst()->getNuevoIdPuertaEnt(numeroPuerta);
+        if(puertaId==-1){
+            Logger::loggError("No se encontro la puerta");
+            mensaje.mensaje=MENSAJE_NO_PASAR;
+            return;
+        }
+        
         stringstream ss;
         ss<<numeroPuerta;
 
         MensajeAPuerta msg;
         msg.myType=myID;
         msg.origen=myID;
-        msg.destino=2*numeroPuerta;//TODO pedir y remplazar por el id de la puerta
+        msg.destino=puertaId;
         msg.mensaje=0;
         msg.tipo=tipo;
         msg.pertenenciasOTarjeta=tarjeta;
@@ -126,9 +133,16 @@ using namespace std;
     
     void InterfazPuerta::salir(int numeroPuerta, int tipo, int tarjeta,MensajeAPuerta& msg){
 
+        long puertaId=idServer_client::getInst()->getNuevoIdPuertaSal(numeroPuerta);
+        if(puertaId==-1){
+            Logger::loggError("No se encontro la puerta");
+            msg.mensaje=MENSAJE_NO_PASAR;
+            return;
+        }
+        
         msg.myType=myID;
         msg.origen=myID;
-        msg.destino=(2*numeroPuerta)-1;//TODO pedir y reemplazar por id de puerta
+        msg.destino=puertaId;
         msg.mensaje=0;
         msg.tipo= tipo;
         msg.pertenenciasOTarjeta=tarjeta;
@@ -176,5 +190,5 @@ using namespace std;
             exit(1);
         }
         
-        //TODO  liberar id
+        idServer_client::getInst()->devolverId(myID);
     }

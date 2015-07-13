@@ -8,7 +8,11 @@ idServer_client::idServer_client(){
     char broker[255];
     bool found=false;
     std::ifstream file;
-    file.open("../../brokers.conf");
+    file.open("../brokers.conf");
+    if(!file.is_open()){
+        Logger::loggError("no se pudo abrir el archivo");
+        exit(1);
+    }
     Logger::logg("Buscando broker");
     while((!found) && (!file.eof())){
         file.getline(broker,255);
@@ -64,7 +68,8 @@ long idServer_client::getNuevoIdPuertaEnt(long nroPuerta){
     }
     if ((*result_2).error == 0){
         Logger::loggError((*result_2).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_2).id_response_u.id;
 }
@@ -79,7 +84,8 @@ long idServer_client::getNuevoIdPuertaSal(long nroPuerta){
     }
     if ((*result_3).error == 0){
         Logger::loggError((*result_3).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_3).id_response_u.id;
 }
