@@ -10,7 +10,8 @@
 #include <sys/types.h> //para lseek 
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h> //para lseek
+#include <unistd.h>
+#include <errno.h> //para lseek
 
 #define TAMLONG 10
 #define TAMLINEA (TAMLONG+2+2+1+TAMLONG+1) //tamlinea=id(long)+ocupado(char)+p/e/s/m(char)+nroPuerta(int)
@@ -20,6 +21,10 @@ long getId(char tipo, long nroPuerta){ //devuelve -1 si no existe el ID
 	
     char buffer[TAMLINEA];
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
+    if(fd==-1){
+        printf("Error al abrir el archivo: ",strerror(errno));
+        return -2;
+    }
     
     long id = 0;
     int encontrado = 0;
@@ -69,8 +74,10 @@ long getNuevoId(char tipo,long nroPuerta){
     //si puertas ya habian pedido un id, devuelvo ese, sino (getID devuelve -1), busco uno nuevo
 	if ((tipo == 'e') || (tipo == 's')) {
 		long old_id = getId(tipo,nroPuerta);
-		if (old_id != -1) {
-		return old_id;
+                if(old_id == -2){
+                    return -1;
+		}else if (old_id != -1) {
+                    return old_id;
 		}
 	}
     
@@ -78,6 +85,10 @@ long getNuevoId(char tipo,long nroPuerta){
     int j; for(j=0;j<TAMLINEA;j++){buffer[j]='0';}
 
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
+    if(fd==-1){
+        printf("Error al abrir el archivo: ",strerror(errno));
+        return -1;
+    }
     
     long id = 0;
     int ocupado = 1;
@@ -123,6 +134,10 @@ long devolverId(long id){
 	
     char buffer[TAMLINEA];
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
+    if(fd==-1){
+        printf("Error al abrir el archivo: ",strerror(errno));
+        return -1;
+    }
 
     //lseek al nro de id que me piden
     int res = lseek(fd,(id-1)*TAMLINEA,SEEK_SET);

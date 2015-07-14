@@ -3,12 +3,31 @@
 #include <stdio.h>
 
 int main(int argc, char* argv[]){
+    
         Logger::startLog("./log.txt","test");
-	printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
-	printf("%ld\n",idServer_client::getInst()->getNuevoIdPuertaEnt(9));
-	printf("%ld\n",idServer_client::getInst()->getNuevoIdPuertaSal(222));
-	printf("%ld\n",idServer_client::getInst()->getNuevoIdShMem());
-	printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+    if(argc==2){
+        for (int i=0;i<atoi(argv[1]);i++){
+            long first = idServer_client::getInst()->getNuevoIdPersona();
+            printf("%ld\n",first);
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getNuevoIdPersona());
+            printf("%ld\n",idServer_client::getInst()->getIdPuertaEnt(1));
+            printf("%ld\n",idServer_client::getInst()->getIdPuertaSal(1));
+            printf("%ld\n",idServer_client::getInst()->devolverId(first));
+        }
+    }else{
+        for (int i=atoi(argv[1]);i<atoi(argv[2]);i++){
+            printf("%ld\n",idServer_client::getInst()->devolverId(i));
+        }
+    }
+        
         Logger::closeLogger();
         
 	return 0;

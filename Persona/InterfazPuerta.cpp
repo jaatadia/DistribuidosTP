@@ -43,6 +43,14 @@ using namespace std;
         }
         
         myID=idServer_client::getInst()->getNuevoIdPersona();
+        if(myID==-1){
+            Logger::loggError("No pude conseguir un id");
+            exit(1);
+        }
+        
+        char line[255];
+        sprintf(line,"Tengo id: %ld",myID);
+        Logger::logg(line);
         
         Parser::setPath("../broker.conf");
         int portCS = Parser::getIntParam("PUERTO_1");
@@ -72,7 +80,7 @@ using namespace std;
     
    void InterfazPuerta::entrar(int numeroPuerta,int tipo,int tarjeta, MensajeAPuerta& mensaje){
 
-        long puertaId=idServer_client::getInst()->getNuevoIdPuertaEnt(numeroPuerta);
+        long puertaId=idServer_client::getInst()->getIdPuertaEnt(numeroPuerta);
         if(puertaId==-1){
             Logger::loggError("No se encontro la puerta");
             mensaje.mensaje=MENSAJE_NO_PASAR;
@@ -133,7 +141,7 @@ using namespace std;
     
     void InterfazPuerta::salir(int numeroPuerta, int tipo, int tarjeta,MensajeAPuerta& msg){
 
-        long puertaId=idServer_client::getInst()->getNuevoIdPuertaSal(numeroPuerta);
+        long puertaId=idServer_client::getInst()->getIdPuertaSal(numeroPuerta);
         if(puertaId==-1){
             Logger::loggError("No se encontro la puerta");
             msg.mensaje=MENSAJE_NO_PASAR;
@@ -190,5 +198,8 @@ using namespace std;
             exit(1);
         }
         
+        char line[255];
+        sprintf(line,"Devolviendo id: %ld",myID);
+        Logger::logg(line);
         idServer_client::getInst()->devolverId(myID);
     }

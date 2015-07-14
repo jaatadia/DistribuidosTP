@@ -37,7 +37,11 @@ InterfazPersonaEntrada::InterfazPersonaEntrada(int numeroPuerta) {
     }
     
     myID=idServer_client::getInst()->getNuevoIdPuertaEnt(numeroPuerta);
-
+    if(myID==-1){
+        Logger::loggError("Error al conseguir un id");
+        exit(1);   
+    }
+    
     Parser::setPath("../broker.conf");
     int portCS = Parser::getIntParam("PUERTO_1");
     int portCE = Parser::getIntParam("PUERTO_2");

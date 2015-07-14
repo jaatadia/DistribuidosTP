@@ -23,6 +23,10 @@
 InterfazMuseoEntrada::InterfazMuseoEntrada() {
     
     myId = idServer_client::getInst()->getNuevoIdShMem();
+    if(myId==-1){
+        Logger::loggError("Error al conseguir un id");
+        exit(1);   
+    }
     
        //busco las colas
     Logger::logg("Buscando la cola de peticion");

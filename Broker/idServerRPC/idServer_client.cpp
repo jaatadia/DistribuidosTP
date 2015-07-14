@@ -1,10 +1,12 @@
 #include "idServer_client.h"
 #include <rpc/rpc.h>
 #include <fstream>
+#include <unistd.h>
 
 idServer_client* idServer_client::instance = NULL;
 
 idServer_client::idServer_client(){
+    srand(time(NULL));
     char broker[255];
     bool found=false;
     std::ifstream file;
@@ -19,12 +21,7 @@ idServer_client::idServer_client(){
         Logger::logg(std::string("Tratando de conectar con broker: ")+broker);
         this->clnt = clnt_create (broker, IDSERVERPROG, IDSERVERVERS, "tcp");
         if (clnt == NULL) {
-            if((rpc_createerr.cf_stat==RPC_TIMEDOUT)||(rpc_createerr.cf_stat==RPC_UNKNOWNHOST)){
-                Logger::loggError(std::string("no se pudo conectar con broker: ")+broker);
-            }else{
-                Logger::loggError(std::string("Error al conectarse con el broker")+clnt_spcreateerror (broker));
-                exit(1);   
-            }
+            Logger::loggError(std::string("No se pudo conectar con broker: ")+broker+" "+clnt_spcreateerror (broker));
         }else{
             found=true;
         }
@@ -44,16 +41,30 @@ idServer_client* idServer_client::getInst(){
 }
 
 long idServer_client::getNuevoIdPersona(){
-    
+     
     id_response  *result_1;
     char *getnuevoidpersona_1_arg;
-    result_1 = getnuevoidpersona_1((void*)&getnuevoidpersona_1_arg, clnt);
-    if (result_1 == (id_response *) NULL) {
-        clnt_perror (clnt, "call failed");
+    
+    int i=1;
+    while(true){
+        result_1 = getnuevoidpersona_1((void*)&getnuevoidpersona_1_arg, clnt);
+        if (result_1 == (id_response *) NULL) { 
+            if((rpc_createerr.cf_stat==RPC_TIMEDOUT)&&(i<10)){
+                i++;
+                sleep(rand()%i);
+            }else{
+                Logger::logg(clnt_sperror(clnt, "Error pidiendo nuevo id"));
+                exit(1);
+            }
+        }else{
+            break;
+        }
     }
+    
     if ((*result_1).error == 0){
         Logger::loggError((*result_1).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_1).id_response_u.id;
 }
@@ -100,7 +111,8 @@ long idServer_client::getNuevoIdShMem(){
     }  
     if ((*result_4).error == 0){
         Logger::loggError((*result_4).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_4).id_response_u.id;
 }
@@ -109,28 +121,54 @@ long idServer_client::getIdPuertaEnt(long nroPuerta){
     
     id_response  *result_5;
     long  getidpuertaent_1_arg = nroPuerta;
-    result_5 = getidpuertaent_1(&getidpuertaent_1_arg, clnt);
-    if (result_5 == (id_response *) NULL) {
-        clnt_perror (clnt, "call failed");
+    int i=1;
+    while(true){
+        result_5 = getidpuertaent_1(&getidpuertaent_1_arg, clnt);
+        if (result_5 == (id_response *) NULL) { 
+            if((rpc_createerr.cf_stat==RPC_TIMEDOUT)&&(i<10)){
+                i++;
+                sleep(rand()%i);
+            }else{
+                Logger::logg(clnt_sperror(clnt, "Error consiguiendo id de la puerta de entrada"));
+                exit(1);
+            }
+        }else{
+            break;
+        }
     }
     if ((*result_5).error == 0){
         Logger::loggError((*result_5).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_5).id_response_u.id;
+    
+    
 }
 
 long idServer_client::getIdPuertaSal(long nroPuerta){
     
     id_response  *result_6;
     long  getidpuertasal_1_arg = nroPuerta;
-    result_6 = getidpuertasal_1(&getidpuertasal_1_arg, clnt);
-    if (result_6 == (id_response *) NULL) {
-        clnt_perror (clnt, "call failed");
+    int i=1;
+    while(true){
+        result_6 = getidpuertasal_1(&getidpuertasal_1_arg, clnt);
+        if (result_6 == (id_response *) NULL) { 
+                if((rpc_createerr.cf_stat==RPC_TIMEDOUT)&&(i<10)){
+                    i++;
+                    sleep(rand()%i);
+                }else{
+                    Logger::logg(clnt_sperror(clnt, "Error consiguiendo el id de la puerta de salida"));
+                    exit(1);
+                }
+            }else{
+                break;
+            }
     }
     if ((*result_6).error == 0){
         Logger::loggError((*result_6).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_6).id_response_u.id;
 }
@@ -139,20 +177,32 @@ long idServer_client::devolverId(long id){
     
     id_response  *result_7;
     long  devolverid_1_arg = id;
-    result_7 = devolverid_1(&devolverid_1_arg, clnt);
-    if (result_7 == (id_response *) NULL) {
-        clnt_perror (clnt, "call failed");
+    int i=1;
+    while(true){
+        result_7 = devolverid_1(&devolverid_1_arg, clnt);
+        if (result_7 == (id_response *) NULL) {
+            if((rpc_createerr.cf_stat==RPC_TIMEDOUT)&&(i<10)){
+                i++;
+                sleep(rand()%i);
+            }else{
+                Logger::logg(clnt_sperror(clnt, "Error devolviendo el id"));
+                exit(1);
+            }
+        }else{
+            break;
+        }
     }
     if ((*result_7).error == 0){
         Logger::loggError((*result_7).id_response_u.message);
-        exit(1);
+        return -1;
+        //exit(1);
     }
     return (*result_7).id_response_u.id;
 }
 
 idServer_client::~idServer_client(){
     clnt_destroy (this->clnt);
-    delete this->instance;
+    //delete this->instance;
 }
 
 /*  
