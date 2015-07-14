@@ -123,6 +123,7 @@ long getNuevoId(char tipo,long nroPuerta){
         id++;
     }
     
+    printf("Entregado el id: %ld\n",id);
     sprintf(buffer,"%010ld-%c-%c-%010ld\n",id,'o',tipo,nroPuerta);
     write(fd,&buffer,TAMLINEA);
     close(fd);
@@ -131,7 +132,7 @@ long getNuevoId(char tipo,long nroPuerta){
 }
 
 long devolverId(long id){
-	
+    printf("Devolvieron el id: %ld\n",id);
     char buffer[TAMLINEA];
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
     if(fd==-1){
@@ -145,10 +146,10 @@ long devolverId(long id){
         close(fd);
         return -1;
     }
-    printf("res: %d \n",res);
+    //printf("res: %d \n",res);
     //chequeo si es el mismo
     read(fd,&buffer,TAMLINEA);
-    printf("leido: %s \n",buffer);
+    //printf("leido: %s \n",buffer);
 
     char str_id[TAMLONG+1]; //pasar el id del buffer a string
     int i;
@@ -156,9 +157,9 @@ long devolverId(long id){
         str_id[i] = buffer[i];
     }
     str_id[TAMLONG]='\0';
-    printf("str id leido: %s \n",str_id);
+    //printf("str id leido: %s \n",str_id);
     long id_leido=atol(str_id);
-    printf("id leido: %ld \n",id_leido);
+    //printf("id leido: %ld \n",id_leido);
 
 
     if (id_leido == id) {
