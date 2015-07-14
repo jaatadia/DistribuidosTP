@@ -22,7 +22,7 @@ long getId(char tipo, long nroPuerta){ //devuelve -1 si no existe el ID
     char buffer[TAMLINEA];
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
     if(fd==-1){
-        printf("Error al abrir el archivo: ",strerror(errno));
+        printf("Error al abrir el archivo: %s",strerror(errno));
         return -2;
     }
     
@@ -86,7 +86,7 @@ long getNuevoId(char tipo,long nroPuerta){
 
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
     if(fd==-1){
-        printf("Error al abrir el archivo: ",strerror(errno));
+        printf("Error al abrir el archivo: %s",strerror(errno));
         return -1;
     }
     
@@ -135,7 +135,7 @@ long devolverId(long id){
     char buffer[TAMLINEA];
     int fd = open(IDFILEPATH,O_RDWR); //abro archivo
     if(fd==-1){
-        printf("Error al abrir el archivo: ",strerror(errno));
+        printf("Error al abrir el archivo: %s",strerror(errno));
         return -1;
     }
 
