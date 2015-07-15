@@ -13,6 +13,7 @@ private:
     
 public:
     static idServer_client* getInst();
+    static void destroy();
     
     long getNuevoIdPersona();
     long getNuevoIdPuertaEnt(long nroPuerta);

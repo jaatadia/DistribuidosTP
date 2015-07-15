@@ -1,0 +1,40 @@
+Para compilar el programa:
+  1. En el directorio corriente ejecutar el comando make
+  
+Para compiar una version limplia de los ejecutables
+  1. Ejecutar el script copy.sh que generara una carpeta llamada copy.cp en el directorio corriente
+
+Para limpiar el proyecto:
+  1. En el directorio corriente ejecutar el comando make clean
+  2. Eliminar la carpeta copy.cp
+  
+Configurar el proyecto:  
+  1. En el directorio copy.cp se encuentra un archivo llamado "brokers.conf" en el cual figuran el nombre de los brokers que los programas usaran. Se debe poner en el los nombres correctos.
+  2. Dichos nombres deben estar en la tabla de hosts (o ser direcciones IP). 
+    2.1 Para agregarlos a la tabla de hosts se solicita crear un archivo hosts.txt donde cada linea tiene "ip nombre1 nombre2 ..."
+    2.2 Se proporciona un script a correr llamado HOST_ADDER.sh que agrega dichas ips y nombres al archivo de hosts al ejecutarlo: ./HOST_ADDER.sh hosts.txt
+  3. En el directorio copy.cp se encuentra un archivo llamado "broker.conf" en el cual se pueden configurar los puertos que usa el proyecto.
+  4. En el directorio copy.cp se encuentra un archivo llamado "museo.cfg" en el que se configura el estado inicial del museo
+    
+Para correr el proyecto:
+  1. Levantar el broker:
+    1.1 Ir al directorio Broker dentro de copy.cp y ejecutar el programa "./BrokerInitializer"
+    1.2 Ir al directorio Broker/idServerRPC dentro de copy.cp y ejecutar los siguientes comandos:
+      1.2.1 sudo service rpcbind start
+      1.2.2 sudo ./idSererver_svc
+  2. Levantar las puertas:
+    2.1 Ir al directorio Puerta dentro de copy.cp y ejecutar el programa "./PuertaInitializer <nroDePuerta>"
+    2.2 Levantar tantas puertas como se desee.
+  3. Levantar las personas:
+    3.1 Ir al directorio Persona dentro de copy.cp y ejecutar el programa "./PersonaIntializer <cantDePersonas> <cantDePuertasDisponibles>"
+  4. Administrador:
+    4.1 Ir al directorio Administrador dentro de la carpeta copy.cp y ejecutar el programa "./AdminInitializer"
+    4.2 Una vez realizado esto una unica vez se pueden correr los programas:
+      4.2.1 "./Abrir " que abre el museo
+      4.2.2 "./Cerrar " que cierra el museo
+      
+
+Se proveen ademas los siguiente scripts dentro de copy.cp:
+  1. "./PS_RM.sh" que elimina todos los procesos abiertos en la consola actual
+  2. "./IPC_RM.sh" que elimina todos los ipcs creados
+    

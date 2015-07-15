@@ -202,7 +202,11 @@ long idServer_client::devolverId(long id){
 
 idServer_client::~idServer_client(){
     clnt_destroy (this->clnt);
-    //delete this->instance;
+}
+
+void idServer_client::destroy(){
+    delete instance;
+    instance=NULL;
 }
 
 /*  

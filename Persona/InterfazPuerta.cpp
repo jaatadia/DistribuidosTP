@@ -202,4 +202,6 @@ using namespace std;
         sprintf(line,"Devolviendo id: %ld",myID);
         Logger::logg(line);
         idServer_client::getInst()->devolverId(myID);
+        
+        idServer_client::destroy();
     }
